@@ -1,5 +1,15 @@
 # LavaJatoFrontend
 
+#### Gerar o componente standalone
+```bash
+ng generate component pages/usuario --standalone
+```
+
+#### Gerar o service
+```
+ng generate service services/usuario/usuario
+```
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.4.
 
 ## Development server
