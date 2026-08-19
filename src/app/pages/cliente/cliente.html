@@ -1,0 +1,40 @@
+<h2>Lista de Clientes</h2>
+
+<button (click)="adicionar()">adicionar</button>
+
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>Celular</th>
+        <th>Fidelidade</th>
+        <th colspan="2">ações</th>
+    </tr>
+    @for (c of clientes | async; track c.id) {
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.celular }}</td>
+            <td>{{ c.fidelidade }}</td>
+            <button (click)="editar(c)">editar</button>
+            <button (click)="excluir(c.id)">excluir</button>
+        </tr>
+    }
+</table>
+
+@if (clienteSelecionado) {
+    <h4>Editar Cliente</h4>
+    <div>
+        <input id="nome" type="text" [(ngModel)]="clienteSelecionado.nome" placeholder="nome">
+        <input type="tel" [(ngModel)]="clienteSelecionado.celular" telefoneMask placeholder="celular">
+        <input type="number" [(ngModel)]="clienteSelecionado.fidelidade" placeholder="fidelidade">
+        <button (click)="salvar()">salvar</button>
+    </div>
+}
+
+@if (inserirCliente) {
+    <h4>Adicionar Cliente</h4>
+    <input type="text" [(ngModel)]="novoCliente.nome" placeholder="nome">
+    <input type="tel" [(ngModel)]="novoCliente.celular" placeholder="celular" telefoneMask>
+    <button (click)="salvar()">Cadastrar</button>
+}

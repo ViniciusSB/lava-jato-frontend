@@ -6,11 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { UsuarioService } from '../../services/usuario/usuario';
 import { Usuario } from '../../models/usuario';
 import { Observable } from 'rxjs';
+import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 
 @Component({
   selector: 'app-usuario',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PrimCarcMaius],
   templateUrl: './usuario.html',
   styleUrls: ['./usuario.css'],
 })
@@ -20,11 +21,21 @@ export class UsuarioComponent {
 
   usuarioSelecionado: Usuario | undefined;
 
+  tipos: string[] = ['ADM', 'GERENTE', 'FUNCIONARIO']
+
+  inserirUsuario: boolean = false;
+
+  novoUsuario: Usuario = {nome: '', email: '', senha: '', tipo: ''};
+
   constructor(private usuarioService: UsuarioService) {}
 
   ngOnInit() {
     this.usuarioService.getAll();
     this.usuarios = this.usuarioService.usuarios;
+  }
+
+  adicionar() {
+    this.inserirUsuario = true;
   }
 
   excluir(id: number) {
@@ -44,9 +55,7 @@ export class UsuarioComponent {
   }
 
   salvar() {
-    if (!this.usuarioSelecionado) 
-      return;
-    else {
+    if (this.usuarioSelecionado) {
       this.usuarioService.update(this.usuarioSelecionado).subscribe({
         next: () => {
           this.usuarioSelecionado = undefined;
@@ -55,7 +64,17 @@ export class UsuarioComponent {
           console.error('Erro ao atualizar usuário:', err);
           alert('Não foi possível atualizar o usuário.');
         }
+      });
+    } else if (this.inserirUsuario) {
+      this.usuarioService.create(this.novoUsuario).subscribe({
+        next: () => {
+          this.inserirUsuario = false;
+        },
+        error: (err) => {
+          console.error('Erro ao cadastrar usuário:', err);
+          alert('Não foi possível cadastrar o usuário.');
+        }
       })
-    }
+    } 
   }
 }
