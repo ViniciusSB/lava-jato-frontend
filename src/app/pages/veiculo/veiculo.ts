@@ -36,12 +36,19 @@ export class VeiculoComponent {
     this.veiculos = this.veiculoService.veiculos;
   }
 
+  fechar() {
+    this.veiculoSelecionado = undefined;
+    this.inserirVeiculo = false;
+  }
+
   adicionar() {
     this.inserirVeiculo = true;
+    this.veiculoSelecionado = undefined;
   }
 
   editar(v: Veiculo) {
     this.veiculoSelecionado = {... v};
+    this.inserirVeiculo = false;
   }
 
   excluir(id:number) {

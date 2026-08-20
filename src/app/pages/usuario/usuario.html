@@ -1,48 +1,77 @@
-<h2>Lista de Usuários</h2>
-<button (click)="adicionar()">adicionar</button>
+<!DOCTYPE html>
+<html lang="en">
 
-<table>
-  <tr>
-    <th>Id</th>
-    <th>Nome</th>
-    <th>E-mail</th>
-    <th>Tipo</th>
-    <th colspan="2">Ações</th>
-  </tr>
-  <tr *ngFor="let u of usuarios | async">
-    <td>{{u.id}}</td>
-    <td>{{u.nome}}</td>
-    <td>{{u.email}}</td>
-    <td>{{u.tipo | primCaracMaius }}</td>
-    <button (click)="editar(u)">editar</button>
-    <button (click)="excluir(u.id!)">excluir</button>
-  </tr>
-</table>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tela de usuário</title>
+</head>
 
-<div *ngIf="usuarioSelecionado">
-  <h3>Editar Usuário</h3>
-  <input type="text" [(ngModel)]="usuarioSelecionado.nome" placeholder="digite o nome"> 
-  <input type="email" [(ngModel)]="usuarioSelecionado.email" placeholder="digite o email">
-  <select [(ngModel)]="usuarioSelecionado.tipo" >
-    @for (tipo of tipos; track tipo) {
-      <option [value]="tipo">{{ tipo |  primCaracMaius }}</option>
-    }
-  </select>
-  <button (click)="salvar()">Salvar</button>
-</div>
+<body>
 
-@if (inserirUsuario) {
-  <div>
-    <h3>Adicionar Usuário</h3>
-    <input type="text" [(ngModel)]="novoUsuario.nome" placeholder="digite o nome"> 
-    <input type="email" [(ngModel)]="novoUsuario.email" placeholder="digite o email">
-    <input type="password" [(ngModel)]="novoUsuario.senha" placeholder="digite a senha">
-    <select [(ngModel)]="novoUsuario.tipo">
-      <option value="" disabled selected>Escolha um tipo</option>
-      @for (tipo of tipos; track tipo) {
-        <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
-      }
-    </select>
-    <button (click)="salvar()">Salvar</button>
+  <h2>Lista de Usuários</h2>
+
+  <div class="acoes-cima">
+    <button class="btn-add" (click)="adicionar()">adicionar</button>
   </div>
-}
+  <table border="1">
+    <tr>
+      <th>Id</th>
+      <th>Nome</th>
+      <th>E-mail</th>
+      <th>Tipo</th>
+      <th colspan="2">Ações</th>
+    </tr>
+    <tr *ngFor="let u of usuarios | async">
+      <td>{{u.id}}</td>
+      <td>{{u.nome}}</td>
+      <td>{{u.email}}</td>
+      <td>{{u.tipo | primCaracMaius }}</td>
+      <td class="acoes">
+        <button (click)="editar(u)">editar</button>
+        <button (click)="excluir(u.id!)">excluir</button>
+      </td>
+    </tr>
+  </table>
+
+  <div *ngIf="usuarioSelecionado">
+    <div class="edit-info-superior">
+      <h3>Editar Usuário</h3>
+      <button class="btn-fechar" (click)="fechar()">x</button>
+    </div>
+    <div class="editar-usuario">
+      <input type="text" [(ngModel)]="usuarioSelecionado.nome" placeholder="digite o nome">
+      <input type="email" [(ngModel)]="usuarioSelecionado.email" placeholder="digite o email">
+      <select [(ngModel)]="usuarioSelecionado.tipo">
+        @for (tipo of tipos; track tipo) {
+        <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
+        }
+      </select>
+      <button title="fechar" (click)="salvar()">salvar</button>
+    </div>
+  </div>
+
+  @if (inserirUsuario) {
+  <div>
+    <div class="add-info-superior">
+      <h3>Adicionar Usuário</h3>
+      <button class="btn-fechar" (click)="fechar()">x</button>
+    </div>
+    <div class="add-usuario">
+      <input type="text" [(ngModel)]="novoUsuario.nome" placeholder="digite o nome">
+      <input type="email" [(ngModel)]="novoUsuario.email" placeholder="digite o email">
+      <input type="password" [(ngModel)]="novoUsuario.senha" placeholder="digite a senha">
+      <select [(ngModel)]="novoUsuario.tipo">
+        <option value="" disabled selected>Escolha um tipo</option>
+        @for (tipo of tipos; track tipo) {
+        <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
+        }
+      </select>
+      <button (click)="salvar()">cadastrar</button>
+    </div>
+  </div>
+  }
+
+</body>
+
+</html>

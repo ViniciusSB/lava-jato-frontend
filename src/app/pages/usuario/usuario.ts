@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { UsuarioService } from '../../services/usuario/usuario';
 import { Usuario } from '../../models/usuario';
-import { Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 
 @Component({
@@ -36,6 +36,7 @@ export class UsuarioComponent {
 
   adicionar() {
     this.inserirUsuario = true;
+    this.usuarioSelecionado = undefined;
   }
 
   excluir(id: number) {
@@ -52,6 +53,12 @@ export class UsuarioComponent {
 
   editar(u: Usuario) {
     this.usuarioSelecionado = {... u};
+    this.inserirUsuario = false;
+  }
+
+  fechar() {
+    this.usuarioSelecionado = undefined;
+    this.inserirUsuario = false;
   }
 
   salvar() {
@@ -77,4 +84,6 @@ export class UsuarioComponent {
       })
     } 
   }
+
+  
 }

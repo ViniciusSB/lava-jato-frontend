@@ -1,15 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente/cliente';
 import { FormsModule } from '@angular/forms';
 import { TelefoneMaskDirective } from '../../util/telefone-mak';
+import { VeiculoService } from '../../services/veiculo/veiculo';
+import { Veiculo } from '../../models/veiculo';
+import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 
 @Component({
   selector: 'app-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule, TelefoneMaskDirective],
+  imports: [CommonModule, FormsModule, TelefoneMaskDirective, PrimCarcMaius],
   templateUrl: './cliente.html',
   styleUrl: './cliente.css',
 })
@@ -20,12 +23,20 @@ export class ClienteComponent {
   inserirCliente: boolean = false;
   novoCliente: Cliente = {
     nome: '', celular: '', fidelidade: 0,
-    id: 0,
-    dataCriacao: '',
-    dataAtualizacao: ''
+    id: 0, veiculos: []
   }
 
-  constructor(private clienteService: ClienteService) {}
+  revelarVeiculosCliente: boolean = false;
+  
+  veiculosCliente: Observable<Veiculo[]> | undefined;
+
+  clientesFiltrados: Observable<Cliente[]> | undefined;
+
+  filtroAtivo: boolean = false;
+
+  constructor(
+    private clienteService: ClienteService, 
+    private veiculoService: VeiculoService) {}
 
   ngOnInit() {
     this.clienteService.getAll();
@@ -46,10 +57,14 @@ export class ClienteComponent {
 
   adicionar() {
     this.inserirCliente = true;
+    this.clienteSelecionado = undefined;
+    this.revelarVeiculosCliente = false;
   }
   
   editar(c: Cliente) {
     this.clienteSelecionado = {... c};
+    this.inserirCliente = false;
+    this.revelarVeiculosCliente = false;
   }
 
   salvar() {
@@ -75,7 +90,7 @@ export class ClienteComponent {
       }
       this.clienteService.create(this.novoCliente).subscribe({
         next: () => {
-          this.novoCliente = { id: 0, nome: '', celular: '', fidelidade: 0, dataCriacao: '', dataAtualizacao: '' }; 
+          this.novoCliente = { id: 0, nome: '', celular: '', fidelidade: 0, veiculos: [] }; 
           this.inserirCliente = false;
         },
         error: (err) => {
@@ -84,5 +99,35 @@ export class ClienteComponent {
         }
       });
     }
+  }
+
+  filtrar(termo: string) {
+    if (termo.length == 0) 
+      this.filtroAtivo = false;
+    else {
+      this.filtroAtivo = true;
+      this.clientesFiltrados = this.clientes!.pipe(
+        map( clientes => 
+          clientes.filter(c => 
+            c.nome.toLocaleLowerCase().includes(termo.toLocaleLowerCase())
+          )
+        )
+     );
+    }
+  }
+
+  exibirVeiculos(idCliente: number) {
+    this.clienteSelecionado = undefined;
+    this.inserirCliente = false;
+    this.revelarVeiculosCliente = true;
+    this.veiculoService.obterVeiculosPorClienteId(idCliente);
+    this.veiculosCliente = this.veiculoService.veiculos;
+    this.veiculosCliente.forEach( v => {
+      console.log('OLOKO', v);
+    })
+  }
+
+  fecharModal() {
+    this.revelarVeiculosCliente = false;
   }
 }

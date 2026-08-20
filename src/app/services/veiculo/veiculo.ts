@@ -37,4 +37,12 @@ export class VeiculoService {
             tap( () => this.getAll() )
         )
     }
+
+    obterVeiculosPorClienteId(id: number) {
+        this.http.get<Veiculo[]>(`${this.urlBase}/listar/cliente/${id}`).subscribe(
+            data => {
+                this.veiculosSubject.next(data);
+            }
+        );
+    }
 }

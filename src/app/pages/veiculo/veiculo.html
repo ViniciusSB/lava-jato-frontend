@@ -1,19 +1,29 @@
-<h2>Lista de Veículos</h2>
+<!DOCTYPE html>
+<html lang="en">
 
-<button (click)="adicionar()">adicionar</button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
 
-<table>
-    <tr>
-        <th>Id</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Cor</th>
-        <th>Placa</th>
-        <th>Tipo</th>
-        <th>ClienteId</th>
-        <th colspan="2">ações</th>
-    </tr>
-    @for (v of veiculos | async; track v.id) {
+<body>
+    <h2>Lista de Veículos</h2>
+    <div class="btn-add">
+        <button (click)="adicionar()">adicionar</button>
+    </div>
+    <table border="1">
+        <tr>
+            <th>Id</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Cor</th>
+            <th>Placa</th>
+            <th>Tipo</th>
+            <th>ClienteId</th>
+            <th colspan="2">ações</th>
+        </tr>
+        @for (v of veiculos | async; track v.id) {
         <tr>
             <td>{{ v.id }}</td>
             <td>{{ v.marca }}</td>
@@ -22,40 +32,54 @@
             <td>{{ v.placa }}</td>
             <td>{{ v.tipo | primCaracMaius }}</td>
             <td>{{ v.clienteId }}</td>
-            <button (click)="editar(v)">editar</button>
-            <button (click)="excluir(v.id!)">excluir</button>
+            <td class="acoes">
+                <button (click)="editar(v)">editar</button>
+                <button (click)="excluir(v.id!)">excluir</button>
+            </td>
         </tr>
-    }
-</table>
+        }
+    </table>
 
-@if (veiculoSelecionado) {
-    <h4>Editar Veículo</h4>
-    <div>
+    @if (veiculoSelecionado) {
+    <div class="edit-info-superior">
+        <h4>Editar Veículo</h4>
+        <button class="btn-fechar" (click)="fechar()">x</button>
+    </div>
+    <div class="editar-veiculo">
         <input type="text" [(ngModel)]="veiculoSelecionado.marca" placeholder="marca">
         <input type="text" [(ngModel)]="veiculoSelecionado.modelo" placeholder="modelo">
         <input type="text" [(ngModel)]="veiculoSelecionado.cor" placeholder="cor">
         <input type="text" [(ngModel)]="veiculoSelecionado.placa" placeholder="placa">
         <select [(ngModel)]="veiculoSelecionado.tipo">
             @for (tipo of tipos; track tipo) {
-                <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
+            <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
             }
         </select>
         <input type="number" [(ngModel)]="veiculoSelecionado.clienteId" placeholder="id cliente">
         <button (click)="salvar()">salvar</button>
     </div>
-}
+    }
 
-@if (inserirVeiculo) {
-    <h4>Adicionar Veículo</h4>
-    <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
-    <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
-    <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
-    <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
-    <select [(ngModel)]="novoVeiculo.tipo">
-        @for (tipo of tipos; track tipo) {
+    @if (inserirVeiculo) {
+    <div class="add-info-superior">
+        <h4>Adicionar Veículo</h4>
+        <button class="btn-fechar" (click)="fechar()">x</button>
+    </div>
+    <div class="add-veiculo">
+        <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
+        <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
+        <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
+        <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
+        <select [(ngModel)]="novoVeiculo.tipo">
+            @for (tipo of tipos; track tipo) {
             <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
-        }
-    </select>
-    <input type="number" [(ngModel)]="novoVeiculo.clienteId" placeholder="id cliente">
-    <button (click)="salvar()">Cadastrar</button>
-}
+            }
+        </select>
+        <input type="number" [(ngModel)]="novoVeiculo.clienteId" placeholder="id cliente">
+        <button (click)="salvar()">Cadastrar</button>
+    </div>
+    }
+
+</body>
+
+</html>

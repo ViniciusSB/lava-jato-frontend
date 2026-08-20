@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    background-color: #f0f0f0;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    padding: 1.2rem;
+}
+
+h4 {
+    display: flex;
+    justify-content: center;
+    padding: 0.8rem;
+}
+
+table {
+    width: 95%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+table th {
+    background-color: #fd8559f1;
+}
+
+table td {
+    text-align: center;
+}
+
+.btn-add {
+    width: 95%;
+    margin: 0.4rem auto;
+}
+
+.acoes {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+button {
+    border-radius: 5px;
+    background-color: #fdc9b6f1;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+button:hover {
+  color: #fd8559f1;
+  background-color: black;
+}
+
+.editar-veiculo {
+    display: flex;
+    width: 95%;
+    justify-content: center;
+}
+
+.edit-info-superior {
+    display: flex;
+    justify-content: center;
+    width: 95%;
+}
+
+.edit-info-superior button {
+  height: min-content;
+  padding-top: 0.2rem;
+  margin-top: 0.5rem;
+  border-radius: 50%;
+  color: #f0f0f0;
+  background-color: red;
+}
+
+.editar-veiculo button {
+    margin-left: 0.2rem;
+}
+
+.add-veiculo {
+    display: flex;
+    width: 95%;
+    justify-content: center;
+}
+
+.add-info-superior {
+    display: flex;
+    justify-content: center;
+    width: 95%;
+}
+
+.add-info-superior button {
+  height: min-content;
+  padding-top: 0.2rem;
+  margin-top: 0.5rem;
+  border-radius: 50%;
+  color: #f0f0f0;
+  background-color: red;
+}
+
+.add-veiculo button {
+    margin-left: 0.2rem;
+}
+
+input {
+    padding: 0.4rem;
+    border: 2px solid #fd885ef1;
+    outline: none;
+}
+
+select {
+  padding: 0.4rem;
+  border: 2px solid #fd885ef1;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+option {
+  background-color: #f0f0f0;
+}
