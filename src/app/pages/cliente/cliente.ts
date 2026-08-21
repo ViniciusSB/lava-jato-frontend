@@ -40,7 +40,7 @@ export class ClienteComponent {
 
   ngOnInit() {
     this.clienteService.getAll();
-    this.clientes = this.clienteService.usuarios;
+    this.clientes = this.clienteService.clientes;
   }
 
   excluir(id: number) {

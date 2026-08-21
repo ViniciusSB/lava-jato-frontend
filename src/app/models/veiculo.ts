@@ -6,4 +6,5 @@ export interface Veiculo {
     placa?: string;
     tipo: string;
     clienteId: number;
+    clienteNome: string
 }

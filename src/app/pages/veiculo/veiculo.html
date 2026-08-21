@@ -20,8 +20,8 @@
             <th>Cor</th>
             <th>Placa</th>
             <th>Tipo</th>
-            <th>ClienteId</th>
-            <th colspan="2">ações</th>
+            <th>Proprietário</th>
+            <th colspan="2">Ações</th>
         </tr>
         @for (v of veiculos | async; track v.id) {
         <tr>
@@ -31,7 +31,7 @@
             <td>{{ v.cor }}</td>
             <td>{{ v.placa }}</td>
             <td>{{ v.tipo | primCaracMaius }}</td>
-            <td>{{ v.clienteId }}</td>
+            <td>{{ v.clienteNome }}</td>
             <td class="acoes">
                 <button (click)="editar(v)">editar</button>
                 <button (click)="excluir(v.id!)">excluir</button>
@@ -55,7 +55,11 @@
             <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
             }
         </select>
-        <input type="number" [(ngModel)]="veiculoSelecionado.clienteId" placeholder="id cliente">
+        <select [(ngModel)]="veiculoSelecionado.clienteId">
+            @for (cliente of clientes | async; track cliente.id) {
+            <option [value]="cliente.id">{{ cliente.nome }}</option>
+            }
+        </select>
         <button (click)="salvar()">salvar</button>
     </div>
     }
@@ -71,11 +75,17 @@
         <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
         <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
         <select [(ngModel)]="novoVeiculo.tipo">
+            <option value="" disabled selected>escolha um tipo</option>
             @for (tipo of tipos; track tipo) {
             <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
             }
         </select>
-        <input type="number" [(ngModel)]="novoVeiculo.clienteId" placeholder="id cliente">
+        <select [(ngModel)]="novoVeiculo.clienteId">
+            <option value="0" disabled selected>escolha um proprietario</option>
+            @for (cliente of clientes | async; track cliente.id) {
+            <option [value]="cliente.id">{{ cliente.nome }}</option>
+            }
+        </select>
         <button (click)="salvar()">Cadastrar</button>
     </div>
     }

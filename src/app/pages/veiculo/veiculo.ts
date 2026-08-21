@@ -5,6 +5,8 @@ import { Veiculo} from '../../models/veiculo';
 import { FormsModule } from '@angular/forms';
 import { VeiculoService } from '../../services/veiculo/veiculo';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
+import { Cliente } from '../../models/cliente';
+import { ClienteService } from '../../services/cliente/cliente';
 
 @Component({
   selector: 'app-veiculo',
@@ -23,13 +25,16 @@ export class VeiculoComponent {
     cor: '',
     tipo: '',
     placa: '',
-    clienteId: 0
+    clienteId: 0,
+    clienteNome: ''
   }
+
+  clientes: Observable<Cliente[]> | undefined;
 
   tipoSecionado: string = '';
   tipos: string[] = ['MOTO', 'CARRO', 'CAMINHONETE', 'CAMINHAO'];
 
-  constructor(private veiculoService: VeiculoService) {}
+  constructor(private veiculoService: VeiculoService, private clienteService: ClienteService) {}
 
   ngOnInit() {
     this.veiculoService.getAll();
@@ -42,11 +47,19 @@ export class VeiculoComponent {
   }
 
   adicionar() {
+    if (this.clientes == undefined) {
+      this.clienteService.getAll();
+      this.clientes = this.clienteService.clientes;
+    }
     this.inserirVeiculo = true;
     this.veiculoSelecionado = undefined;
   }
 
   editar(v: Veiculo) {
+    if (this.clientes == undefined) {
+      this.clienteService.getAll();
+      this.clientes = this.clienteService.clientes;
+    }
     this.veiculoSelecionado = {... v};
     this.inserirVeiculo = false;
   }
@@ -77,7 +90,7 @@ export class VeiculoComponent {
     } else if (this.inserirVeiculo) {
       this.veiculoService.create(this.novoVeiculo).subscribe({
       next: () => {
-        this.novoVeiculo = {marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0};
+        this.novoVeiculo = {marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: ''};
         this.inserirVeiculo = false;
       },
       error: (err) => {

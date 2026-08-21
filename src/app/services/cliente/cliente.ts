@@ -10,7 +10,7 @@ export class ClienteService {
     constructor(private http: HttpClient){}
 
     private clientesSubject = new BehaviorSubject<Cliente[]>([]);
-    usuarios = this.clientesSubject.asObservable();
+    clientes = this.clientesSubject.asObservable();
 
     getAll() {
         this.http.get<Cliente[]>(`${this.urlBase}/listar`).subscribe(
