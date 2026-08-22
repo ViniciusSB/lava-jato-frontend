@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { UsuarioService } from '../../services/usuario/usuario';
 import { Usuario } from '../../models/usuario';
-import { filter, map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 
 @Component({

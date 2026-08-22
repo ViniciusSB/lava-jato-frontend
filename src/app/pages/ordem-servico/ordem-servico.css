@@ -31,6 +31,11 @@ h3 {
   margin-right: auto;
 }
 
+.tabela-responsiva {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 table {
   width: 95%;
   margin: auto;

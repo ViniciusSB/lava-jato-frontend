@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tela de Serviços</title>
+</head>
+
+<body>
+
+  <h2>Lista de Serviços</h2>
+
+  <div class="acoes-cima">
+    <button class="btn-add" (click)="adicionar()">adicionar</button>
+  </div>
+  <div class="div-responsivo">
+    <table border="1">
+      <tr>
+        <th>Id</th>
+        <th>Tipo</th>
+        <th>Detalhes</th>
+        <th>Preço</th>
+        <th colspan="2">Ações</th>
+      </tr>
+      <tr *ngFor="let s of servicos | async">
+        <td>{{s.id}}</td>
+        <td>{{s.tipo}}</td>
+        <td>{{s.detalhes}}</td>
+        <td>{{s.precoBase }}</td>
+        <td class="acoes">
+          <button (click)="editar(s)">editar</button>
+          <button (click)="excluir(s.id!)">excluir</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div *ngIf="servicoSelecionado">
+    <div class="edit-info-superior">
+      <h3>Editar Serviço</h3>
+      <button class="btn-fechar" (click)="fechar()">x</button>
+    </div>
+    <div class="div-responsivo">
+      <div class="editar-servico">
+        <input type="text" [(ngModel)]="servicoSelecionado.tipo" placeholder="digite uma breve descrição">
+        <input type="text" [(ngModel)]="servicoSelecionado.detalhes" placeholder="digite os detalhes do serviço">
+        <input type="text" [(ngModel)]="servicoSelecionado.precoBase" placeholder="preço do serviço">
+        <button (click)="salvar()">salvar</button>
+      </div>
+    </div>
+  </div>
+
+  @if (inserirServico) {
+  <div>
+    <div class="add-info-superior">
+      <h3>Adicionar Serviço</h3>
+      <button class="btn-fechar" (click)="fechar()">x</button>
+    </div>
+    <div class="div-responsivo">
+      <div class="add-servico">
+        <input type="text" [(ngModel)]="novoServico.tipo" placeholder="digite uma breve descrição">
+        <input type="text" [(ngModel)]="novoServico.detalhes" placeholder="digite os detalhes do serviço">
+        <input type="text" [(ngModel)]="novoServico.precoBase" placeholder="preço do serviço">
+        <button (click)="salvar()">cadastrar</button>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (excluirSelecionado) {
+  <div class="modal-externo" (click)="fecharModal()">
+    <div class="modal-excluir">
+      <h3>Excluir ordem?</h3>
+      <div class="acoes-modal-excluir">
+        <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
+        <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+      </div>
+    </div>
+  </div>
+  }
+
+</body>
+
+</html>

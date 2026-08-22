@@ -1,0 +1,182 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f0f0f0;
+    width: 100%;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    padding: 1.2rem;
+}
+
+h3 {
+    display: flex;
+    justify-content: center;
+    padding: 0.8rem;
+}
+
+.acoes-cima {
+    display: flex;
+    justify-content: center;
+    width: 95%;
+    margin: 0.4rem auto;
+}
+
+.acoes-cima button {
+    margin-right: auto;
+}
+
+.add-servico {
+    width: 95%;
+    display: flex;
+    justify-content: center;
+}
+
+.add-info-superior {
+    width: 95%;
+    display: flex;
+    justify-content: center;
+}
+
+.add-info-superior button {
+    height: min-content;
+    padding-top: 0.2rem;
+    margin-top: 0.5rem;
+    border-radius: 50%;
+    color: #f0f0f0;
+    background-color: red;
+}
+
+.add-usuario button {
+    margin-left: 0.2rem;
+}
+
+.editar-servico  {
+    display: flex;
+    justify-content: center;
+    width: 95%;
+}
+
+.edit-info-superior {
+    display: flex;
+    justify-content: center;
+    width: 95%;
+}
+
+.edit-info-superior button {
+  height: min-content;
+  padding-top: 0.2rem;
+  margin-top: 0.5rem;
+  border-radius: 50%;
+  color: #f0f0f0;
+  background-color: red;
+}
+
+.editar-usuario button {
+    margin-left: 0.2rem;
+}
+
+.div-responsivo {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 95%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+table th {
+    background-color: #fd8559f1;
+    padding: 0.2rem;
+}
+
+table td {
+  text-align: center;
+}
+
+button {
+    border-radius: 5px;
+  background-color: #fdc9b6f1;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+button:hover {
+  color: #fd8559f1;
+  background-color: black;
+}
+
+.acoes {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+input {
+  padding: 0.4rem;
+  border: 2px solid #fd885ef1;
+  border-radius: 10px;
+}
+
+select {
+  padding: 0.4rem;
+  border: 2px solid #fd885ef1;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+option {
+  background-color: #f0f0f0;
+}
+
+.modal-externo {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  background: #00000080;
+}
+
+.modal-excluir {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  background: #f0f0f0;
+  max-height: 80%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.acoes-modal-excluir {
+    display: flex;
+    justify-content: center;
+}
+
+.acoes-modal-excluir .btn-excluir-modal{
+    color: #ffffff;
+    background-color: red;
+    margin-left: 0.2rem;
+    transition: transform 0.2s ease;
+}
+
+.acoes-modal-excluir .btn-cancelar-modal{
+    color: #ffffff;
+    background-color: #979797;
+    margin-left: 0.2rem;
+    transition: transform 0.2s ease;
+}
+
+.acoes-modal-excluir button:hover{
+    transform: scale(1.25);
+}

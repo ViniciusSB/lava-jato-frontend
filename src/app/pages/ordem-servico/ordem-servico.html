@@ -13,32 +13,33 @@
     <div class="acoes-cima">
         <button (click)="adicionar()">adicionar</button>
     </div>
-
-    <table border="1">
-        <tr>
-            <th>Id</th>
-            <th>Preço</th>
-            <th>Serviço</th>
-            <th>Status</th>
-            <th>Cliente</th>
-            <th>Tipo veículo</th>
-            <th>Funcionário</th>
-            <th colspan="2">Ações</th>
-        </tr>
-        <tr *ngFor="let os of ordemServicoResponse | async">
-            <td>{{os.id}}</td>
-            <td>R${{os.preco}}</td>
-            <td>{{os.servico?.tipo}}</td>
-            <td>{{os.status}}</td>
-            <td>{{os.cliente?.nome}}</td>
-            <td>{{os.veiculo?.tipo}}</td>
-            <td>{{os.funcionario?.nome}}</td>
-            <td class="acoes">
-                <button (click)="editar(os)">editar</button>
-                <button (click)="excluir(os.id)">excluir</button>
-            </td>
-        </tr>
-    </table>
+    <div class="tabela-responsiva">
+        <table border="1">
+            <tr>
+                <th>Id</th>
+                <th>Preço</th>
+                <th>Serviço</th>
+                <th>Status</th>
+                <th>Cliente</th>
+                <th>Tipo veículo</th>
+                <th>Funcionário</th>
+                <th colspan="2">Ações</th>
+            </tr>
+            <tr *ngFor="let os of ordemServicoResponse | async">
+                <td>{{os.id}}</td>
+                <td>R${{os.preco}}</td>
+                <td>{{os.servico?.tipo}}</td>
+                <td>{{os.status}}</td>
+                <td>{{os.cliente?.nome}}</td>
+                <td>{{os.veiculo?.tipo}}</td>
+                <td>{{os.funcionario?.nome}}</td>
+                <td class="acoes">
+                    <button (click)="editar(os)">editar</button>
+                    <button (click)="excluir(os.id)">excluir</button>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     @if (inserirOrdem) {
     <h3>Inserir Ordem</h3>
