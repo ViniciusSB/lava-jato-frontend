@@ -7,9 +7,9 @@ import { ServicoComponent } from './pages/servico/servico';
 
 
 export const routes: Routes = [
-    { path: 'usuario', component: UsuarioComponent},
-    { path: 'cliente', component: ClienteComponent},
-    { path: 'veiculo', component: VeiculoComponent},
-    { path: 'ordemServico', component: OrdemServicoComponent},
-    { path: 'servico', component: ServicoComponent},
+    { path: 'usuario', component: UsuarioComponent, title: 'Usuário'},
+    { path: 'cliente', component: ClienteComponent, title: 'Cliente'},
+    { path: 'veiculo', component: VeiculoComponent, title: 'Veículo'},
+    { path: 'ordemServico', component: OrdemServicoComponent, title: 'Ordem Serviço'},
+    { path: 'servico', component: ServicoComponent, title: 'Serviço'},
 ];

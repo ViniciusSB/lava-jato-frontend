@@ -20,6 +20,7 @@ import { VeiculoService } from '../../services/veiculo/veiculo';
 import { Usuario } from '../../models/usuario';
 import { Veiculo } from '../../models/veiculo';
 import { ServicoService } from '../../services/servico/servico';
+import { NormalizarEnum } from '../../util/normalizar-enum';
 
 
 @Component({
@@ -29,7 +30,8 @@ import { ServicoService } from '../../services/servico/servico';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatOptionModule],
+    MatOptionModule, 
+    NormalizarEnum],
   templateUrl: './ordem-servico.html',
   styleUrl: './ordem-servico.css',
 })

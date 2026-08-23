@@ -7,8 +7,26 @@
     <title>Tela de Ordem Serviço</title>
 </head>
 
-<body>
+<body class="bg-svg">
 
+    <aside class="menu">
+        <div class="main-content menu-content">
+            <a href="http://localhost:4200/ordemServico">
+                <img src="logo-lava-jato.png" alt="logo">
+            </a>
+
+            <nav>
+                <ul>
+                    <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
+                    <li><a href="http://localhost:4200/cliente">Clientes</a></li>
+                    <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
+                    <li><a href="http://localhost:4200/servico">Serviços</a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </aside>
+    
     <h2>Lista de Ordens</h2>
     <div class="acoes-cima">
         <button (click)="adicionar()">adicionar</button>
@@ -29,9 +47,9 @@
                 <td>{{os.id}}</td>
                 <td>R${{os.preco}}</td>
                 <td>{{os.servico?.tipo}}</td>
-                <td>{{os.status}}</td>
+                <td>{{os.status | normalizarEnum}}</td>
                 <td>{{os.cliente?.nome}}</td>
-                <td>{{os.veiculo?.tipo}}</td>
+                <td>{{os.veiculo?.tipo | normalizarEnum}}</td>
                 <td>{{os.funcionario?.nome}}</td>
                 <td class="acoes">
                     <button (click)="editar(os)">editar</button>
