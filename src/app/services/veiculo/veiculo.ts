@@ -20,21 +20,39 @@ export class VeiculoService {
         );
     }
 
-    create(usuario: Veiculo){
-        return this.http.post<Veiculo>(`${this.urlBase}/cadastrar`, usuario).pipe(
+    create(veiculo: Veiculo){
+        return this.http.post<Veiculo>(`${this.urlBase}/cadastrar`, veiculo).pipe(
             tap( () => this.getAll() )
         );
     }
 
-    update(usuario: Veiculo){
-        return this.http.put<Veiculo>(`${this.urlBase}/atualizar`, usuario).pipe(
+    criarEListarClienteSelecionado(veiculo: Veiculo, clienteId: number){
+        return this.http.post<Veiculo>(`${this.urlBase}/cadastrar`, veiculo).pipe(
+            tap( () => this.obterVeiculosPorClienteId(clienteId))
+        );
+    }
+
+    update(veiculo: Veiculo){
+        return this.http.put<Veiculo>(`${this.urlBase}/atualizar`, veiculo).pipe(
             tap( () => this.getAll() )
+        );
+    }
+
+    atualizarEListarClienteSelecionado(veiculo: Veiculo, clienteId: number){
+        return this.http.put<Veiculo>(`${this.urlBase}/atualizar`, veiculo).pipe(
+            tap( () => this.obterVeiculosPorClienteId(clienteId))
         );
     }
 
     delete(id: number){
         return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
             tap( () => this.getAll() )
+        )
+    }
+
+    deletarEListarClienteSelecionado(id: number, clienteId: number){
+        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
+            tap( () => this.obterVeiculosPorClienteId(clienteId) )
         )
     }
 

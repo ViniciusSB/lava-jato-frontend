@@ -31,6 +31,10 @@ export class VeiculoComponent {
 
   clientes: Observable<Cliente[]> | undefined;
 
+  excluirSelecionado: boolean = false;
+
+  idVeiculoExclusao: number | null = null;
+
   tipoSecionado: string = '';
   tipos: string[] = ['MOTO', 'CARRO', 'CAMINHONETE', 'CAMINHAO'];
 
@@ -64,18 +68,6 @@ export class VeiculoComponent {
     this.inserirVeiculo = false;
   }
 
-  excluir(id:number) {
-    this.veiculoService.delete(id).subscribe({
-      next: () => {
-        alert('Veículo excluido com sucesso');
-      },
-      error: (err) => {
-        console.log('Erro ao deletar o veículo', err);
-        alert('Não foi possível deletar o veículo.')
-      }
-    })
-  }
-
   salvar() {
     if (this.veiculoSelecionado) {
       this.veiculoService.update(this.veiculoSelecionado).subscribe({
@@ -98,6 +90,36 @@ export class VeiculoComponent {
         alert('Não foi possível cadastrar o veículo.');
       }
     })
+    }
+  }
+
+  fecharModal() {
+    this.idVeiculoExclusao = null;
+    this.excluirSelecionado = false;
+  }
+
+  excluir(id: number) {
+    this.excluirSelecionado = true;
+    this.idVeiculoExclusao = id;
+    this.fechar();
+  }
+
+  cancelarExclusao() {
+    this.excluirSelecionado = false;
+  }
+
+  confirmarExclusao() {
+    if (this.idVeiculoExclusao != null){
+      this.veiculoService.delete(this.idVeiculoExclusao).subscribe({
+      next: () => {
+        this.idVeiculoExclusao = null;
+        this.excluirSelecionado = false;
+      },
+      error: (err) => {
+        console.log('Erro ao deletar o veículo', err);
+        alert('Não foi possível deletar o veículo.')
+      }
+    });
     }
   }
 

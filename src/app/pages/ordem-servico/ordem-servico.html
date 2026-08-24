@@ -11,12 +11,12 @@
 
     <aside class="menu">
         <div class="main-content menu-content">
-            <div class="menu-superior">
-                <a href="http://localhost:4200/ordemServico">
+            <a href="http://localhost:4200/ordemServico">
+                <div class="menu-superior">
                     <img src="logo-lava-jato.png" alt="logo">
-                </a>
-                <h3>Lava Jato</h3>
-            </div>
+                    <h3>Lava Jato</h3>
+                </div>
+            </a>
             <nav>
                 <ul>
                     <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
@@ -26,7 +26,6 @@
                 </ul>
             </nav>
         </div>
-
     </aside>
 
     <div class="agrupamento-cima">
@@ -43,6 +42,7 @@
                     <th>Id</th>
                     <th>Cliente</th>
                     <th>Veículo</th>
+                    <th>Funcionário</th>
                     <th>Serviço</th>
                     <th>Status</th>
                     <th colspan="2">Ações</th>
@@ -53,6 +53,7 @@
                     <td>{{os.id}}</td>
                     <td>{{os.cliente?.nome}}</td>
                     <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
+                    <td>{{os.funcionario?.nome}}</td>
                     <td>{{os.servico?.tipo}}</td>
                     <td>
                         @switch (os.status) {
@@ -74,10 +75,11 @@
     </div>
 
     @if (inserirOrdem) {
-    <div class="texto-inserir-ordem">
+    <div class="titulo-form">
         <h3>Inserir Ordem</h3>
+        <button class="btn-fechar-form" (click)="fechar()">x</button>
     </div>
-    <div class="add-ordem">
+    <div class="campos-form">
         <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
             [(ngModel)]="funcionarioAdicionadoId" [clearable]="true" placeholder="funcionário">
             <ng-template ng-option-tmp let-item="item">
@@ -92,7 +94,8 @@
             </ng-template>
         </ng-select>
         <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
-            [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo" notFoundText="selecione um cliente">
+            [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo"
+            notFoundText="selecione um cliente">
             <ng-template ng-option-tmp let-item="item">
                 <span [title]="item.modelo">{{ item.modelo }}</span>
             </ng-template>
@@ -108,10 +111,11 @@
     }
 
     @if (editarOrdem) {
-    <div class="texto-editar-ordem">
+    <div class="titulo-form">
         <h3>Editar Ordem</h3>
+        <button class="btn-fechar-form" (click)="fechar()">x</button>
     </div>
-    <div class="editar-ordem">
+    <div class="campos-form">
         <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
             [(ngModel)]="funcionarioSelecionado.id" [clearable]="true" placeholder="funcionário">
             <ng-template ng-option-tmp let-item="item">
@@ -126,7 +130,8 @@
             </ng-template>
         </ng-select>
         <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
-            [(ngModel)]="veiculoSelecionado.id" [clearable]="true" placeholder="veículo" notFoundText="selecione um cliente">
+            [(ngModel)]="veiculoSelecionado.id" [clearable]="true" placeholder="veículo"
+            notFoundText="selecione um cliente">
             <ng-template ng-option-tmp let-item="item">
                 <span [title]="item.modelo">{{ item.modelo }}</span>
             </ng-template>
@@ -135,6 +140,12 @@
             [(ngModel)]="servicoSelecionado.id" [clearable]="true" placeholder="serviço">
             <ng-template ng-option-tmp let-item="item">
                 <span [title]="item.tipo">{{ item.tipo }}</span>
+            </ng-template>
+        </ng-select>
+        <ng-select class="custom-ng-select" [items]="status" bindLabel="label" bindValue="id"
+            [(ngModel)]="novaOrdem.status" [clearable]="true" placeholder="status">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.label">{{ item.label }}</span>
             </ng-template>
         </ng-select>
         <button (click)="salvar()">Editar</button>

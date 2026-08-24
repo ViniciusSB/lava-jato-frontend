@@ -66,10 +66,7 @@ export class OrdemServicoComponent {
   servicoSelecionado: Servico = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
   servicoAdicionadoId: number | null = null;
 
-  revelarModalFuncionario: boolean = false;
-  revelarModalCliente: boolean = false;
-  revelarModalVeiculo: boolean = false;
-  revelarModalServico: boolean = false;
+  status = [{id: 'EM_ANDAMENTO', label: 'Em andamento'}, {id: 'FINALIZADO', label: 'Finalizado'}];
 
   constructor(
     private ordemServicoService: OrdemServicoService,
@@ -206,6 +203,7 @@ export class OrdemServicoComponent {
   excluir(id: number) {
     this.excluirSelecionado = true;
     this.idOrdemExclusao = id;
+    this.fechar();
   }
 
   cancelarExclusao() {
@@ -225,6 +223,11 @@ export class OrdemServicoComponent {
         }
       });
     }
+  }
+
+  fechar() {
+    this.editarOrdem = false;
+    this.inserirOrdem = false;
   }
 
   atualizarOrdemServico() {

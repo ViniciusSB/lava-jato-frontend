@@ -13,6 +13,65 @@ body {
   overflow-x: hidden;
 }
 
+.main-content {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.menu {
+  background-color: #ffffff;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 2px solid #b1b1b1;
+}
+
+.menu-superior {
+  display: flex;
+  align-items: center;
+}
+
+.menu-superior h3 {
+  color: #000000;
+  padding: 0;
+}
+
+.menu a{
+  text-decoration: none;
+  display: block;
+  line-height: 0; 
+}
+
+.menu a img {
+  width: 4rem;
+  height: 3rem;
+}
+
+.menu-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu ul {
+  list-style: none;
+  display: flex;
+}
+
+.menu ul li a{
+  text-decoration: none;
+  padding: 0 0.6rem;
+  color: black;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.menu ul li a:hover{
+  transform: scale(1.2);
+}
+
 .agrupamento-cima {
   display: flex;
   justify-content: center;
@@ -29,6 +88,23 @@ body {
 .subtitulo-cima {
   width: 95%;
   margin: 0 auto;
+}
+
+button {
+  border-radius: 5px;
+  background-color: #6366F1;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+button:hover {
+  background-color: #4338ca;
+}
+
+.lixeira:hover {
+  background-color: #dd3d3d;
 }
 
 .tabela-responsiva {
@@ -99,64 +175,36 @@ table tr:hover {
   gap: 5px;                
 }
 
-.texto-inserir-ordem {
+.titulo-form {
   display: flex;
   width: 95;
   justify-content: center;
   margin: 0.5rem 0;
 }
 
+.btn-fechar-form {
+    background-color: #e90707;
+    height: 1.4rem;
+    width: 1.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.6rem;
+}
 
-.add-ordem {
+.btn-fechar-form:hover {
+    background-color: #a00505;
+}
+
+.campos-form {
   display: flex;
   width: 95;
   justify-content: center;
 }
 
-.add-ordem ng-select {
+.campos-form ng-select {
     cursor: pointer;
     margin-right: 0.2rem;
-}
-
-.texto-editar-ordem {
-  display: flex;
-  width: 95;
-  justify-content: center;
-  margin: 0.5rem 0;
-}
-
-.editar-ordem {
-  display: flex;
-  width: 95;
-  justify-content: center;
-}
-
-.editar-ordem ng-select {
-    cursor: pointer;
-    margin-right: 0.2rem
-}
-
-button {
-  border-radius: 5px;
-  background-color: #6366F1;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  color: #ffffff;
-}
-
-button:hover {
-  background-color: #4338ca;
-}
-
-.lixeira:hover {
-  background-color: #dd3d3d;
-}
-
-input {
-  padding: 0.4rem;
-  border: 2px solid #fd885ef1;
-  outline: none;
 }
 
 .modal-externo {
@@ -166,33 +214,6 @@ input {
   left: 0;
   position: fixed;
   background: #00000080;
-}
-
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 80%;
-  background: #152946;
-  max-height: 80%;
-  transform: translate(-50%, -50%);
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-.modal h3 {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.4rem;
-}
-
-.modal .close-btn {
-  position: absolute;
-  top: 0rem;
-  right: 0rem;
-  border-radius: 50%;
-  color: #f0f0f0;
-  background-color: red;
 }
 
 .modal-excluir {
@@ -240,67 +261,4 @@ input {
 
 .acoes-modal-excluir button:hover{
     transform: scale(1.25);
-}
-
-.white-bg {
-  background-color: #ffffff;
-}
-
-.main-content {
-  max-width: 80%;
-  margin: 0 auto;
-}
-
-.menu {
-  background-color: #ffffff;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  border-bottom: 2px solid #b1b1b1;
-}
-
-.menu-superior {
-  display: flex;
-  align-items: center;
-}
-
-.menu-superior h3 {
-  color: #000000;
-  padding: 0;
-}
-
-.menu a{
-  text-decoration: none;
-  display: block;
-  line-height: 0; 
-}
-
-.menu a img {
-  width: 4rem;
-  height: 3rem;
-}
-
-.menu-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.menu ul {
-  list-style: none;
-  display: flex;
-}
-
-.menu ul li a{
-  text-decoration: none;
-  padding: 0 0.6rem;
-  color: black;
-  display: inline-block;
-  transition: transform 0.2s ease;
-}
-
-.menu ul li a:hover{
-  transform: scale(1.2);
 }

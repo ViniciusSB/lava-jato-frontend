@@ -9,37 +9,65 @@
 
 <body>
 
-  <h2>Lista de Usuários</h2>
+  <aside class="menu">
+    <div class="main-content menu-content">
+      <a href="http://localhost:4200/usuario">
+        <div class="menu-superior">
+          <img src="logo-lava-jato.png" alt="logo">
+          <h3>Lava Jato</h3>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="http://localhost:4200/cliente">Clientes</a></li>
+          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
+          <li><a href="http://localhost:4200/servico">Serviços</a></li>
+          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
 
-  <div class="acoes-cima">
-    <button class="btn-add" (click)="adicionar()">adicionar</button>
+  <div class="agrupamento-cima">
+    <h2>Lista de Usuários</h2>
+    <button (click)="adicionar()">Adicionar</button>
   </div>
-  <table border="1">
-    <tr>
-      <th>Id</th>
-      <th>Nome</th>
-      <th>E-mail</th>
-      <th>Tipo</th>
-      <th colspan="2">Ações</th>
-    </tr>
-    <tr *ngFor="let u of usuarios | async">
-      <td>{{u.id}}</td>
-      <td>{{u.nome}}</td>
-      <td>{{u.email}}</td>
-      <td>{{u.tipo | primCaracMaius }}</td>
-      <td class="acoes">
-        <button (click)="editar(u)">editar</button>
-        <button (click)="excluir(u.id!)">excluir</button>
-      </td>
-    </tr>
-  </table>
+  <div class="subtitulo-cima">
+    <h3>Gerencie os Usuários</h3>
+  </div>
+
+  <div class="tabela-responsiva">
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Tipo</th>
+          <th colspan="2">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of usuarios | async">
+          <td>{{u.id}}</td>
+          <td>{{u.nome}}</td>
+          <td>{{u.email}}</td>
+          <td>{{u.tipo | primCaracMaius }}</td>
+          <td class="acoes">
+            <button (click)="editar(u)">✏️</button>
+            <button class="lixeira" (click)="excluir(u.id!)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <div *ngIf="usuarioSelecionado">
-    <div class="edit-info-superior">
+    <div class="titulo-form">
       <h3>Editar Usuário</h3>
-      <button class="btn-fechar" (click)="fechar()">x</button>
+      <button class="btn-fechar-form" (click)="fechar()">x</button>
     </div>
-    <div class="editar-usuario">
+    <div class="campos-form">
       <input type="text" [(ngModel)]="usuarioSelecionado.nome" placeholder="digite o nome">
       <input type="email" [(ngModel)]="usuarioSelecionado.email" placeholder="digite o email">
       <select [(ngModel)]="usuarioSelecionado.tipo">
@@ -53,11 +81,11 @@
 
   @if (inserirUsuario) {
   <div>
-    <div class="add-info-superior">
+    <div class="titulo-form">
       <h3>Adicionar Usuário</h3>
-      <button class="btn-fechar" (click)="fechar()">x</button>
+      <button class="btn-fechar-form" (click)="fechar()">x</button>
     </div>
-    <div class="add-usuario">
+    <div class="campos-form">
       <input type="text" [(ngModel)]="novoUsuario.nome" placeholder="digite o nome">
       <input type="email" [(ngModel)]="novoUsuario.email" placeholder="digite o email">
       <input type="password" [(ngModel)]="novoUsuario.senha" placeholder="digite a senha">
@@ -68,6 +96,21 @@
         }
       </select>
       <button (click)="salvar()">cadastrar</button>
+    </div>
+  </div>
+  }
+
+  @if (excluirSelecionado) {
+  <div class="modal-externo" (click)="fecharModal()">
+    <div class="modal-excluir">
+      <div class="excluir-superior">
+        <h3>Excluir serviço?</h3>
+        <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+      </div>
+      <div class="acoes-modal-excluir">
+        <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
+        <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+      </div>
     </div>
   </div>
   }

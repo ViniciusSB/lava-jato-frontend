@@ -9,61 +9,83 @@
 
 <body>
 
-  <h2>Lista de Serviços</h2>
+  <aside class="menu">
+    <div class="main-content menu-content">
+      <a href="http://localhost:4200/servico">
+        <div class="menu-superior">
+          <img src="logo-lava-jato.png" alt="logo">
+          <h3>Lava Jato</h3>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
+          <li><a href="http://localhost:4200/cliente">Clientes</a></li>
+          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
+          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
 
-  <div class="acoes-cima">
-    <button class="btn-add" (click)="adicionar()">adicionar</button>
+  <div class="agrupamento-cima">
+    <h2>Lista de Serviços</h2>
+    <button (click)="adicionar()">Adicionar</button>
   </div>
-  <div class="div-responsivo">
-    <table border="1">
-      <tr>
-        <th>Id</th>
-        <th>Tipo</th>
-        <th>Detalhes</th>
-        <th>Preço</th>
-        <th colspan="2">Ações</th>
-      </tr>
-      <tr *ngFor="let s of servicos | async">
-        <td>{{s.id}}</td>
-        <td>{{s.tipo}}</td>
-        <td>{{s.detalhes}}</td>
-        <td>{{s.precoBase }}</td>
-        <td class="acoes">
-          <button (click)="editar(s)">editar</button>
-          <button (click)="excluir(s.id!)">excluir</button>
-        </td>
-      </tr>
+  <div class="subtitulo-cima">
+    <h3>Gerencie os atendimentos em andamento</h3>
+  </div>
+
+  <div class="tabela-responsiva">
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Tipo</th>
+          <th>Detalhes</th>
+          <th>Preço</th>
+          <th colspan="2">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of servicos | async">
+          <td>{{s.id}}</td>
+          <td>{{s.tipo}}</td>
+          <td>{{s.detalhes}}</td>
+          <td>{{s.precoBase }}</td>
+          <td class="acoes">
+            <button (click)="editar(s)">✏️</button>
+            <button class="lixeira" (click)="excluir(s.id!)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
   <div *ngIf="servicoSelecionado">
-    <div class="edit-info-superior">
+    <div class="titulo-form">
       <h3>Editar Serviço</h3>
-      <button class="btn-fechar" (click)="fechar()">x</button>
+      <button class="btn-fechar-form" (click)="fechar()">x</button>
     </div>
-    <div class="div-responsivo">
-      <div class="editar-servico">
-        <input type="text" [(ngModel)]="servicoSelecionado.tipo" placeholder="digite uma breve descrição">
-        <input type="text" [(ngModel)]="servicoSelecionado.detalhes" placeholder="digite os detalhes do serviço">
-        <input type="text" [(ngModel)]="servicoSelecionado.precoBase" placeholder="preço do serviço">
-        <button (click)="salvar()">salvar</button>
-      </div>
+    <div class="campos-form">
+      <input type="text" [(ngModel)]="servicoSelecionado.tipo" placeholder="digite uma breve descrição">
+      <input type="text" [(ngModel)]="servicoSelecionado.detalhes" placeholder="digite os detalhes do serviço">
+      <input type="text" [(ngModel)]="servicoSelecionado.precoBase" placeholder="preço do serviço">
+      <button (click)="salvar()">salvar</button>
     </div>
   </div>
 
   @if (inserirServico) {
   <div>
-    <div class="add-info-superior">
+    <div class="titulo-form">
       <h3>Adicionar Serviço</h3>
-      <button class="btn-fechar" (click)="fechar()">x</button>
+      <button class="btn-fechar-form" (click)="fechar()">x</button>
     </div>
-    <div class="div-responsivo">
-      <div class="add-servico">
-        <input type="text" [(ngModel)]="novoServico.tipo" placeholder="digite uma breve descrição">
-        <input type="text" [(ngModel)]="novoServico.detalhes" placeholder="digite os detalhes do serviço">
-        <input type="text" [(ngModel)]="novoServico.precoBase" placeholder="preço do serviço">
-        <button (click)="salvar()">cadastrar</button>
-      </div>
+    <div class="campos-form">
+      <input type="text" [(ngModel)]="novoServico.tipo" placeholder="digite uma breve descrição">
+      <input type="text" [(ngModel)]="novoServico.detalhes" placeholder="digite os detalhes do serviço">
+      <input type="text" [(ngModel)]="novoServico.precoBase" placeholder="preço do serviço">
+      <button (click)="salvar()">cadastrar</button>
     </div>
   </div>
   }
@@ -71,7 +93,10 @@
   @if (excluirSelecionado) {
   <div class="modal-externo" (click)="fecharModal()">
     <div class="modal-excluir">
-      <h3>Excluir ordem?</h3>
+      <div class="excluir-superior">
+        <h3>Excluir serviço?</h3>
+        <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+      </div>
       <div class="acoes-modal-excluir">
         <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
         <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>

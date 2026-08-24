@@ -9,58 +9,92 @@
 
 <body>
 
-  <h2>Lista de Clientes</h2>
+  <aside class="menu">
+    <div class="main-content menu-content">
+      <a href="http://localhost:4200/cliente">
+        <div class="menu-superior">
+          <img src="logo-lava-jato.png" alt="logo">
+          <h3>Lava Jato</h3>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
+          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
+          <li><a href="http://localhost:4200/servico">Serviços</a></li>
+          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
 
-  <div class="acoes-cima">
-    <button (click)="adicionar()">adicionar</button>
-    <input class="filtrar" type="text" placeholder="digite um nome para filtrar" (input)="filtrar($event.target.value)">
+  <div class="agrupamento-cima">
+    <h2>Lista de Clientes</h2>
+    <button (click)="adicionar()">Adicionar</button>
+    <!-- <input class="filtrar" type="text" placeholder="digite um nome para filtrar" (input)="filtrar($event.target.value)"> -->
   </div>
-  <table border="1">
-    <tr>
-      <th>Id</th>
-      <th>Nome</th>
-      <th>Celular</th>
-      <th>Fidelidade</th>
-      <th>Veiculos</th>
-      <th colspan="2">ações</th>
-    </tr>
-    @if (!filtroAtivo) {
-    @for (c of clientes | async; track c.id) {
-    <tr>
-      <td>{{ c.id }}</td>
-      <td>{{ c.nome }}</td>
-      <td>{{ c.celular }}</td>
-      <td>{{ c.fidelidade }}</td>
-      <td><button (click)="exibirVeiculos(c.id)">{{ c.veiculos.length }}</button></td>
-      <td class="acoes">
-        <button (click)="editar(c)">editar</button>
-        <button (click)="excluir(c.id)">excluir</button>
-      </td>
-    </tr>
-    }
-    }
-    @else {
-    @for (c of clientesFiltrados | async; track c.id) {
-    <tr>
-      <td>{{ c.id }}</td>
-      <td>{{ c.nome }}</td>
-      <td>{{ c.celular }}</td>
-      <td>{{ c.fidelidade }}</td>
-      <td><button (click)="exibirVeiculos(c.id)">{{ c.veiculos.length }}</button></td>
-      <td>
-        <button (click)="editar(c)">editar</button>
-        <button (click)="excluir(c.id)">excluir</button>
-      </td>
-    </tr>
-    }
-    }
+  <div class="subtitulo-cima">
+    <h3>Gerencie os clientes</h3>
+  </div>
 
-  </table>
+
+  <div class="tabela-responsiva">
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nome</th>
+          <th>Celular</th>
+          <th>Fidelidade</th>
+          <th>Veiculos</th>
+          <th colspan="2">ações</th>
+        </tr>
+      </thead>
+      @if (!filtroAtivo) {
+      @for (c of clientes | async; track c.id) {
+      <tbody>
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>{{ c.nome }}</td>
+          <td>{{ c.celular }}</td>
+          <td>{{ c.fidelidade }}</td>
+          <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
+          <td class="acoes">
+            <button (click)="editar(c)">✏️</button>
+            <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+      }
+      }
+      @else {
+      @for (c of clientesFiltrados | async; track c.id) {
+      <tbody>
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>{{ c.nome }}</td>
+          <td>{{ c.celular }}</td>
+          <td>{{ c.fidelidade }}</td>
+          <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
+          <td>
+            <button (click)="editar(c)">✏️</button>
+            <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+      }
+      }
+
+    </table>
+  </div>
 
   @if (clienteSelecionado) {
   <div>
-    <h4>Editar Cliente</h4>
-    <div class="editar-cliente">
+    <div class="titulo-form">
+      <h4>Editar Cliente</h4>
+      <button class="btn-fechar-form" (click)="fechar()">x</button>
+    </div>
+    <div class="campos-form">
       <input id="nome" type="text" [(ngModel)]="clienteSelecionado.nome" placeholder="nome">
       <input type="tel" [(ngModel)]="clienteSelecionado.celular" telefoneMask placeholder="celular">
       <input type="number" [(ngModel)]="clienteSelecionado.fidelidade" placeholder="fidelidade">
@@ -71,8 +105,11 @@
 
   @if (inserirCliente) {
   <div>
-    <h4>Adicionar Cliente</h4>
-    <div class="add-cliente">
+    <div class="titulo-form">
+      <h4>Adicionar Cliente</h4>
+      <button class="btn-fechar-form" (click)="fechar()">x</button>
+    </div>
+    <div class="campos-form">
       <input type="text" [(ngModel)]="novoCliente.nome" placeholder="nome">
       <input type="tel" [(ngModel)]="novoCliente.celular" placeholder="celular" telefoneMask>
       <button (click)="salvar()">cadastrar</button>
@@ -81,32 +118,115 @@
   }
 
   @if (revelarVeiculosCliente) {
+  <div class="modal-externo">
+    <div class="modal-tabela">
+      <div class="titulo-form">
+        <h3>Veículos do(a) {{clienteSelecionado?.nome ?? ''}}</h3>
+      </div>
+      <button class="btn-fechar-modal" (click)="fecharModal()">×</button>
+      <div class="tabela-responsiva">
+        <table>
+          <tr>
+            <th>Id</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Cor</th>
+            <th>Placa</th>
+            <th>Tipo</th>
+            <th colspan="2">Ações</th>
+          </tr>
+          @for (v of veiculosCliente | async; track v.id) {
+          <tr>
+            <td>{{ v.id }}</td>
+            <td>{{ v.marca }}</td>
+            <td>{{ v.modelo }}</td>
+            <td>{{ v.cor }}</td>
+            <td>{{ v.placa || '-' }}</td>
+            <td>{{ v.tipo | primCaracMaius }}</td>
+            <td class="acoes">
+              <button (click)="botaoEditarVeiculo(v)">✏️</button>
+              <button (click)="excluirVeiculo(v.id!)" class="lixeira">🗑️</button>
+            </td>
+          </tr>
+          }
+        </table>
+      </div>
+
+      <div class="btn-adicionar-veiculo">
+        <button *ngIf="!inserirVeiculo && !editarVeiculo" (click)="botaoAdicionarVeiculo()">Adicionar</button>
+      </div>
+
+      @if (inserirVeiculo) {
+      <div class="titulo-form">
+        <h4>Adicionar Veículo</h4>
+        <button class="btn-fechar-form" (click)="fecharAdicionarVeiculo()">x</button>
+      </div>
+      <div class="campos-form-modal-veiculo">
+        <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
+        <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
+        <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
+        <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
+        <select [(ngModel)]="novoVeiculo.tipo">
+          <option value="" disabled selected>escolha um tipo</option>
+          @for (tipo of tipos; track tipo) {
+          <option [value]="tipo.id">{{ tipo.label }}</option>
+          }
+        </select>
+        <input type="text" [value]="clienteSelecionado?.nome" readonly>
+        <button (click)="salvarVeiculo()">Cadastrar</button>
+      </div>
+      }
+
+      @if (editarVeiculo) {
+      <div class="titulo-form">
+        <h4>Editar Veículo</h4>
+        <button class="btn-fechar-form" (click)="fecharEditarVeiculo()">x</button>
+      </div>
+      <div class="campos-form-modal-veiculo">
+        <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
+        <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
+        <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
+        <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
+        <select [(ngModel)]="novoVeiculo.tipo">
+          <option value="" disabled selected>escolha um tipo</option>
+          @for (tipo of tipos; track tipo) {
+          <option [value]="tipo.id">{{ tipo.label }}</option>
+          }
+        </select>
+        <input type="text" [value]="clienteSelecionado?.nome" readonly>
+        <button (click)="salvarVeiculo()">Editar</button>
+      </div>
+      }
+    </div>
+
+    @if (excluirVeiculoSelecionado) {
+    <div class="modal-externo">
+      <div class="modal-excluir">
+        <div class="excluir-superior">
+          <h3>Excluir veículo?</h3>
+          <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+        </div>
+        <div class="acoes-modal-excluir">
+          <button class="btn-cancelar-modal" (click)="cancelarExclusaoVeiculo()">cancelar</button>
+          <button class="btn-excluir-modal" (click)="confirmarExclusaoVeiculo()">confirmar</button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  @if (excluirSelecionado) {
   <div class="modal-externo" (click)="fecharModal()">
-    <div class="modal">
-      <h3>Veículos do Cliente</h3>
-      <button class="close-btn" (click)="fecharModal()">×</button>
-      <table border="1">
-        <tr>
-          <th>Id</th>
-          <th>Marca</th>
-          <th>Modelo</th>
-          <th>Cor</th>
-          <th>Placa</th>
-          <th>Tipo</th>
-          <th>ClienteId</th>
-        </tr>
-        @for (v of veiculosCliente | async; track v.id) {
-        <tr>
-          <td>{{ v.id }}</td>
-          <td>{{ v.marca }}</td>
-          <td>{{ v.modelo }}</td>
-          <td>{{ v.cor }}</td>
-          <td>{{ v.placa }}</td>
-          <td>{{ v.tipo | primCaracMaius }}</td>
-          <td>{{ v.clienteId }}</td>
-        </tr>
-        }
-      </table>
+    <div class="modal-excluir">
+      <div class="excluir-superior">
+        <h3>Excluir serviço?</h3>
+        <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+      </div>
+      <div class="acoes-modal-excluir">
+        <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
+        <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+      </div>
     </div>
   </div>
   }

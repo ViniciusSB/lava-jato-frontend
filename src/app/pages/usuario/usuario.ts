@@ -25,6 +25,10 @@ export class UsuarioComponent {
 
   novoUsuario: Usuario = {nome: '', email: '', senha: '', tipo: ''};
 
+  excluirSelecionado: boolean = false;
+
+  idUsuarioExclusao: number | null = null;
+
   constructor(private usuarioService: UsuarioService) {}
 
   ngOnInit() {
@@ -37,18 +41,6 @@ export class UsuarioComponent {
     this.usuarioSelecionado = undefined;
   }
 
-  excluir(id: number) {
-    this.usuarioService.delete(id).subscribe({
-      next: () => {
-        alert('Usuario deletado')
-      },
-      error: (err) => {
-        console.error('Erro ao excluir usuário:', err);
-        alert('Não foi possível excluir o usuário. Tente novamente mais tarde.');
-      }
-    });
-  }
-
   editar(u: Usuario) {
     this.usuarioSelecionado = {... u};
     this.inserirUsuario = false;
@@ -57,6 +49,11 @@ export class UsuarioComponent {
   fechar() {
     this.usuarioSelecionado = undefined;
     this.inserirUsuario = false;
+  }
+
+  fecharModal() {
+    this.idUsuarioExclusao = null;
+    this.excluirSelecionado = false;
   }
 
   salvar() {
@@ -81,6 +78,31 @@ export class UsuarioComponent {
         }
       })
     } 
+  }
+
+  excluir(id: number) {
+    this.excluirSelecionado = true;
+    this.idUsuarioExclusao = id;
+    this.fechar();
+  }
+
+  cancelarExclusao() {
+    this.excluirSelecionado = false;
+  }
+
+  confirmarExclusao() {
+    if (this.idUsuarioExclusao != null){
+      this.usuarioService.delete(this.idUsuarioExclusao).subscribe({
+      next: () => {
+        this.idUsuarioExclusao = null;
+        this.excluirSelecionado = false;
+      },
+      error: (err) => {
+        console.error('Erro ao excluir usuário:', err);
+        alert('Não foi possível excluir o usuário. Tente novamente mais tarde.');
+      }
+    });
+    }
   }
 
   

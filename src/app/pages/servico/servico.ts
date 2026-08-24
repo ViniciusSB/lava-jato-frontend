@@ -82,6 +82,7 @@ export class ServicoComponent {
   excluir(id: number) {
     this.excluirSelecionado = true;
     this.idServicoExclusao = id;
+    this.fechar();
   }
 
   cancelarExclusao() {

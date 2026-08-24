@@ -29,10 +29,21 @@ export class ClienteComponent {
   revelarVeiculosCliente: boolean = false;
   
   veiculosCliente: Observable<Veiculo[]> | undefined;
+  
+  inserirVeiculo: boolean = false;
+  editarVeiculo: boolean = false;
+  novoVeiculo: Veiculo = {marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: ''};
+  tipos = [{id: 'MOTO', label: 'Moto'}, {id: 'CARRO', label: 'Carro'}, {id: 'CAMINHONETE', label: 'Caminhonete'}, {id: 'CAMINHAO', label: 'Caminhão'}];
+  idVeiculoExclusao: number | null = null;
 
   clientesFiltrados: Observable<Cliente[]> | undefined;
 
   filtroAtivo: boolean = false;
+
+  excluirSelecionado: boolean = false;
+  excluirVeiculoSelecionado: boolean = false;
+
+  idClienteExclusao: number | null = null;
 
   constructor(
     private clienteService: ClienteService, 
@@ -44,15 +55,28 @@ export class ClienteComponent {
   }
 
   excluir(id: number) {
-    this.clienteService.delete(id).subscribe({
+    this.excluirSelecionado = true;
+    this.idClienteExclusao = id;
+    this.fechar();
+  }
+
+  cancelarExclusao() {
+    this.excluirSelecionado = false;
+  }
+
+  confirmarExclusao() {
+    if (this.idClienteExclusao != null){
+      this.clienteService.delete(this.idClienteExclusao).subscribe({
       next: () => {
-        alert('Cliente removido');
+        this.idClienteExclusao = null;
+        this.excluirSelecionado = false;
       },
       error: (err) => {
         console.log('Erro ao deletar o cliente', err);
         alert('Não foi possível deletar o cliente.')
       }
-    })
+    });
+    }
   }
 
   adicionar() {
@@ -116,18 +140,99 @@ export class ClienteComponent {
     }
   }
 
-  exibirVeiculos(idCliente: number) {
-    this.clienteSelecionado = undefined;
+  exibirVeiculos(c: Cliente) {
+    this.clienteSelecionado = c;
     this.inserirCliente = false;
     this.revelarVeiculosCliente = true;
-    this.veiculoService.obterVeiculosPorClienteId(idCliente);
+    this.veiculoService.obterVeiculosPorClienteId(c.id);
     this.veiculosCliente = this.veiculoService.veiculos;
-    this.veiculosCliente.forEach( v => {
-      console.log('OLOKO', v);
-    })
+  }
+
+  fechar() {
+    this.clienteSelecionado = undefined;
+    this.inserirCliente = false;
   }
 
   fecharModal() {
     this.revelarVeiculosCliente = false;
+    this.clienteSelecionado = undefined;
+    this.novoVeiculo = {marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: ''};
+    this.limparCamposVeiculo();
+  }
+
+  botaoAdicionarVeiculo() {
+    this.inserirVeiculo = true;
+    this.editarVeiculo = false;
+    this.novoVeiculo.clienteId = this.clienteSelecionado?.id ?? 0;
+  }
+
+  botaoEditarVeiculo(v: Veiculo) {
+    this.inserirVeiculo = false;
+    this.editarVeiculo = true;
+    this.novoVeiculo = {... v};
+  }
+
+  salvarVeiculo() {
+    if (this.inserirVeiculo) {
+      this.veiculoService.criarEListarClienteSelecionado(this.novoVeiculo, this.clienteSelecionado?.id!).subscribe({
+        next: () => {
+          this.novoVeiculo = {marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: ''};
+          this.inserirVeiculo = false;
+        },
+        error: (err) => {
+          console.error('Erro ao cadastrar veículo:', err);
+          alert('Não foi possível cadastrar o veículo.');
+        }
+      });
+    } else {
+      this.veiculoService.atualizarEListarClienteSelecionado(this.novoVeiculo, this.clienteSelecionado?.id!).subscribe({
+        next: () => {
+          this.novoVeiculo = {marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: ''};
+          this.editarVeiculo = false;
+        },
+        error: (err) => {
+          console.error('Erro ao editar veículo:', err);
+          alert('Não foi possível editar o veículo.');
+        }
+      });
+    }
+  }
+
+  excluirVeiculo(idVeiculo: number) {
+    this.excluirVeiculoSelecionado = true;
+    this.limparCamposVeiculo();
+    this.idVeiculoExclusao = idVeiculo;
+  }
+
+  cancelarExclusaoVeiculo() {
+    this.excluirVeiculoSelecionado = false;
+  }
+
+  confirmarExclusaoVeiculo() {
+    if (this.idVeiculoExclusao != null){
+      this.veiculoService.deletarEListarClienteSelecionado(this.idVeiculoExclusao, this.clienteSelecionado?.id!).subscribe({
+      next: () => {
+        this.idVeiculoExclusao = null;
+        this.excluirVeiculoSelecionado = false;
+      },
+      error: (err) => {
+        console.log('Erro ao deletar o veículo', err);
+        alert('Não foi possível deletar o veículo.')
+      }
+    });
+    }
+  }
+
+  fecharAdicionarVeiculo() {
+    this.limparCamposVeiculo();
+  }
+
+  fecharEditarVeiculo() {
+    this.limparCamposVeiculo();
+  }
+
+  limparCamposVeiculo() {
+    this.inserirVeiculo = false;
+    this.editarVeiculo = false;
   }
 }
