@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { OrdemServicoService } from '../../services/ordem-servico/ordem-servico';
 import { OrdemServicoResponse } from '../../models/ordemServico';
 import { OrdemServicoRequest } from '../../models/ordemServico';
-import { filter, map, Observable } from 'rxjs';
-import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
+import { Observable } from 'rxjs';
 import { Servico } from '../../models/servico';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,8 +28,9 @@ import { NormalizarEnum } from '../../util/normalizar-enum';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatOptionModule, 
-    NormalizarEnum],
+    MatOptionModule,
+    NormalizarEnum,
+    NgSelectModule],
   templateUrl: './ordem-servico.html',
   styleUrl: './ordem-servico.css',
 })
@@ -52,16 +51,20 @@ export class OrdemServicoComponent {
   };
 
   funcionarios: Observable<Usuario[]> | undefined;
-  funcionarioSelecionado: Usuario | null = null;
+  funcionarioSelecionado: Usuario = { id: 0, nome: '', email: '', tipo: '' };
+  funcionarioAdicionadoId: number | null = null;
 
   clientes: Observable<Cliente[]> | undefined;
-  clienteSelecionado: Cliente | null = null;
+  clienteSelecionado: Cliente = { id: 0, nome: '', celular: '', fidelidade: 0, veiculos: [] };
+  clienteAdicionadoId: number | null = null;
 
   veiculos: Observable<Veiculo[]> | undefined;
-  veiculoSelecionado: Veiculo | null = null;
+  veiculoSelecionado: Veiculo = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, clienteNome: '' };
+  veiculoAdicionadoId: number | null = null;
 
   servicos: Observable<Servico[]> | undefined;
-  servicoSelecionado: Servico | null = null;
+  servicoSelecionado: Servico = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
+  servicoAdicionadoId: number | null = null;
 
   revelarModalFuncionario: boolean = false;
   revelarModalCliente: boolean = false;
@@ -90,101 +93,59 @@ export class OrdemServicoComponent {
     this.inserirOrdem = true;
     this.editarOrdem = false;
     this.limparElementosSelecionados();
+    this.popularListas();
     this.novaOrdem = {};
   }
 
   addFuncionario() {
-    this.revelarModalFuncionario = true;
-    this.revelarModalVeiculo = false;
-    this.revelarModalCliente = false;
-    this.revelarModalServico = false;
-    if (this.funcionarios == null) {
+    if (this.funcionarios == undefined) {
       this.usuarioService.getAll();
       this.funcionarios = this.usuarioService.usuarios;
     }
   }
 
-  selecionarFuncionario(user: Usuario) {
-    this.novaOrdem.funcionarioId = user.id;
-    this.funcionarioSelecionado = user;
-  }
-
   addCliente() {
-    this.revelarModalCliente = true;
-    this.revelarModalFuncionario = false;
-    this.revelarModalVeiculo = false;
-    this.revelarModalServico = false;
-    if (this.clientes == null) {
+    if (this.clientes == undefined) {
       this.clienteService.getAll();
       this.clientes = this.clienteService.clientes;
     }
   }
 
-  selecionarCliente(cliente: Cliente) {
-    this.novaOrdem.clienteId = cliente.id;
-    this.clienteSelecionado = cliente;
-    this.veiculoSelecionado = null;
-    this.novaOrdem.veiculoId = null;
-  }
-
   addVeiculo() {
-    if (this.clienteSelecionado == null) {
-      alert('Selecione um cliente antes de selecionar um veículo');
-      return;
+    if (this.clienteSelecionado != undefined) {
+      this.veiculoService.obterVeiculosPorClienteId(this.clienteSelecionado.id);
+      this.veiculos = this.veiculoService.veiculos;
     }
-    this.revelarModalVeiculo = true;
-    this.revelarModalCliente = false;
-    this.revelarModalFuncionario = false;
-    this.revelarModalServico = false;
-    this.veiculoService.obterVeiculosPorClienteId(this.clienteSelecionado.id);
-    this.veiculos = this.veiculoService.veiculos;
-  }
-
-  selecionarVeiculo(veiculo: Veiculo) {
-    this.novaOrdem.veiculoId = veiculo.id;
-    this.veiculoSelecionado = veiculo;
   }
 
   addServico() {
-    if (this.servicos == null) {
+    if (this.servicos == undefined) {
       this.servicoService.getAll();
       this.servicos = this.servicoService.servicos;
     }
-    this.revelarModalServico = true;
-    this.revelarModalVeiculo = false;
-    this.revelarModalCliente = false;
-    this.revelarModalFuncionario = false;
-    this.servicoService.getAll();
-    this.servicos = this.servicoService.servicos;
-  }
-
-  selecionarServico(s: Servico) {
-    this.novaOrdem.servicoId = s.id;
-    this.servicoSelecionado = s;
   }
 
   fecharModal() {
-    this.revelarModalFuncionario = false;
-    this.revelarModalCliente = false;
-    this.revelarModalVeiculo = false;
-    this.revelarModalServico = false;
+    this.excluirSelecionado = false;
   }
 
   salvar() {
     if (this.inserirOrdem) {
+      this.AdicionarOrdemServico();
       this.ordemServicoService.create(this.novaOrdem).subscribe({
         next: () => {
           this.novaOrdem = {};
           this.inserirOrdem = false;
-          this.limparElementosSelecionados();
+          this.limparElementosAdicionados();
         },
         error: (err) => {
           console.error('Erro ao gerar a ordem:', err);
           alert('Não foi possível gerar a ordem.');
         }
       });
-    } 
+    }
     else if (this.editarOrdem) {
+      this.atualizarOrdemServico();
       this.ordemServicoService.update(this.novaOrdem).subscribe({
         next: () => {
           this.novaOrdem = {};
@@ -204,18 +165,42 @@ export class OrdemServicoComponent {
     this.inserirOrdem = false;
     this.novaOrdem.ordemServicoId = os.id;
     this.novaOrdem.status = os.status;
-    
-    this.funcionarioSelecionado = os.funcionario ?? null;
+
+    if (os.funcionario)
+      this.funcionarioSelecionado = os.funcionario;
     this.novaOrdem.funcionarioId = os.funcionario?.id;
 
-    this.clienteSelecionado = os.cliente ?? null;
+    if (os.cliente)
+      this.clienteSelecionado = os.cliente;
     this.novaOrdem.clienteId = os.cliente?.id;
 
-    this.servicoSelecionado = os.servico ?? null;
+    if (os.servico)
+      this.servicoSelecionado = os.servico;
     this.novaOrdem.servicoId = os.servico?.id;
 
-    this.veiculoSelecionado = os.veiculo ?? null;
+    if (os.veiculo)
+      this.veiculoSelecionado = os.veiculo;
     this.novaOrdem.veiculoId = os.veiculo?.id;
+
+    this.popularListas();
+  }
+
+  atualizarVeiculos(cliente: any) {
+    this.veiculoAdicionadoId = null;
+    this.veiculos = undefined;
+
+    if (!cliente) {
+      return;
+    }
+
+    const idCliente = typeof cliente === 'object' ? cliente.id : cliente;
+
+    if (!idCliente) {
+      return;
+    }
+
+    this.veiculoService.obterVeiculosPorClienteId(idCliente);
+    this.veiculos = this.veiculoService.veiculos;
   }
 
   excluir(id: number) {
@@ -242,11 +227,39 @@ export class OrdemServicoComponent {
     }
   }
 
+  atualizarOrdemServico() {
+    this.novaOrdem.servicoId = this.servicoSelecionado.id;
+    this.novaOrdem.clienteId = this.clienteSelecionado.id;
+    this.novaOrdem.funcionarioId = this.funcionarioSelecionado.id;
+    this.novaOrdem.veiculoId = this.veiculoSelecionado.id;
+  }
+
+  AdicionarOrdemServico() {
+    this.novaOrdem.servicoId = this.servicoAdicionadoId;
+    this.novaOrdem.clienteId = this.clienteAdicionadoId;
+    this.novaOrdem.funcionarioId = this.funcionarioAdicionadoId;
+    this.novaOrdem.veiculoId = this.servicoAdicionadoId;
+  }
+
   limparElementosSelecionados() {
-    this.servicoSelecionado = null;
-        this.veiculoSelecionado = null;
-        this.clienteSelecionado = null;
-        this.funcionarioSelecionado = null;
+    this.servicoSelecionado = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
+    this.veiculoSelecionado = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, clienteNome: '' };
+    this.clienteSelecionado = { id: 0, nome: '', celular: '', fidelidade: 0, veiculos: [] };
+    this.funcionarioSelecionado = { id: 0, nome: '', email: '', tipo: '' };
+  }
+
+  limparElementosAdicionados() {
+    this.clienteAdicionadoId = null;
+    this.veiculoAdicionadoId = null;
+    this.funcionarioAdicionadoId = null;
+    this.servicoAdicionadoId = null;
+  }
+
+  popularListas() {
+    this.addCliente();
+    this.addFuncionario();
+    this.addServico();
+    this.addVeiculo();
   }
 
 }

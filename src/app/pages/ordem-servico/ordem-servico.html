@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -7,14 +7,16 @@
     <title>Tela de Ordem Serviço</title>
 </head>
 
-<body class="bg-svg">
+<body>
 
     <aside class="menu">
         <div class="main-content menu-content">
-            <a href="http://localhost:4200/ordemServico">
-                <img src="logo-lava-jato.png" alt="logo">
-            </a>
-
+            <div class="menu-superior">
+                <a href="http://localhost:4200/ordemServico">
+                    <img src="logo-lava-jato.png" alt="logo">
+                </a>
+                <h3>Lava Jato</h3>
+            </div>
             <nav>
                 <ul>
                     <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
@@ -26,186 +28,129 @@
         </div>
 
     </aside>
-    
-    <h2>Lista de Ordens</h2>
-    <div class="acoes-cima">
-        <button (click)="adicionar()">adicionar</button>
+
+    <div class="agrupamento-cima">
+        <h2>Ordens de Serviço</h2>
+        <button (click)="adicionar()">Nova Ordem</button>
+    </div>
+    <div class="subtitulo-cima">
+        <h3>Gerencie os atendimentos em andamento</h3>
     </div>
     <div class="tabela-responsiva">
-        <table border="1">
-            <tr>
-                <th>Id</th>
-                <th>Preço</th>
-                <th>Serviço</th>
-                <th>Status</th>
-                <th>Cliente</th>
-                <th>Tipo veículo</th>
-                <th>Funcionário</th>
-                <th colspan="2">Ações</th>
-            </tr>
-            <tr *ngFor="let os of ordemServicoResponse | async">
-                <td>{{os.id}}</td>
-                <td>R${{os.preco}}</td>
-                <td>{{os.servico?.tipo}}</td>
-                <td>{{os.status | normalizarEnum}}</td>
-                <td>{{os.cliente?.nome}}</td>
-                <td>{{os.veiculo?.tipo | normalizarEnum}}</td>
-                <td>{{os.funcionario?.nome}}</td>
-                <td class="acoes">
-                    <button (click)="editar(os)">editar</button>
-                    <button (click)="excluir(os.id)">excluir</button>
-                </td>
-            </tr>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Cliente</th>
+                    <th>Veículo</th>
+                    <th>Serviço</th>
+                    <th>Status</th>
+                    <th colspan="2">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let os of ordemServicoResponse | async">
+                    <td>{{os.id}}</td>
+                    <td>{{os.cliente?.nome}}</td>
+                    <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
+                    <td>{{os.servico?.tipo}}</td>
+                    <td>
+                        @switch (os.status) {
+                        @case ('EM_ANDAMENTO') {
+                        <span class="badge badge-em-andamento">{{os.status | normalizarEnum}}</span>
+                        }
+                        @case ('FINALIZADO') {
+                        <span class="badge badge-finalizado">{{os.status | normalizarEnum}}</span>
+                        }
+                        }
+                    </td>
+                    <td class="acoes">
+                        <button (click)="editar(os)">✏️</button>
+                        <button class="lixeira" (click)="excluir(os.id)">🗑️</button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
     @if (inserirOrdem) {
-    <h3>Inserir Ordem</h3>
+    <div class="texto-inserir-ordem">
+        <h3>Inserir Ordem</h3>
+    </div>
     <div class="add-ordem">
-        <input readonly placeholder="selecione um funcionario" (click)="addFuncionario()"
-            [value]="funcionarioSelecionado?.nome ?? ''">
-        <input readonly placeholder="selecione um cliente" (click)="addCliente()"
-            [value]="clienteSelecionado?.nome ?? ''">
-        <input readonly placeholder="selecione um veiculo" (click)="addVeiculo()"
-            [value]="(veiculoSelecionado ? veiculoSelecionado.modelo + ' - ' + veiculoSelecionado.cor : '')">
-        <input readonly placeholder="selecione um servico" (click)="addServico()"
-            [value]="servicoSelecionado?.tipo ?? ''">
-        <button (click)="salvar()">gerar</button>
+        <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
+            [(ngModel)]="funcionarioAdicionadoId" [clearable]="true" placeholder="funcionário">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.nome">{{ item.nome }}</span>
+            </ng-template>
+        </ng-select>
+        <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
+            (change)="atualizarVeiculos($event)" [(ngModel)]="clienteAdicionadoId" [clearable]="true"
+            placeholder="cliente">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.nome">{{ item.nome }}</span>
+            </ng-template>
+        </ng-select>
+        <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
+            [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo" notFoundText="selecione um cliente">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.modelo">{{ item.modelo }}</span>
+            </ng-template>
+        </ng-select>
+        <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
+            [(ngModel)]="servicoAdicionadoId" [clearable]="true" placeholder="serviço">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.tipo">{{ item.tipo }}</span>
+            </ng-template>
+        </ng-select>
+        <button (click)="salvar()">Gerar</button>
     </div>
     }
 
     @if (editarOrdem) {
-    <h3>Editar Ordem</h3>
+    <div class="texto-editar-ordem">
+        <h3>Editar Ordem</h3>
+    </div>
     <div class="editar-ordem">
-        <input readonly placeholder="selecione um funcionario" (click)="addFuncionario()"
-            [value]="funcionarioSelecionado?.nome ?? ''">
-        <input readonly placeholder="selecione um cliente" (click)="addCliente()"
-            [value]="clienteSelecionado?.nome ?? ''">
-        <input readonly placeholder="selecione um veiculo" (click)="addVeiculo()"
-            [value]="(veiculoSelecionado ? veiculoSelecionado.modelo + ' - ' + veiculoSelecionado.cor : '')">
-        <input readonly placeholder="selecione um servico" (click)="addServico()"
-            [value]="servicoSelecionado?.tipo ?? ''">
-        <button (click)="salvar()">editar</button>
-    </div>
-    }
-
-    @if (revelarModalFuncionario) {
-    <div class="modal-externo" (click)="fecharModal()">
-        <div class="modal">
-            <h3>Lista de Funcionários</h3>
-            <button class="close-btn" (click)="fecharModal()">×</button>
-            <table border="1">
-                <tr>
-                    <th>Id</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Tipo</th>
-                    <th>Ação</th>
-                </tr>
-                @for (f of funcionarios | async; track f.id) {
-                <tr>
-                    <td>{{ f.id }}</td>
-                    <td>{{ f.nome }}</td>
-                    <td>{{ f.email }}</td>
-                    <td>{{ f.tipo }}</td>
-                    <td><button (click)="selecionarFuncionario(f)">selecionar</button></td>
-                </tr>
-                }
-            </table>
-        </div>
-    </div>
-    }
-
-    @if (revelarModalCliente) {
-    <div class="modal-externo" (click)="fecharModal()">
-        <div class="modal">
-            <h3>Lista de Clientes</h3>
-            <button class="close-btn" (click)="fecharModal()">×</button>
-            <table border="1">
-                <tr>
-                    <th>Id</th>
-                    <th>Nome</th>
-                    <th>Celular</th>
-                    <th>Ação</th>
-                </tr>
-                @for (c of clientes | async; track c.id) {
-                <tr>
-                    <td>{{ c.id }}</td>
-                    <td>{{ c.nome }}</td>
-                    <td>{{ c.celular }}</td>
-                    <td><button (click)="selecionarCliente(c)">selecionar</button></td>
-                </tr>
-                }
-            </table>
-        </div>
-    </div>
-    }
-
-    @if (revelarModalVeiculo) {
-    <div class="modal-externo" (click)="fecharModal()">
-        <div class="modal">
-            <h3>Lista de Veículos do cliente {{ clienteSelecionado?.nome ?? '' }}</h3>
-            <button class="close-btn" (click)="fecharModal()">×</button>
-            <table border="1">
-                <tr>
-                    <th>Id</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Cor</th>
-                    <th>Placa</th>
-                    <th>Tipo</th>
-                    <th>Ação</th>
-                </tr>
-                @for (v of veiculos | async; track v.id) {
-                <tr>
-                    <td>{{ v.id }}</td>
-                    <td>{{ v.marca }}</td>
-                    <td>{{ v.modelo }}</td>
-                    <td>{{ v.cor }}</td>
-                    <td>{{ v.placa }}</td>
-                    <td>{{ v.tipo }}</td>
-                    <td><button (click)="selecionarVeiculo(v)">selecionar</button></td>
-                </tr>
-                }
-            </table>
-        </div>
-    </div>
-    }
-
-    @if (revelarModalServico) {
-    <div class="modal-externo" (click)="fecharModal()">
-        <div class="modal">
-            <h3>Lista de Clientes</h3>
-            <button class="close-btn" (click)="fecharModal()">×</button>
-            <table border="1">
-                <tr>
-                    <th>Id</th>
-                    <th>Tipo</th>
-                    <th>Detahes</th>
-                    <th>Preço</th>
-                    <th>Ação</th>
-                </tr>
-                @for (s of servicos | async; track s.id) {
-                <tr>
-                    <td>{{ s.id }}</td>
-                    <td>{{ s.tipo }}</td>
-                    <td>{{ s.detalhes }}</td>
-                    <td>{{ s.precoBase }}</td>
-                    <td><button (click)="selecionarServico(s)">selecionar</button></td>
-                </tr>
-                }
-            </table>
-        </div>
+        <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
+            [(ngModel)]="funcionarioSelecionado.id" [clearable]="true" placeholder="funcionário">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.nome">{{ item.nome }}</span>
+            </ng-template>
+        </ng-select>
+        <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
+            (change)="atualizarVeiculos($event)" [(ngModel)]="clienteSelecionado.id" [clearable]="true"
+            placeholder="veículo">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.nome">{{ item.nome }}</span>
+            </ng-template>
+        </ng-select>
+        <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
+            [(ngModel)]="veiculoSelecionado.id" [clearable]="true" placeholder="veículo" notFoundText="selecione um cliente">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.modelo">{{ item.modelo }}</span>
+            </ng-template>
+        </ng-select>
+        <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
+            [(ngModel)]="servicoSelecionado.id" [clearable]="true" placeholder="serviço">
+            <ng-template ng-option-tmp let-item="item">
+                <span [title]="item.tipo">{{ item.tipo }}</span>
+            </ng-template>
+        </ng-select>
+        <button (click)="salvar()">Editar</button>
     </div>
     }
 
     @if (excluirSelecionado) {
     <div class="modal-externo" (click)="fecharModal()">
         <div class="modal-excluir">
-            <h3>Excluir ordem?</h3>
+            <div class="excluir-superior">
+                <h3>Excluir ordem?</h3>
+                <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+            </div>
             <div class="acoes-modal-excluir">
-                <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
-                <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+                <button class="btn-cancelar-modal" (click)="cancelarExclusao()">Cancelar</button>
+                <button class="btn-excluir-modal" (click)="confirmarExclusao()">Confirmar</button>
             </div>
         </div>
     </div>

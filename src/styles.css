@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+/*  */
+
+ng-select.custom-ng-select {
+    width: 10rem;
+    min-width: 10rem;
+    display: inline-block;
+}
+
+.ng-clear-wrapper {
+    position: absolute;
+    bottom: 0.5rem;
+    right: -1.4rem;
+    padding: 0;
+    margin: 0;
+}
+
+.ng-arrow-wrapper {
+    position: absolute;
+    top: 0.5rem;
+}
+

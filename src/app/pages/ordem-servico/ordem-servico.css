@@ -1,62 +1,111 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background-color: #f0f0f0;
   width: 100%;
+  background-color: #0F172A;
+  background-size: cover;
+  background-position: center center;
+  color: #ffffff;
+  overflow-x: hidden;
 }
 
-h2 {
-  margin-top: 3rem;
-  padding: 1.2rem;
+.agrupamento-cima {
   display: flex;
   justify-content: center;
-}
-
-h3 {
-  padding: 0.8rem;
-  display: flex;
-  justify-content: center;
-}
-
-.acoes-cima {
-  display: flex;
-  justify-content: center;
+  align-items: center;
   width: 95%;
-  margin: 0.4rem auto;
+  margin: 3rem auto 0 auto;
+  padding-top: 1rem;
 }
 
-.acoes-cima button {
-  margin-right: auto;
+.agrupamento-cima button {
+  margin-left: auto;
+}
+
+.subtitulo-cima {
+  width: 95%;
+  margin: 0 auto;
 }
 
 .tabela-responsiva {
   max-width: 100%;
   overflow-x: auto;
+  background-color: #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  padding: 1.5rem 0;
+  margin-top: 1rem;
+  border: 1px solid #334155;
 }
 
 table {
   width: 95%;
-  margin: auto;
-  border-collapse: collapse;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #f8fafc;
 }
 
 table th {
-  background-color: #fd8559f1;
+  background-color: transparent;
   padding: 0.2rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-align: left;
+  border-bottom: 2px solid #334155;
 }
 
 table td {
-  text-align: center;
+  padding: 0.2rem;
+  text-align: left;
+  border-bottom: 1px solid #334155;
+  font-size: 0.875rem;
+}
+
+table tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.05rem 0.5rem;
+}
+
+.badge-em-andamento {
+  background-color: rgba(245, 158, 11, 0.15); /* Fundo laranja transparente */
+  color: #fbbf24; /* Texto amarelo/laranja */
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-finalizado {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .acoes {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   gap: 5px;                
 }
+
+.texto-inserir-ordem {
+  display: flex;
+  width: 95;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
 
 .add-ordem {
   display: flex;
@@ -64,8 +113,16 @@ table td {
   justify-content: center;
 }
 
-.add-ordem input {
+.add-ordem ng-select {
     cursor: pointer;
+    margin-right: 0.2rem;
+}
+
+.texto-editar-ordem {
+  display: flex;
+  width: 95;
+  justify-content: center;
+  margin: 0.5rem 0;
 }
 
 .editar-ordem {
@@ -74,21 +131,26 @@ table td {
   justify-content: center;
 }
 
-.editar-ordem input {
+.editar-ordem ng-select {
     cursor: pointer;
+    margin-right: 0.2rem
 }
 
 button {
   border-radius: 5px;
-  background-color: #fdc9b6f1;
+  background-color: #6366F1;
   border: none;
   padding: 0.5rem;
   cursor: pointer;
+  color: #ffffff;
 }
 
 button:hover {
-  color: #fd8559f1;
-  background-color: black;
+  background-color: #4338ca;
+}
+
+.lixeira:hover {
+  background-color: #dd3d3d;
 }
 
 input {
@@ -145,6 +207,19 @@ input {
   border-radius: 8px;
 }
 
+.excluir-superior {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.modal-excluir img {
+  margin-left: 0.4rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .acoes-modal-excluir {
     display: flex;
     justify-content: center;
@@ -167,14 +242,6 @@ input {
     transform: scale(1.25);
 }
 
-.bg-svg {
-  background-image: url(../../../assets/stars.svg);
-  background-size: cover;
-  background-position: center center;
-  height: 100%;
-  color: #ffffff;
-}
-
 .white-bg {
   background-color: #ffffff;
 }
@@ -182,10 +249,6 @@ input {
 .main-content {
   max-width: 80%;
   margin: 0 auto;
-}
-
-.section {
-  min-height: 100vh;
 }
 
 .menu {
@@ -196,6 +259,16 @@ input {
   left: 0;
   right: 0;
   border-bottom: 2px solid #b1b1b1;
+}
+
+.menu-superior {
+  display: flex;
+  align-items: center;
+}
+
+.menu-superior h3 {
+  color: #000000;
+  padding: 0;
 }
 
 .menu a{
