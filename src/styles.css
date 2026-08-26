@@ -19,3 +19,22 @@ ng-select.custom-ng-select {
     top: 0.5rem;
 }
 
+/* ApexCharts */
+
+.apexcharts-menu-item {
+  color: #000 !important;   /* cor dos ícones */
+}
+
+apx-chart {
+    display: block !important;
+    height: 100%;
+}
+
+apx-chart div:first-child {
+    height: 100%;
+}
+
+.apexcharts-canvas, .apexcharts-canvas svg, foreignObject {
+    height: 100% !important;
+}
+

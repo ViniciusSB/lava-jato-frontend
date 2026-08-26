@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+
+<body>
+
+    <aside class="menu">
+        <div class="main-content menu-content">
+            <a href="http://localhost:4200">
+                <div class="menu-superior">
+                    <img src="logo-lava-jato.png" alt="logo">
+                    <h3>Lava Jato</h3>
+                </div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
+                    <li><a href="http://localhost:4200/cliente">Clientes</a></li>
+                    <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
+                    <li><a href="http://localhost:4200/servico">Serviço</a></li>
+                    <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <div class="filtros">
+        <div class="radio">
+            <div class="radio-div">
+                <label for="radio1">Dia</label>
+                <input type="radio" id="radio1" name="tipoPeriodo" [value]="tipos[0]" (click)="alterarTipo(tipos[0])">
+            </div>
+            <div class="radio-div">
+                <label for="radio2">Mês</label>
+                <input type="radio" id="radio2" name="tipoPeriodo" [value]="tipos[1]" (click)="alterarTipo(tipos[1])">
+            </div>
+            <div class="radio-div">
+                <label for="radio3">Ano</label>
+                <input type="radio" id="radio3" name="tipoPeriodo" [value]="tipos[2]" (click)="alterarTipo(tipos[2])">
+            </div>
+        </div>
+        <div class="calendario">
+            <h4>Selecione o período</h4>
+            <input type="date" (change)="selecionarPeriodo($event)">
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <!-- Tela do gerente -->
+        <!-- 
+        <div class="grid-dados">
+            <div>
+                <h4 class="texto-grid">Total de Funcionários</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Funcionário destaque</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Clientes atendidos</h4>
+            </div>
+        </div>
+        -->
+
+
+        <!--
+        <div class="grid-dados">
+            <div>
+                <h4 class="texto-grid">Faturamento total</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Faturamento líquido</h4>
+            </div>
+        </div>
+        -->
+
+        <!--
+        <div class="grid-dados">
+            <div>
+                <h4 class="texto-grid">Total de ordens em andamento</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Total de ordens finalizadas</h4>
+            </div>
+        </div>
+        -->
+
+        <!-- Tela do funcionário -->
+
+        <div class="grid-dados">
+            <div>
+                <h4 class="texto-grid">Ordens finalizadas: {{ ordensFinalizadas }}</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Ordens em andamento: {{ ordensEmAndamento }}</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Faturamento total: R${{ faturamentoTotal }}</h4>
+            </div>
+        </div>
+
+        <div class="grafico">
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+                [title]="chartOptions.title">
+            </apx-chart>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

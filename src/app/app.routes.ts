@@ -4,12 +4,15 @@ import { ClienteComponent } from './pages/cliente/cliente';
 import { VeiculoComponent } from './pages/veiculo/veiculo';
 import { OrdemServicoComponent } from './pages/ordem-servico/ordem-servico';
 import { ServicoComponent } from './pages/servico/servico';
+import { DashboardComponent } from './pages/dashboard/dashboard';
 
 
 export const routes: Routes = [
+    { path: '', component: DashboardComponent, title: 'Dashboard'},
     { path: 'usuario', component: UsuarioComponent, title: 'Usuário'},
     { path: 'cliente', component: ClienteComponent, title: 'Cliente'},
     { path: 'veiculo', component: VeiculoComponent, title: 'Veículo'},
     { path: 'ordemServico', component: OrdemServicoComponent, title: 'Ordem Serviço'},
     { path: 'servico', component: ServicoComponent, title: 'Serviço'},
+    { path: '**', redirectTo: '' }
 ];
