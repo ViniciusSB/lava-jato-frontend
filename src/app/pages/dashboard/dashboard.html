@@ -33,21 +33,29 @@
         <div class="radio">
             <div class="radio-div">
                 <label for="radio1">Dia</label>
-                <input type="radio" id="radio1" name="tipoPeriodo" [value]="tipos[0]" (click)="alterarTipo(tipos[0])">
+                <input type="radio" id="radio1" name="tipoPeriodo" [value]="tipos[0]" [(ngModel)]="request.tipo"
+                    (click)="alterarTipo(tipos[0])">
             </div>
             <div class="radio-div">
                 <label for="radio2">Mês</label>
-                <input type="radio" id="radio2" name="tipoPeriodo" [value]="tipos[1]" (click)="alterarTipo(tipos[1])">
+                <input type="radio" id="radio2" name="tipoPeriodo" [value]="tipos[1]" [(ngModel)]="request.tipo"
+                    (click)="alterarTipo(tipos[1])">
             </div>
             <div class="radio-div">
                 <label for="radio3">Ano</label>
-                <input type="radio" id="radio3" name="tipoPeriodo" [value]="tipos[2]" (click)="alterarTipo(tipos[2])">
+                <input type="radio" id="radio3" name="tipoPeriodo" [value]="tipos[2]" [(ngModel)]="request.tipo"
+                    (click)="alterarTipo(tipos[2])">
             </div>
         </div>
-        <div class="calendario">
-            <h4>Selecione o período</h4>
-            <input type="date" (change)="selecionarPeriodo($event)">
+        <div class="periodo">
+            <h4>Digite o período</h4>
+            <input type="text" [(ngModel)]="campoPeriodo" [placeholder]="placeholderPeriodo" [mask]="mascaraPeriodo">
+            <button type="button" (click)="filtrar()">Filtrar</button>
+            <div *ngIf="mensagemErro" class="msg-erro">
+                <h4>{{ mensagemErro }}</h4>
+            </div>
         </div>
+
     </div>
 
     <div class="grid">

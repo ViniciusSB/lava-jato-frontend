@@ -109,7 +109,7 @@ export class OrdemServicoComponent {
   }
 
   addVeiculo() {
-    if (this.clienteSelecionado != undefined) {
+    if (this.clienteSelecionado != undefined && this.clienteSelecionado.id != 0) {
       this.veiculoService.obterVeiculosPorClienteId(this.clienteSelecionado.id);
       this.veiculos = this.veiculoService.veiculos;
     }
@@ -226,6 +226,8 @@ export class OrdemServicoComponent {
   }
 
   fechar() {
+    this.limparElementosAdicionados();
+    this.limparElementosSelecionados();
     this.editarOrdem = false;
     this.inserirOrdem = false;
   }
@@ -241,7 +243,7 @@ export class OrdemServicoComponent {
     this.novaOrdem.servicoId = this.servicoAdicionadoId;
     this.novaOrdem.clienteId = this.clienteAdicionadoId;
     this.novaOrdem.funcionarioId = this.funcionarioAdicionadoId;
-    this.novaOrdem.veiculoId = this.servicoAdicionadoId;
+    this.novaOrdem.veiculoId = this.veiculoAdicionadoId;
   }
 
   limparElementosSelecionados() {

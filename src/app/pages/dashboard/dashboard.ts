@@ -3,19 +3,29 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DashboardService } from '../../services/dashboard/dashboard';
 import { DashboardFuncionario, DashboardFuncionarioRequest, GraficoItem } from '../../models/dashboard';
+import { FormsModule } from '@angular/forms';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
+  imports: [CommonModule, NgApexchartsModule, FormsModule, NgxMaskDirective],
+  providers: [provideNgxMask({ dropSpecialCharacters: false })],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class DashboardComponent {
-  public chartOptions: any;
-  public ordensFinalizadas = 0;
-  public ordensEmAndamento = 0;
-  public faturamentoTotal = 0;
+  chartOptions: any;
+  ordensFinalizadas = 0;
+  ordensEmAndamento = 0;
+  faturamentoTotal = 0;
+  mensagemErro = "";
+  diaAtual = "";
+  mesAtual = "";
+  anoAtual = "";
+  campoPeriodo = "";
+  mascaraPeriodo = "00-00-0000"
+  placeholderPeriodo = "dd-mm-aaaa"
 
   constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef) {
     this.chartOptions = {
@@ -24,41 +34,79 @@ export class DashboardComponent {
       xaxis: { categories: [] },
       title: { text: "Ordens de Serviço Finalizadas", style: { color: "#000" } }
     };
+    const data = new Date();
+    this.diaAtual = data.getDate().toString();
+    if (data.getDate() < 10)
+      this.diaAtual = `0${this.diaAtual}`;
+    this.mesAtual = (data.getMonth() + 1).toString();
+    if ((data.getMonth() + 1) < 10)
+      this.mesAtual = `0${this.mesAtual}`;
+    this.anoAtual = data.getFullYear().toString();
+    this.campoPeriodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
   }
 
   tipos = ['dia', 'mes', 'ano'];
   request: DashboardFuncionarioRequest = {
     tipo: 'dia',
-    periodo: '25'
+    periodo: this.diaAtual
   };
 
   alterarTipo(tipo: string) {
     this.request.tipo = tipo;
+    if (tipo == 'mes') {
+      this.campoPeriodo = `${this.mesAtual}-${this.anoAtual}`;
+      this.request.periodo = this.campoPeriodo;
+      this.mascaraPeriodo = "00-0000";
+      this.placeholderPeriodo = "mm ou mm-aaaa"
+    }
+    else if (tipo == 'ano') {
+      this.campoPeriodo = this.anoAtual;
+      this.request.periodo = this.campoPeriodo;
+      this.mascaraPeriodo = "0000";
+      this.placeholderPeriodo = "aaaa"
+    }
+    else {
+      this.campoPeriodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
+      this.request.periodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
+      this.mascaraPeriodo = "00-00-0000";
+      this.placeholderPeriodo = "dd-mm-aaaa"
+    }
+    this.mensagemErro = "";
     this.carregarDados();
   }
 
-  selecionarPeriodo(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const data = input.value; 
-    console.log(this.request.periodo);
+  filtrar() {
+    const caracteres = this.campoPeriodo.length;
+    if (this.request.tipo == "dia") {
+      if (!(caracteres == 2 || caracteres == 5 || caracteres == 10)) {
+        this.mensagemErro = "Data mal formatada";
+        return;
+      }
 
-    if (!data)
+      if (!this.validarPeriodoFiltroDia())
+        return;
+    }
+
+    if (this.request.tipo == "mes") {
+      if (!(caracteres == 2 || caracteres == 7)) {
+        this.mensagemErro = "Data mal formatada";
+        return;
+      }
+      if (!this.validarPeriodoFiltroMes())
+        return;
+    }
+
+    else if (this.request.tipo == "ano" && !this.validarPeriodoFiltroAno())
       return;
 
-    const dataValida = new Date(data);
-    if (isNaN(dataValida.getTime()))
-      return;
-
-    if (dataValida > new Date())
-      return;
-
-    this.request.periodo = this.formatarData(data, this.request.tipo);
+    this.request.periodo = this.campoPeriodo;
+    this.mensagemErro = "";
     this.carregarDados();
   }
 
   ngOnInit() {
     // Inicialmente traz os dados do dia
-    this.request = { periodo: '25', tipo: 'dia' };
+    this.request = { periodo: this.diaAtual, tipo: 'dia' };
 
     this.dashboardService.getDadosDashboardFuncionario(5, this.request).subscribe((dados: DashboardFuncionario) => {
       this.ordensFinalizadas = dados.ordensFinalizadas;
@@ -97,7 +145,93 @@ export class DashboardComponent {
     });
   }
 
+  validarPeriodoFiltroDia(): boolean {
+    const caracteres = this.campoPeriodo.length;
+    // Verficacao do dia
+    let dia = this.campoPeriodo;
+    if (caracteres >= 2) {
+      if (caracteres > 2) {
+        const datas = this.campoPeriodo.split("-");
+        dia = datas[0];
+      }
+      if (Number(dia) < 1 || Number(dia) > 31) {
+        this.mensagemErro = "Dia inválido";
+        return false;
+      }
 
+    }
+
+    // Verficacao do mes
+    let mes = this.campoPeriodo;
+    if (caracteres >= 5) {
+      const datas = this.campoPeriodo.split("-");
+      mes = datas[1];
+      if (Number(mes) < 1 || Number(mes) > 12) {
+        this.mensagemErro = "Mês inválido";
+        return false;
+      }
+    }
+
+    // Verficacao do ano
+    let ano = this.campoPeriodo;
+    if (caracteres == 10) {
+      const datas = this.campoPeriodo.split("-");
+      ano = datas[2];
+      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
+        this.mensagemErro = "Ano inválido";
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  validarPeriodoFiltroMes(): boolean {
+    const caracteres = this.campoPeriodo.length;
+    // Verficacao do mes
+    let mes = this.campoPeriodo;
+    if (caracteres >= 2) {
+      if (caracteres > 2) {
+        const datas = this.campoPeriodo.split("-");
+        mes = datas[0];
+      }
+      if (Number(mes) < 1 || Number(mes) > 12) {
+        this.mensagemErro = "Mês inválido";
+        return false;
+      }
+    }
+
+    // Verficacao do ano
+    let ano = this.campoPeriodo;
+    if (caracteres == 7) {
+      const datas = this.campoPeriodo.split("-");
+      ano = datas[1];
+      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
+        this.mensagemErro = "Ano inválido";
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  validarPeriodoFiltroAno(): boolean {
+    const caracteres = this.campoPeriodo.length;
+    let ano = this.campoPeriodo;
+    if (caracteres == 4) {
+      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
+        this.mensagemErro = "Ano inválido";
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+    else {
+      this.mensagemErro = "Data mal formatada";
+      return false;
+    }
+  }
 
   /* FUNCIONARIO */
   extrairGanhos(grafico: GraficoItem[]): number[] {
@@ -112,12 +246,6 @@ export class DashboardComponent {
     } else {
       return grafico.map(d => d.mes);
     }
-  }
-
-  formatarData(data: string, tipo: string):string {
-    let dataVetor = data.split("-");
-    let dataFormatada = `${dataVetor[2]}-${dataVetor[1]}-${dataVetor[0]}`
-    return dataFormatada;
   }
 
 }
