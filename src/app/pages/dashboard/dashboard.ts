@@ -233,6 +233,10 @@ export class DashboardComponent {
     }
   }
 
+  fecharMsgErro() {
+    this.mensagemErro = "";
+  }
+
   /* FUNCIONARIO */
   extrairGanhos(grafico: GraficoItem[]): number[] {
     return grafico.map(gf => gf.faturamento);

@@ -51,11 +51,17 @@
             <h4>Digite o período</h4>
             <input type="text" [(ngModel)]="campoPeriodo" [placeholder]="placeholderPeriodo" [mask]="mascaraPeriodo">
             <button type="button" (click)="filtrar()">Filtrar</button>
-            <div *ngIf="mensagemErro" class="msg-erro">
-                <h4>{{ mensagemErro }}</h4>
+        </div>
+        <div *ngIf="mensagemErro" class="msg-erro">
+            <div class="borda">
+                <div>
+                    <h4>{{ mensagemErro }}</h4>
+                </div>
+                <div>
+                    <button type="button" (click)="fecharMsgErro()">X</button>
+                </div>
             </div>
         </div>
-
     </div>
 
     <div class="grid">
@@ -69,12 +75,8 @@
             <div>
                 <h4 class="texto-grid">Funcionário destaque</h4>
             </div>
-            <div>
-                <h4 class="texto-grid">Clientes atendidos</h4>
-            </div>
         </div>
         -->
-
 
         <!--
         <div class="grid-dados">
@@ -90,10 +92,16 @@
         <!--
         <div class="grid-dados">
             <div>
-                <h4 class="texto-grid">Total de ordens em andamento</h4>
+                <h4 class="texto-grid">Clientes atendidos</h4>
             </div>
             <div>
-                <h4 class="texto-grid">Total de ordens finalizadas</h4>
+                <h4 class="texto-grid">Serviços finalizados</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Ordens em andamento</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Tipos de veículos</h4>
             </div>
         </div>
         -->
