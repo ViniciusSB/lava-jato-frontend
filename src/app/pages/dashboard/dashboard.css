@@ -76,7 +76,6 @@ body {
   width: 95%;
   margin: 5rem auto 2rem auto;
   display: flex;
-  position: relative;
   align-items: center;
   gap: 2px;
 }
@@ -118,7 +117,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  margin-right: 3rem;
+  margin: 5rem 8rem 0 0;
 }
 
 .msg-erro .borda {

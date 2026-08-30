@@ -67,64 +67,78 @@
     <div class="grid">
 
         <!-- Tela do gerente -->
-        <!-- 
-        <div class="grid-dados">
-            <div>
-                <h4 class="texto-grid">Total de Funcionários</h4>
-            </div>
-            <div>
-                <h4 class="texto-grid">Funcionário destaque</h4>
-            </div>
-        </div>
-        -->
 
-        <!--
+        <!-- Dados Equipe -->
         <div class="grid-dados">
             <div>
-                <h4 class="texto-grid">Faturamento total</h4>
+                <h4 class="texto-grid">Membros totais: {{ totalMembros }}</h4>
             </div>
-            <div>
-                <h4 class="texto-grid">Faturamento líquido</h4>
+            <div *ngIf="funcionarioDestaque != undefined">
+                <h4 class="texto-grid">Funcionário destaque: {{ funcionarioDestaque.nome }}</h4>
+                <h4 class="texto-grid">Atendimentos concluídos: {{ funcionarioDestaque.servicosConcluidos }}</h4>
             </div>
         </div>
-        -->
 
-        <!--
+        <div class="grafico">
+            <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
+                [title]="graficoTipoMembros.title">
+            </apx-chart>
+        </div>
+
+        <!-- Atendimento -->
         <div class="grid-dados">
             <div>
-                <h4 class="texto-grid">Clientes atendidos</h4>
+                <h4 class="texto-grid">Clientes atendidos: {{ clientesAtendidos }}</h4>
             </div>
             <div>
-                <h4 class="texto-grid">Serviços finalizados</h4>
+                <h4 class="texto-grid">Serviços finalizados {{ servicosFinalizados }}</h4>
             </div>
             <div>
-                <h4 class="texto-grid">Ordens em andamento</h4>
-            </div>
-            <div>
-                <h4 class="texto-grid">Tipos de veículos</h4>
+                <h4 class="texto-grid">Ordens em andamento {{ ordensEmAndamento }}</h4>
             </div>
         </div>
-        -->
+
+        <div class="grafico">
+            <apx-chart [series]="graficoTipoVeiculos.series" [chart]="graficoTipoVeiculos.chart"
+                [xaxis]="graficoTipoVeiculos.xaxis" [title]="graficoTipoVeiculos.title"
+                [colors]="graficoTipoVeiculos.colors" [plotOptions]="graficoTipoVeiculos.plotOptions">
+            </apx-chart>
+        </div>
+
+        <!-- Faturamento -->
+        <div class="grid-dados">
+            <div>
+                <h4 class="texto-grid">Total Bruto: {{ totalBruto }}</h4>
+            </div>
+            <div>
+                <h4 class="texto-grid">Total Líquido: {{ totalLiquido }}</h4>
+            </div>
+        </div>
+
+        <div class="grafico">
+            <apx-chart [series]="graficoFaturamento.series" [chart]="graficoFaturamento.chart"
+                [xaxis]="graficoFaturamento.xaxis" [title]="graficoFaturamento.title">
+            </apx-chart>
+        </div>
 
         <!-- Tela do funcionário -->
 
         <div class="grid-dados">
             <div>
-                <h4 class="texto-grid">Ordens finalizadas: {{ ordensFinalizadas }}</h4>
+                <h4 class="texto-grid">Ordens finalizadas: {{ ordensFinalizadasFuncionario }}</h4>
             </div>
             <div>
-                <h4 class="texto-grid">Ordens em andamento: {{ ordensEmAndamento }}</h4>
+                <h4 class="texto-grid">Ordens em andamento: {{ ordensEmAndamentoFuncionario }}</h4>
             </div>
             <div>
-                <h4 class="texto-grid">Faturamento total: R${{ faturamentoTotal }}</h4>
+                <h4 class="texto-grid">Faturamento total: R${{ faturamentoTotalFuncionario }}</h4>
             </div>
         </div>
 
         <div class="grafico">
-            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
-                [title]="chartOptions.title">
+            <apx-chart [series]="graficoFaturamentoFuncionario.series" [chart]="graficoFaturamentoFuncionario.chart"
+                [xaxis]="graficoFaturamentoFuncionario.xaxis" [title]="graficoFaturamentoFuncionario.title">
             </apx-chart>
-
         </div>
     </div>
 

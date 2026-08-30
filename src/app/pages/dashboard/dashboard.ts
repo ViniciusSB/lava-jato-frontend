@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DashboardService } from '../../services/dashboard/dashboard';
-import { DashboardFuncionario, DashboardFuncionarioRequest, GraficoItem } from '../../models/dashboard';
+import { DadosFaturamento, DadosVeiculos, DashboardFuncionario, DashboardFuncionarioRequest, DashboardGerente, FuncionarioDestaque, GraficoItem } from '../../models/dashboard';
 import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
@@ -15,10 +15,24 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
   styleUrl: './dashboard.css',
 })
 export class DashboardComponent {
-  chartOptions: any;
-  ordensFinalizadas = 0;
+  totalMembros = 0;
+  funcionarioDestaque: FuncionarioDestaque | undefined;
+  graficoTipoMembros: any;
+
+  clientesAtendidos = 0;
+  servicosFinalizados = 0;
   ordensEmAndamento = 0;
-  faturamentoTotal = 0;
+  graficoTipoVeiculos: any;
+
+  totalBruto = 0;
+  totalLiquido = 0;
+  graficoFaturamento: any;
+
+  graficoFaturamentoFuncionario: any;
+  ordensFinalizadasFuncionario = 0;
+  ordensEmAndamentoFuncionario = 0;
+  faturamentoTotalFuncionario = 0;
+
   mensagemErro = "";
   diaAtual = "";
   mesAtual = "";
@@ -26,14 +40,10 @@ export class DashboardComponent {
   campoPeriodo = "";
   mascaraPeriodo = "00-00-0000"
   placeholderPeriodo = "dd-mm-aaaa"
+  tipos = ['dia', 'mes', 'ano'];
+  request: DashboardFuncionarioRequest = { tipo: '', periodo: ''};
 
   constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef) {
-    this.chartOptions = {
-      series: [],
-      chart: { type: "line", toolbar: { show: true }, background: "#FFFFFF" },
-      xaxis: { categories: [] },
-      title: { text: "Ordens de Serviço Finalizadas", style: { color: "#000" } }
-    };
     const data = new Date();
     this.diaAtual = data.getDate().toString();
     if (data.getDate() < 10)
@@ -45,14 +55,17 @@ export class DashboardComponent {
     this.campoPeriodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
   }
 
-  tipos = ['dia', 'mes', 'ano'];
-  request: DashboardFuncionarioRequest = {
-    tipo: 'dia',
-    periodo: this.diaAtual
-  };
+  ngOnInit() {
+    this.iniciarGraficos();
+
+    // Inicialmente traz os dados do dia
+    this.request = { periodo: this.diaAtual, tipo: 'dia' };
+    this.preencherDashboards(this.request.tipo, "ambos");
+  }
 
   alterarTipo(tipo: string) {
     this.request.tipo = tipo;
+    this.resetarDadosDashboard();
     if (tipo == 'mes') {
       this.campoPeriodo = `${this.mesAtual}-${this.anoAtual}`;
       this.request.periodo = this.campoPeriodo;
@@ -72,11 +85,12 @@ export class DashboardComponent {
       this.placeholderPeriodo = "dd-mm-aaaa"
     }
     this.mensagemErro = "";
-    this.carregarDados();
+    this.preencherDashboards(this.request.tipo, "ambos");
   }
 
   filtrar() {
     const caracteres = this.campoPeriodo.length;
+    this.resetarDadosDashboard();
     if (this.request.tipo == "dia") {
       if (!(caracteres == 2 || caracteres == 5 || caracteres == 10)) {
         this.mensagemErro = "Data mal formatada";
@@ -101,48 +115,7 @@ export class DashboardComponent {
 
     this.request.periodo = this.campoPeriodo;
     this.mensagemErro = "";
-    this.carregarDados();
-  }
-
-  ngOnInit() {
-    // Inicialmente traz os dados do dia
-    this.request = { periodo: this.diaAtual, tipo: 'dia' };
-
-    this.dashboardService.getDadosDashboardFuncionario(5, this.request).subscribe((dados: DashboardFuncionario) => {
-      this.ordensFinalizadas = dados.ordensFinalizadas;
-      this.ordensEmAndamento = dados.ordensEmAndamento;
-      this.faturamentoTotal = dados.faturamentoTotal;
-
-      const ganhos = this.extrairGanhos(dados.grafico);
-      const data = this.extrairData(dados.grafico, "dia");
-
-      this.chartOptions.series = [{ name: "Ganhos", data: ganhos }];
-      this.chartOptions.xaxis = { categories: data };
-      this.chartOptions.title = { text: "Ganhos diários R$ x Hora" }
-      this.cdr.detectChanges();
-    });
-  }
-
-  carregarDados() {
-    this.dashboardService.getDadosDashboardFuncionario(5, this.request).subscribe((dados: DashboardFuncionario) => {
-      this.ordensFinalizadas = dados.ordensFinalizadas;
-      this.ordensEmAndamento = dados.ordensEmAndamento;
-      this.faturamentoTotal = dados.faturamentoTotal;
-
-      const ganhos = this.extrairGanhos(dados.grafico);
-      const data = this.extrairData(dados.grafico, this.request.tipo);
-
-      this.chartOptions.series = [{ name: "Ganhos", data: ganhos }];
-      this.chartOptions.xaxis = { categories: data };
-      if (this.request.tipo == 'dia')
-        this.chartOptions.title = { text: "Ganhos diários R$ x Hora" };
-      else if (this.request.tipo == 'mes')
-        this.chartOptions.title = { text: "Ganhos Mensais R$ x Dia" };
-      else
-        this.chartOptions.title = { text: "Ganhos Anuais R$ x Mês" };
-
-      this.cdr.detectChanges();
-    });
+    this.preencherDashboards(this.request.tipo, "ambos");
   }
 
   validarPeriodoFiltroDia(): boolean {
@@ -237,7 +210,90 @@ export class DashboardComponent {
     this.mensagemErro = "";
   }
 
+  iniciarGraficos() {
+    this.graficoFaturamentoFuncionario = this.iniciarGrafico("line", "Ganhos Diários R$ x Hora");
+    this.graficoTipoMembros = this.iniciarGrafico("donut", "Equipe Lava Jato");
+    this.graficoTipoVeiculos = this.iniciarGrafico("bar", `Veículos finalizados no dia ${this.diaAtual}`);
+    this.graficoFaturamento = this.iniciarGrafico("bar", `Faturamento Bruto/Líquido do dia ${this.diaAtual}`);
+  }
+
+  iniciarGrafico(tipo: string, titulo: string): any {
+    return {
+      series: [],
+      chart: { type: tipo, toolbar: { show: true }, background: "#FFFFFF" },
+      xaxis: { categories: [] },
+      title: { text: titulo }
+    };
+  }
+
+  preencherDashboards(periodo: string, tipoUsuario: string) {
+    if (tipoUsuario == 'ambos') {
+      this.preecherDashboardFuncionario(periodo);
+      this.preecherDashboardGerente(periodo);
+    } else if (tipoUsuario == 'funcionario')
+      this.preecherDashboardFuncionario(periodo);
+    else
+      this.preecherDashboardGerente(periodo);
+  }
+
+  resetarDadosDashboard() {
+    this.graficoTipoMembros.xaxis = { categories: [] };
+    this.graficoTipoMembros.title = { text: '' };
+    this.graficoTipoMembros.series = [{}];
+    this.totalMembros = 0;
+    
+    this.graficoTipoVeiculos.xaxis = { categories: [] };
+    this.graficoTipoVeiculos.title = { text: '' };
+    this.graficoTipoVeiculos.series = [{ }];
+    this.clientesAtendidos = 0;
+    this.servicosFinalizados = 0;
+    this.ordensEmAndamento = 0;
+
+    this.graficoFaturamento.xaxis = { categories: [] };
+    this.graficoFaturamento.title = { text: '' };
+    this.graficoFaturamento.series = [{ }];
+    this.totalBruto = 0;
+    this.totalLiquido = 0;
+
+    this.graficoFaturamentoFuncionario.xaxis = { categories: [] };
+    this.graficoFaturamentoFuncionario.title = { text: '' };
+    this.graficoFaturamentoFuncionario.series = [{ }];
+    this.ordensEmAndamentoFuncionario = 0;
+    this.ordensFinalizadasFuncionario = 0;
+    this.faturamentoTotalFuncionario = 0;
+
+
+    /*
+    this.graficoTipoVeiculos.series = [{ name: "quantidade", data: this.extrairQuantidadeVeiculo(dados.atendimento.veiculos) }];
+      this.graficoTipoVeiculos.xaxis = { categories: this.extrairTipoVeiculo(dados.atendimento.veiculos) };
+      if (periodo == 'dia')
+        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no dia ${this.request.periodo}` }
+      */
+    
+  }
+
   /* FUNCIONARIO */
+  preecherDashboardFuncionario(periodo: string) {
+    this.dashboardService.getDadosDashboardFuncionario(5, this.request).subscribe((dados: DashboardFuncionario) => {
+      this.ordensFinalizadasFuncionario = dados.ordensFinalizadas;
+      this.ordensEmAndamentoFuncionario = dados.ordensEmAndamento;
+      this.faturamentoTotalFuncionario = dados.faturamentoTotal;
+
+      const ganhos = this.extrairGanhos(dados.grafico);
+      const data = this.extrairData(dados.grafico, periodo);
+
+      this.graficoFaturamentoFuncionario.series = [{ name: "Ganhos", data: ganhos }];
+      this.graficoFaturamentoFuncionario.xaxis = { categories: data };
+      if (periodo == 'dia')
+        this.graficoFaturamentoFuncionario.title = { text: "Ganhos Diários R$ x Hora" }
+      else if (periodo == 'mes')
+        this.graficoFaturamentoFuncionario.title = { text: "Ganhos Mensais R$ x Dia" }
+      else
+        this.graficoFaturamentoFuncionario.title = { text: "Ganhos Anuais R$ x Mês" }
+      this.cdr.detectChanges();
+    });
+  }
+
   extrairGanhos(grafico: GraficoItem[]): number[] {
     return grafico.map(gf => gf.faturamento);
   }
@@ -250,6 +306,72 @@ export class DashboardComponent {
     } else {
       return grafico.map(d => d.mes);
     }
+  }
+
+  /* GERENTE */
+  preecherDashboardGerente(periodo: string) {
+    this.dashboardService.getDadosDashboardGerente(this.request).subscribe((dados: DashboardGerente) => {
+      this.totalMembros = dados.equipe.totalMembros;
+      this.funcionarioDestaque = dados.equipe.funcionarioDestaque;
+
+      this.graficoTipoMembros.series = [{ data: [{ x: 'funcionário', y: dados.equipe.qtdFuncionarios }, { x: 'gerente', y: dados.equipe.qtdGerentes }, { x: 'administrador', y: dados.equipe.qtdAdministrador }] }];
+      this.graficoTipoMembros.title = { text: "Equipe Lava Jato" }
+      this.cdr.detectChanges();
+
+      this.clientesAtendidos = dados.atendimento.clientesAtendidos;
+      this.servicosFinalizados = dados.atendimento.servicosFinalizados;
+      this.ordensEmAndamento = dados.atendimento.ordensEmAndamento;
+
+      this.graficoTipoVeiculos.series = [{ name: "quantidade", data: this.extrairQuantidadeVeiculo(dados.atendimento.veiculos) }];
+      this.graficoTipoVeiculos.xaxis = { categories: this.extrairTipoVeiculo(dados.atendimento.veiculos) };
+      if (periodo == 'dia')
+        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no dia ${this.request.periodo}` }
+      else if (periodo == 'mes')
+        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no mês ${this.request.periodo}` }
+      else
+        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no ano de ${this.request.periodo}` }
+      this.graficoTipoVeiculos.colors = ['#FF0000', '#00FF00', '#0000FF', '#FFA500'];
+      this.graficoTipoVeiculos.plotOptions = { bar: { distributed: true } };
+      this.cdr.detectChanges();
+
+      this.totalBruto = dados.faturamento.totalBruto;
+      this.totalLiquido = dados.faturamento.totalLiquido;
+
+      this.graficoFaturamento.series = [{ name: "Valor Líquido", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "liquido") }, { name: "Valor Bruto", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "bruto") }];
+      this.graficoFaturamento.xaxis = { categories: this.extrairDataGraficoFaturamento(dados.faturamento, periodo) };
+      if (periodo == 'dia')
+        this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do dia ${this.request.periodo}` };
+      else if (periodo == 'mes')
+        this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do mês ${this.request.periodo}` };
+      else
+        this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do ano de ${this.request.periodo}` };
+      this.cdr.detectChanges();
+    });
+  }
+
+  extrairQuantidadeVeiculo(veiculos: DadosVeiculos[]): number[] {
+    return veiculos.map(v => v.quantidade);
+  }
+
+  extrairTipoVeiculo(veiculos: DadosVeiculos[]): string[] {
+    return veiculos.map(v => v.tipo);
+  }
+
+  extrairDataGraficoFaturamento(faturamento: DadosFaturamento, periodo: string): string[] {
+    if (periodo == 'dia') {
+      return faturamento.dadosGraficoBruto.map(f => f.hora);
+    } else if (periodo == "mes") {
+      return faturamento.dadosGraficoBruto.map(f => f.dia);
+    } else {
+      return faturamento.dadosGraficoBruto.map(f => f.mes);
+    }
+  }
+
+  extrairGanhosGraficoFaturamento(faturamento: DadosFaturamento, tipo: string): number[] {
+    if (tipo == 'bruto')
+      return faturamento.dadosGraficoBruto.map(f => f.valorBruto);
+    else
+      return faturamento.dadosGraficoLiquido.map(f => f.valorLiquido);
   }
 
 }

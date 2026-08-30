@@ -64,9 +64,9 @@ export interface DadosFaturamento {
 export interface GraficoFaturamento {
   valorBruto: number;
   valorLiquido: number;
-  hora: String;
-  dia: String;
-  mes: String;
-  ano: String;
+  hora: string;
+  dia: string;
+  mes: string;
+  ano: string;
 }
 
