@@ -30,37 +30,40 @@
     </aside>
 
     <div class="filtros">
-        <div class="radio">
-            <div class="radio-div">
-                <label for="radio1">Dia</label>
-                <input type="radio" id="radio1" name="tipoPeriodo" [value]="tipos[0]" [(ngModel)]="request.tipo"
-                    (click)="alterarTipo(tipos[0])">
+        <div class="filtro-card">
+            <div class="radio-group">
+                <label class="radio-btn" [class.active]="request.tipo === tipos[0]">
+                    <input type="radio" id="radio1" name="tipoPeriodo" [value]="tipos[0]" [(ngModel)]="request.tipo"
+                        (click)="alterarTipo(tipos[0])">
+                    <span>Dia</span>
+                </label>
+
+                <label class="radio-btn" [class.active]="request.tipo === tipos[1]">
+                    <input type="radio" id="radio2" name="tipoPeriodo" [value]="tipos[1]" [(ngModel)]="request.tipo"
+                        (click)="alterarTipo(tipos[1])">
+                    <span>Mês</span>
+                </label>
+
+                <label class="radio-btn" [class.active]="request.tipo === tipos[2]">
+                    <input type="radio" id="radio3" name="tipoPeriodo" [value]="tipos[2]" [(ngModel)]="request.tipo"
+                        (click)="alterarTipo(tipos[2])">
+                    <span>Ano</span>
+                </label>
             </div>
-            <div class="radio-div">
-                <label for="radio2">Mês</label>
-                <input type="radio" id="radio2" name="tipoPeriodo" [value]="tipos[1]" [(ngModel)]="request.tipo"
-                    (click)="alterarTipo(tipos[1])">
-            </div>
-            <div class="radio-div">
-                <label for="radio3">Ano</label>
-                <input type="radio" id="radio3" name="tipoPeriodo" [value]="tipos[2]" [(ngModel)]="request.tipo"
-                    (click)="alterarTipo(tipos[2])">
+
+            <div class="periodo-group">
+                <input type="text" [(ngModel)]="campoPeriodo" [placeholder]="placeholderPeriodo"
+                    [mask]="mascaraPeriodo">
+                <button type="button" class="btn-filtrar" (click)="filtrar()">Filtrar</button>
             </div>
         </div>
-        <div class="periodo">
-            <h4>Digite o período</h4>
-            <input type="text" [(ngModel)]="campoPeriodo" [placeholder]="placeholderPeriodo" [mask]="mascaraPeriodo">
-            <button type="button" (click)="filtrar()">Filtrar</button>
-        </div>
+
         <div *ngIf="mensagemErro" class="msg-erro">
-            <div class="borda">
-                <div>
-                    <h4>{{ mensagemErro }}</h4>
-                </div>
-                <div>
-                    <button type="button" (click)="fecharMsgErro()">X</button>
-                </div>
+            <h4>{{ mensagemErro }}</h4>
+            <div class="btn-fechar">
+                <button type="button" (click)="fecharMsgErro()">x</button>
             </div>
+
         </div>
     </div>
 
@@ -68,33 +71,19 @@
 
         <!-- Tela do gerente -->
 
-        <!-- Dados Equipe -->
-        <div class="grid-dados">
-            <div>
-                <h4 class="texto-grid">Membros totais: {{ totalMembros }}</h4>
-            </div>
-            <div *ngIf="funcionarioDestaque != undefined">
-                <h4 class="texto-grid">Funcionário destaque: {{ funcionarioDestaque.nome }}</h4>
-                <h4 class="texto-grid">Atendimentos concluídos: {{ funcionarioDestaque.servicosConcluidos }}</h4>
-            </div>
-        </div>
-
-        <div class="grafico">
-            <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
-                [title]="graficoTipoMembros.title">
-            </apx-chart>
-        </div>
-
         <!-- Atendimento -->
         <div class="grid-dados">
             <div>
-                <h4 class="texto-grid">Clientes atendidos: {{ clientesAtendidos }}</h4>
+                <h4>Clientes atendidos</h4>
+                <h2>{{ clientesAtendidos }}</h2>
             </div>
             <div>
-                <h4 class="texto-grid">Serviços finalizados {{ servicosFinalizados }}</h4>
+                <h4>Serviços finalizados</h4>
+                <h2>{{ servicosFinalizados }}</h2>
             </div>
             <div>
-                <h4 class="texto-grid">Ordens em andamento {{ ordensEmAndamento }}</h4>
+                <h4>Ordens em andamento</h4>
+                <h2>{{ ordensEmAndamento }}</h2>
             </div>
         </div>
 
@@ -108,10 +97,12 @@
         <!-- Faturamento -->
         <div class="grid-dados">
             <div>
-                <h4 class="texto-grid">Total Bruto: {{ totalBruto }}</h4>
+                <h4>Total Bruto</h4>
+                <h2>R${{ totalBruto }}</h2>
             </div>
             <div>
-                <h4 class="texto-grid">Total Líquido: {{ totalLiquido }}</h4>
+                <h4>Total Líquido</h4>
+                <h2>R${{ totalLiquido }}</h2>
             </div>
         </div>
 
@@ -121,17 +112,44 @@
             </apx-chart>
         </div>
 
+        <!-- Dados Equipe -->
+        <div class="grid-dados">
+            <div>
+                <h4>Membros totais</h4>
+                <h2>{{ totalMembros }}</h2>
+            </div>
+            <div *ngIf="funcionarioDestaque != undefined" class="div-func-destaque">
+                <div>
+                    <h4>Funcionário destaque</h4>
+                    <h2>{{ funcionarioDestaque.nome }}</h2>
+                </div>
+                <div>
+                    <h4>Atendimentos concluídos</h4>
+                    <h2>{{ funcionarioDestaque.servicosConcluidos }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="grafico">
+            <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
+                [title]="graficoTipoMembros.title">
+            </apx-chart>
+        </div>
+
         <!-- Tela do funcionário -->
 
         <div class="grid-dados">
             <div>
-                <h4 class="texto-grid">Ordens finalizadas: {{ ordensFinalizadasFuncionario }}</h4>
+                <h4>Ordens finalizadas</h4>
+                <h2>{{ ordensFinalizadasFuncionario }}</h2>
             </div>
             <div>
-                <h4 class="texto-grid">Ordens em andamento: {{ ordensEmAndamentoFuncionario }}</h4>
+                <h4>Ordens em andamento</h4>
+                <h2>{{ ordensEmAndamentoFuncionario }}</h2>
             </div>
             <div>
-                <h4 class="texto-grid">Faturamento total: R${{ faturamentoTotalFuncionario }}</h4>
+                <h4>Faturamento total</h4>
+                <h2>R${{ faturamentoTotalFuncionario }}</h2>
             </div>
         </div>
 

@@ -22,7 +22,7 @@ ng-select.custom-ng-select {
 /* ApexCharts */
 
 .apexcharts-menu-item {
-  color: #000 !important;   /* cor dos ícones */
+    color: #000 !important;
 }
 
 apx-chart {
@@ -34,7 +34,39 @@ apx-chart div:first-child {
     height: 100%;
 }
 
-.apexcharts-canvas, .apexcharts-canvas svg, foreignObject {
+.apexcharts-canvas,
+.apexcharts-canvas svg,
+foreignObject {
     height: 100% !important;
 }
 
+.apexcharts-toolbar {
+    background-color: #0F172A !important;
+}
+
+.apexcharts-menu-icon[aria-expanded="true"] svg,
+.apexcharts-menu-icon[aria-expanded="false"] svg {
+    stroke: #FFFFFF !important;
+}
+
+.apexcharts-menu {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+.apexcharts-menu-item:hover {
+  background-color: #334155 !important;
+}
+
+.apexcharts-menu.apexcharts-menu-open div {
+    color: #FFFFFF !important;
+}
+
+/* Grafico pizza */
+.apexcharts-legend.apexcharts-align-center.apx-legend-position-right {
+    justify-content: center !important;
+}
+
+.apexcharts-legend.apexcharts-align-center.apx-legend-position-right div:first-child {
+    height: auto !important;
+}

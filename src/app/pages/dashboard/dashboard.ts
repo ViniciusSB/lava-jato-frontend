@@ -41,7 +41,7 @@ export class DashboardComponent {
   mascaraPeriodo = "00-00-0000"
   placeholderPeriodo = "dd-mm-aaaa"
   tipos = ['dia', 'mes', 'ano'];
-  request: DashboardFuncionarioRequest = { tipo: '', periodo: ''};
+  request: DashboardFuncionarioRequest = { tipo: '', periodo: '' };
 
   constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef) {
     const data = new Date();
@@ -90,7 +90,6 @@ export class DashboardComponent {
 
   filtrar() {
     const caracteres = this.campoPeriodo.length;
-    this.resetarDadosDashboard();
     if (this.request.tipo == "dia") {
       if (!(caracteres == 2 || caracteres == 5 || caracteres == 10)) {
         this.mensagemErro = "Data mal formatada";
@@ -115,6 +114,7 @@ export class DashboardComponent {
 
     this.request.periodo = this.campoPeriodo;
     this.mensagemErro = "";
+    this.resetarDadosDashboard();
     this.preencherDashboards(this.request.tipo, "ambos");
   }
 
@@ -220,8 +220,8 @@ export class DashboardComponent {
   iniciarGrafico(tipo: string, titulo: string): any {
     return {
       series: [],
-      chart: { type: tipo, toolbar: { show: true }, background: "#FFFFFF" },
-      xaxis: { categories: [] },
+      chart: { type: tipo, toolbar: { show: true }, background: "#0F172A", foreColor: "#FFFFFF" },
+      xaxis: { categories: [], labels: { style: { colors: "94a3b8" } } },
       title: { text: titulo }
     };
   }
@@ -241,35 +241,26 @@ export class DashboardComponent {
     this.graficoTipoMembros.title = { text: '' };
     this.graficoTipoMembros.series = [{}];
     this.totalMembros = 0;
-    
+
     this.graficoTipoVeiculos.xaxis = { categories: [] };
     this.graficoTipoVeiculos.title = { text: '' };
-    this.graficoTipoVeiculos.series = [{ }];
+    this.graficoTipoVeiculos.series = [{}];
     this.clientesAtendidos = 0;
     this.servicosFinalizados = 0;
     this.ordensEmAndamento = 0;
 
     this.graficoFaturamento.xaxis = { categories: [] };
     this.graficoFaturamento.title = { text: '' };
-    this.graficoFaturamento.series = [{ }];
+    this.graficoFaturamento.series = [{}];
     this.totalBruto = 0;
     this.totalLiquido = 0;
 
     this.graficoFaturamentoFuncionario.xaxis = { categories: [] };
     this.graficoFaturamentoFuncionario.title = { text: '' };
-    this.graficoFaturamentoFuncionario.series = [{ }];
+    this.graficoFaturamentoFuncionario.series = [{}];
     this.ordensEmAndamentoFuncionario = 0;
     this.ordensFinalizadasFuncionario = 0;
     this.faturamentoTotalFuncionario = 0;
-
-
-    /*
-    this.graficoTipoVeiculos.series = [{ name: "quantidade", data: this.extrairQuantidadeVeiculo(dados.atendimento.veiculos) }];
-      this.graficoTipoVeiculos.xaxis = { categories: this.extrairTipoVeiculo(dados.atendimento.veiculos) };
-      if (periodo == 'dia')
-        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no dia ${this.request.periodo}` }
-      */
-    
   }
 
   /* FUNCIONARIO */

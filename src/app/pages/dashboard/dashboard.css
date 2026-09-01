@@ -26,6 +26,7 @@ body {
   left: 0;
   right: 0;
   border-bottom: 2px solid #b1b1b1;
+  z-index: 999;
 }
 
 .menu-superior {
@@ -76,75 +77,109 @@ body {
   width: 95%;
   margin: 5rem auto 2rem auto;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 2px;
+  position: relative;
 }
 
-.radio {
+.filtro-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.8rem;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
-.radio-div input {
-  margin-left: 0.2rem;
-}
-
-.periodo {
-  margin-left: 0.5rem;
-}
-
-.periodo input {
+.radio-group {
+  display: flex;
+  background-color: #0f172a;
   padding: 0.2rem;
-  border: 2px solid #6970d3;
-  border-radius: 8px;
-  outline: none;
-  width: 8rem;
+  border-radius: 0.4rem;
+  border: 1px solid #334155;
 }
 
-
-.periodo button {
-  border-radius: 5px;
-  background-color: #6366F1;
-  border: none;
-  padding: 0.3rem;
+.radio-btn {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.3rem;
   cursor: pointer;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+.radio-btn input[type="radio"] {
+  display: none;
+}
+
+.radio-btn.active {
+  background-color: #6366f1;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.periodo-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.periodo-group input {
+  padding: 0.6rem 0.6rem;
+  border: 1px solid #334155;
+  border-radius: 0.3rem;
+  background-color: #0f172a;
   color: #ffffff;
-  margin-left: 0.1rem;
+  outline: none;
+  width: 9rem;
+  font-size: 0.85rem;
+}
+
+.periodo-group input:focus {
+  border-color: #6366f1;
+}
+
+.btn-filtrar {
+  border-radius: 0.3rem;
+  background-color: #6366f1;
+  border: none;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.btn-filtrar:hover {
+  background-color: #4f46e5;
 }
 
 .msg-erro {
-  color: #ffffff;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 5rem 8rem 0 0;
-}
-
-.msg-erro .borda {
   border-radius: 5px;
   display: flex;
   align-items: center;
+  gap: 0.3rem;
   background-color: #e63b3b9d;
   padding: 0.3rem;
 }
 
-.borda h4 {
-  margin-left: 0.2rem;
-}
-
-.borda button {
+.msg-erro button {
   margin: 0 0.4rem;
-  height: 1em;
-  width: 1rem;
   border: none;
+  background: none;
   cursor: pointer;
-  background-color: #dc2626;
+  background-color: #ef4444;
   border-radius: 0.3rem;
+  padding: 0.1rem 0.3rem;
   color: #ffffff;
 }
 
-.borda button:hover {
-  background-color: #ef4444;
+.msg-erro button:hover {
+  background-color: #dc2626;
 }
 
 .grid {
@@ -156,35 +191,54 @@ body {
 }
 
 .grid-dados {
-  background-color: #ffffff;
+  background-color: #0F172A;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.grid-dados-3col {
-  background-color: #ffffff;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
 .grid-dados div {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgb(192, 192, 192);
+  background-color: #1e293b;
   width: 80%;
   height: 50%;
   margin: auto;
   border-radius: 10px;
+  gap: 0.5rem;
+  border: 1px solid #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-/*
-.grid-dados div:last-child {
-    grid-column: 1 / -1;
-    width: 50%;
+.grid-dados div:hover {
+  border-color: #6366f1;
+  transform: translateY(-2px);
 }
-*/
 
-.grid-dados div h5 {
-  text-align: center;
+.grid-dados .div-func-destaque {
+  border: none;
+  box-shadow: none;
+}
+
+.grid-dados .div-func-destaque:hover {
+  border: none;
+  transform: none;
+}
+
+.grid-dados .div-func-destaque div:hover {
+  transform: translateX(+2px);
+}
+
+.grid-dados div h4 {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.grid-dados div h2 {
+  color: #f8fafc;
+  font-size: 1.85rem;
+  font-weight: 700;
 }
