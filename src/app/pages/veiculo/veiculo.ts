@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Veiculo} from '../../models/veiculo';
+import { Veiculo } from '../../models/veiculo';
 import { FormsModule } from '@angular/forms';
 import { VeiculoService } from '../../services/veiculo/veiculo';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente/cliente';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-veiculo',
@@ -16,6 +17,7 @@ import { ClienteService } from '../../services/cliente/cliente';
   styleUrl: './veiculo.css',
 })
 export class VeiculoComponent {
+  idUsuarioLogado = 0;
   veiculos: Observable<Veiculo[]> | undefined;
   veiculoSelecionado: Veiculo | undefined;
   inserirVeiculo: boolean = false;
@@ -38,9 +40,14 @@ export class VeiculoComponent {
   tipoSecionado: string = '';
   tipos: string[] = ['MOTO', 'CARRO', 'CAMINHONETE', 'CAMINHAO'];
 
-  constructor(private veiculoService: VeiculoService, private clienteService: ClienteService) {}
+  constructor(private veiculoService: VeiculoService, private clienteService: ClienteService, private router: Router) { }
 
   ngOnInit() {
+    if (localStorage.getItem("token") == '') {
+      this.router.navigate(["/login"]);
+      return;
+    }
+    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
     this.veiculoService.getAll();
     this.veiculos = this.veiculoService.veiculos;
   }
@@ -64,7 +71,7 @@ export class VeiculoComponent {
       this.clienteService.getAll();
       this.clientes = this.clienteService.clientes;
     }
-    this.veiculoSelecionado = {... v};
+    this.veiculoSelecionado = { ...v };
     this.inserirVeiculo = false;
   }
 
@@ -81,15 +88,15 @@ export class VeiculoComponent {
       });
     } else if (this.inserirVeiculo) {
       this.veiculoService.create(this.novoVeiculo).subscribe({
-      next: () => {
-        this.novoVeiculo = {marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: ''};
-        this.inserirVeiculo = false;
-      },
-      error: (err) => {
-        console.error('Erro ao cadastrar veículo:', err);
-        alert('Não foi possível cadastrar o veículo.');
-      }
-    })
+        next: () => {
+          this.novoVeiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: '' };
+          this.inserirVeiculo = false;
+        },
+        error: (err) => {
+          console.error('Erro ao cadastrar veículo:', err);
+          alert('Não foi possível cadastrar o veículo.');
+        }
+      })
     }
   }
 
@@ -109,21 +116,21 @@ export class VeiculoComponent {
   }
 
   confirmarExclusao() {
-    if (this.idVeiculoExclusao != null){
+    if (this.idVeiculoExclusao != null) {
       this.veiculoService.delete(this.idVeiculoExclusao).subscribe({
-      next: () => {
-        this.idVeiculoExclusao = null;
-        this.excluirSelecionado = false;
-      },
-      error: (err) => {
-        console.log('Erro ao deletar o veículo', err);
-        alert('Não foi possível deletar o veículo.')
-      }
-    });
+        next: () => {
+          this.idVeiculoExclusao = null;
+          this.excluirSelecionado = false;
+        },
+        error: (err) => {
+          console.log('Erro ao deletar o veículo', err);
+          alert('Não foi possível deletar o veículo.')
+        }
+      });
     }
   }
 
- 
+
 
 
 }

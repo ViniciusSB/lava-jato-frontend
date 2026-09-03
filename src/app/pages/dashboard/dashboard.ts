@@ -5,6 +5,7 @@ import { DashboardService } from '../../services/dashboard/dashboard';
 import { DadosFaturamento, DadosVeiculos, DashboardFuncionario, DashboardFuncionarioRequest, DashboardGerente, FuncionarioDestaque, GraficoItem } from '../../models/dashboard';
 import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,11 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
   styleUrl: './dashboard.css',
 })
 export class DashboardComponent {
+  idUsuarioLogado = 0;
+  tipoUsuarioLogado = "";
+
+  userOpcoes = false;
+
   totalMembros = 0;
   funcionarioDestaque: FuncionarioDestaque | undefined;
   graficoTipoMembros: any;
@@ -43,7 +49,7 @@ export class DashboardComponent {
   tipos = ['dia', 'mes', 'ano'];
   request: DashboardFuncionarioRequest = { tipo: '', periodo: '' };
 
-  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef) {
+  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef, private router: Router) {
     const data = new Date();
     this.diaAtual = data.getDate().toString();
     if (data.getDate() < 10)
@@ -56,11 +62,18 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    if (localStorage.getItem("token") == "") {
+      this.router.navigate(["/login"]);
+      return;
+    }
+
+    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
+    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.iniciarGraficos();
 
     // Inicialmente traz os dados do dia
     this.request = { periodo: this.diaAtual, tipo: 'dia' };
-    this.preencherDashboards(this.request.tipo, "ambos");
+    this.preencherDashboards(this.request.tipo);
   }
 
   alterarTipo(tipo: string) {
@@ -85,7 +98,7 @@ export class DashboardComponent {
       this.placeholderPeriodo = "dd-mm-aaaa"
     }
     this.mensagemErro = "";
-    this.preencherDashboards(this.request.tipo, "ambos");
+    this.preencherDashboards(this.request.tipo);
   }
 
   filtrar() {
@@ -115,7 +128,7 @@ export class DashboardComponent {
     this.request.periodo = this.campoPeriodo;
     this.mensagemErro = "";
     this.resetarDadosDashboard();
-    this.preencherDashboards(this.request.tipo, "ambos");
+    this.preencherDashboards(this.request.tipo);
   }
 
   validarPeriodoFiltroDia(): boolean {
@@ -226,14 +239,12 @@ export class DashboardComponent {
     };
   }
 
-  preencherDashboards(periodo: string, tipoUsuario: string) {
-    if (tipoUsuario == 'ambos') {
+  preencherDashboards(periodo: string) {
+    if (this.tipoUsuarioLogado == 'GERENTE' || this.tipoUsuarioLogado == 'ADM') {
       this.preecherDashboardFuncionario(periodo);
       this.preecherDashboardGerente(periodo);
-    } else if (tipoUsuario == 'funcionario')
+    } else if (this.tipoUsuarioLogado == 'FUNCIONARIO')
       this.preecherDashboardFuncionario(periodo);
-    else
-      this.preecherDashboardGerente(periodo);
   }
 
   resetarDadosDashboard() {
@@ -263,25 +274,46 @@ export class DashboardComponent {
     this.faturamentoTotalFuncionario = 0;
   }
 
+  menuOpcoesUsuario() {
+    this.userOpcoes = !this.userOpcoes;
+  }
+
+  logout() {
+    localStorage.setItem("token", "");
+    localStorage.setItem("idUsuario", "");
+    localStorage.setItem("tipoUsuaio", "");
+    this.router.navigate(["/login"]);
+  }
+
   /* FUNCIONARIO */
   preecherDashboardFuncionario(periodo: string) {
-    this.dashboardService.getDadosDashboardFuncionario(5, this.request).subscribe((dados: DashboardFuncionario) => {
-      this.ordensFinalizadasFuncionario = dados.ordensFinalizadas;
-      this.ordensEmAndamentoFuncionario = dados.ordensEmAndamento;
-      this.faturamentoTotalFuncionario = dados.faturamentoTotal;
+    this.dashboardService.getDadosDashboardFuncionario(this.idUsuarioLogado, this.request).subscribe({
+      next: (response) => {
 
-      const ganhos = this.extrairGanhos(dados.grafico);
-      const data = this.extrairData(dados.grafico, periodo);
+        const dados = response.body!;
+        this.ordensFinalizadasFuncionario = dados.ordensFinalizadas;
+        this.ordensEmAndamentoFuncionario = dados.ordensEmAndamento;
+        this.faturamentoTotalFuncionario = dados.faturamentoTotal;
 
-      this.graficoFaturamentoFuncionario.series = [{ name: "Ganhos", data: ganhos }];
-      this.graficoFaturamentoFuncionario.xaxis = { categories: data };
-      if (periodo == 'dia')
-        this.graficoFaturamentoFuncionario.title = { text: "Ganhos Diários R$ x Hora" }
-      else if (periodo == 'mes')
-        this.graficoFaturamentoFuncionario.title = { text: "Ganhos Mensais R$ x Dia" }
-      else
-        this.graficoFaturamentoFuncionario.title = { text: "Ganhos Anuais R$ x Mês" }
-      this.cdr.detectChanges();
+        const ganhos = this.extrairGanhos(dados.grafico);
+        const data = this.extrairData(dados.grafico, periodo);
+
+        this.graficoFaturamentoFuncionario.series = [{ name: "Ganhos", data: ganhos }];
+        this.graficoFaturamentoFuncionario.xaxis = { categories: data };
+        if (periodo == 'dia')
+          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Diários R$ x Hora" }
+        else if (periodo == 'mes')
+          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Mensais R$ x Dia" }
+        else
+          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Anuais R$ x Mês" }
+        this.cdr.detectChanges();
+
+      },
+      error: (err) => {
+        if (err.status == 403) {
+          this.router.navigate(["/login"]);
+        }
+      }
     });
   }
 
@@ -301,42 +333,51 @@ export class DashboardComponent {
 
   /* GERENTE */
   preecherDashboardGerente(periodo: string) {
-    this.dashboardService.getDadosDashboardGerente(this.request).subscribe((dados: DashboardGerente) => {
-      this.totalMembros = dados.equipe.totalMembros;
-      this.funcionarioDestaque = dados.equipe.funcionarioDestaque;
+    this.dashboardService.getDadosDashboardGerente(this.request).subscribe({
+      next: (response) => {
+        const dados = response.body!;
+        this.totalMembros = dados.equipe.totalMembros;
+        this.funcionarioDestaque = dados.equipe.funcionarioDestaque;
 
-      this.graficoTipoMembros.series = [{ data: [{ x: 'funcionário', y: dados.equipe.qtdFuncionarios }, { x: 'gerente', y: dados.equipe.qtdGerentes }, { x: 'administrador', y: dados.equipe.qtdAdministrador }] }];
-      this.graficoTipoMembros.title = { text: "Equipe Lava Jato" }
-      this.cdr.detectChanges();
+        this.graficoTipoMembros.series = [{ data: [{ x: 'funcionário', y: dados.equipe.qtdFuncionarios }, { x: 'gerente', y: dados.equipe.qtdGerentes }, { x: 'administrador', y: dados.equipe.qtdAdministrador }] }];
+        this.graficoTipoMembros.title = { text: "Equipe Lava Jato" }
+        this.cdr.detectChanges();
 
-      this.clientesAtendidos = dados.atendimento.clientesAtendidos;
-      this.servicosFinalizados = dados.atendimento.servicosFinalizados;
-      this.ordensEmAndamento = dados.atendimento.ordensEmAndamento;
+        this.clientesAtendidos = dados.atendimento.clientesAtendidos;
+        this.servicosFinalizados = dados.atendimento.servicosFinalizados;
+        this.ordensEmAndamento = dados.atendimento.ordensEmAndamento;
 
-      this.graficoTipoVeiculos.series = [{ name: "quantidade", data: this.extrairQuantidadeVeiculo(dados.atendimento.veiculos) }];
-      this.graficoTipoVeiculos.xaxis = { categories: this.extrairTipoVeiculo(dados.atendimento.veiculos) };
-      if (periodo == 'dia')
-        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no dia ${this.request.periodo}` }
-      else if (periodo == 'mes')
-        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no mês ${this.request.periodo}` }
-      else
-        this.graficoTipoVeiculos.title = { text: `Veículos finalizados no ano de ${this.request.periodo}` }
-      this.graficoTipoVeiculos.colors = ['#FF0000', '#00FF00', '#0000FF', '#FFA500'];
-      this.graficoTipoVeiculos.plotOptions = { bar: { distributed: true } };
-      this.cdr.detectChanges();
+        this.graficoTipoVeiculos.series = [{ name: "quantidade", data: this.extrairQuantidadeVeiculo(dados.atendimento.veiculos) }];
+        this.graficoTipoVeiculos.xaxis = { categories: this.extrairTipoVeiculo(dados.atendimento.veiculos) };
+        if (periodo == 'dia')
+          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no dia ${this.request.periodo}` }
+        else if (periodo == 'mes')
+          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no mês ${this.request.periodo}` }
+        else
+          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no ano de ${this.request.periodo}` }
+        this.graficoTipoVeiculos.colors = ['#FF0000', '#00FF00', '#0000FF', '#FFA500'];
+        this.graficoTipoVeiculos.plotOptions = { bar: { distributed: true } };
+        this.cdr.detectChanges();
 
-      this.totalBruto = dados.faturamento.totalBruto;
-      this.totalLiquido = dados.faturamento.totalLiquido;
+        this.totalBruto = dados.faturamento.totalBruto;
+        this.totalLiquido = dados.faturamento.totalLiquido;
 
-      this.graficoFaturamento.series = [{ name: "Valor Líquido", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "liquido") }, { name: "Valor Bruto", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "bruto") }];
-      this.graficoFaturamento.xaxis = { categories: this.extrairDataGraficoFaturamento(dados.faturamento, periodo) };
-      if (periodo == 'dia')
-        this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do dia ${this.request.periodo}` };
-      else if (periodo == 'mes')
-        this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do mês ${this.request.periodo}` };
-      else
-        this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do ano de ${this.request.periodo}` };
-      this.cdr.detectChanges();
+        this.graficoFaturamento.series = [{ name: "Valor Líquido", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "liquido") }, { name: "Valor Bruto", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "bruto") }];
+        this.graficoFaturamento.xaxis = { categories: this.extrairDataGraficoFaturamento(dados.faturamento, periodo) };
+        if (periodo == 'dia')
+          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do dia ${this.request.periodo}` };
+        else if (periodo == 'mes')
+          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do mês ${this.request.periodo}` };
+        else
+          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do ano de ${this.request.periodo}` };
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        if (err.status == 403) {
+          this.router.navigate(["/login"]);
+          return;
+        }
+      }
     });
   }
 

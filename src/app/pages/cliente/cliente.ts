@@ -8,6 +8,7 @@ import { TelefoneMaskDirective } from '../../util/telefone-mak';
 import { VeiculoService } from '../../services/veiculo/veiculo';
 import { Veiculo } from '../../models/veiculo';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cliente',
@@ -25,6 +26,8 @@ export class ClienteComponent {
     nome: '', celular: '', fidelidade: 0,
     id: 0, veiculos: []
   }
+
+  idUsuarioLogado = 0;
 
   revelarVeiculosCliente: boolean = false;
   
@@ -47,9 +50,15 @@ export class ClienteComponent {
 
   constructor(
     private clienteService: ClienteService, 
-    private veiculoService: VeiculoService) {}
+    private veiculoService: VeiculoService,
+    private router: Router) {}
 
   ngOnInit() {
+    if (localStorage.getItem("token") == '') {
+      this.router.navigate(["/login"]);
+      return;
+    }
+    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
     this.clienteService.getAll();
     this.clientes = this.clienteService.clientes;
   }

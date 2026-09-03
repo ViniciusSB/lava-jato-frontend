@@ -5,6 +5,7 @@ import { UsuarioService } from '../../services/usuario/usuario';
 import { Usuario } from '../../models/usuario';
 import { Observable } from 'rxjs';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-usuario',
@@ -14,6 +15,8 @@ import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
   styleUrls: ['./usuario.css'],
 })
 export class UsuarioComponent {
+
+  idUsuarioLogado = 0;
   
   usuarios!: Observable<Usuario[]>;
 
@@ -29,9 +32,17 @@ export class UsuarioComponent {
 
   idUsuarioExclusao: number | null = null;
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService, private router: Router) {}
 
   ngOnInit() {
+    if (localStorage.getItem("token") == '') {
+      this.router.navigate(["/login"]);
+      return;
+    } else if (localStorage.getItem("tipoUsuario") == 'FUNCIONARIO') {
+      this.router.navigate(["/"]);
+      return;
+    }
+    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
     this.usuarioService.getAll();
     this.usuarios = this.usuarioService.usuarios;
   }

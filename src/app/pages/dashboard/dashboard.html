@@ -27,6 +27,15 @@
                 </ul>
             </nav>
         </div>
+        <div class="user">
+            <img [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'" (click)="menuOpcoesUsuario()">
+            @if (userOpcoes) {
+            <ul>
+                <li><a href="#">Opções</a></li>
+                <li><a (click)="logout()">Sair</a></li>
+            </ul>
+            }
+        </div>
     </aside>
 
     <div class="filtros">
@@ -69,7 +78,7 @@
     <div class="grid">
 
         <!-- Tela do gerente -->
-
+        @if (tipoUsuarioLogado == 'GERENTE' || tipoUsuarioLogado == 'ADM') {
         <!-- Atendimento -->
         <div class="grid-dados">
             <div>
@@ -134,9 +143,10 @@
                 [title]="graficoTipoMembros.title">
             </apx-chart>
         </div>
+        }
 
         <!-- Tela do funcionário -->
-
+        @else if (tipoUsuarioLogado == 'FUNCIONARIO') {
         <div class="grid-dados">
             <div>
                 <h4>Ordens finalizadas</h4>
@@ -157,6 +167,7 @@
                 [xaxis]="graficoFaturamentoFuncionario.xaxis" [title]="graficoFaturamentoFuncionario.title">
             </apx-chart>
         </div>
+        }
     </div>
 
 </body>

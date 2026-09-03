@@ -6,6 +6,7 @@ import { Usuario } from '../../models/usuario';
 @Injectable({providedIn: 'root'})
 export class UsuarioService {
     private urlBase = "http://localhost:8080/usuario";
+    private token = localStorage.getItem("token");
 
     constructor(private http: HttpClient){}
 
@@ -13,7 +14,8 @@ export class UsuarioService {
     usuarios = this.usuariosSubject.asObservable();
 
     getAll() {
-        this.http.get<Usuario[]>(`${this.urlBase}/listar`).subscribe(
+        const headers = { Authorization: `Bearer ${this.token}` };
+        this.http.get<Usuario[]>(`${this.urlBase}/listar`, {headers}).subscribe(
             data => {
                 this.usuariosSubject.next(data);
             }
@@ -21,19 +23,22 @@ export class UsuarioService {
     }
 
     create(usuario: Usuario){
-        return this.http.post<Usuario>(`${this.urlBase}/cadastrar`, usuario).pipe(
+        const headers = { Authorization: `Bearer ${this.token}`};
+        return this.http.post<Usuario>(`${this.urlBase}/cadastrar`, usuario, {headers}).pipe(
             tap( () => this.getAll() )
         );
     }
 
     update(usuario: Usuario){
-        return this.http.put<Usuario>(`${this.urlBase}/atualizar`, usuario).pipe(
+        const headers = { Authorization: `Bearer ${this.token}` };
+        return this.http.put<Usuario>(`${this.urlBase}/atualizar`, usuario, {headers}).pipe(
             tap( () => this.getAll() )
         );
     }
 
     delete(id: number){
-        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
+        const headers = { Authorization: `Bearer ${this.token}` };
+        return this.http.delete(`${this.urlBase}/deletar/${id}`, {headers}).pipe(
             tap( () => this.getAll() )
         )
     }

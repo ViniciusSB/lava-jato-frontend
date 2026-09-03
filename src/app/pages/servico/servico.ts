@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Servico } from '../../models/servico';
 import { ServicoService } from '../../services/servico/servico';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,9 @@ import { ServicoService } from '../../services/servico/servico';
   styleUrl: './servico.css',
 })
 export class ServicoComponent {
-  
+
+  idUsuarioLogado = 0;
+
   servicos: Observable<Servico[]> | undefined;
 
   servicoSelecionado: Servico | null = null;
@@ -30,9 +33,15 @@ export class ServicoComponent {
 
   idServicoExclusao: number | null = null;
 
-  constructor(private servicoService: ServicoService) {}
+  constructor(private servicoService: ServicoService, private router: Router
+  ) { }
 
   ngOnInit() {
+    if (localStorage.getItem("token") == '') {
+      this.router.navigate(["/login"]);
+      return;
+    }
+    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
     this.servicoService.getAll();
     this.servicos = this.servicoService.servicos;
   }
@@ -43,14 +52,14 @@ export class ServicoComponent {
   }
 
   editar(s: Servico) {
-    this.servicoSelecionado = {... s};
+    this.servicoSelecionado = { ...s };
     this.inserirServico = false;
   }
 
   fechar() {
     this.servicoSelecionado = null;
     this.inserirServico = false;
-    this.novoServico = {id: 0, detalhes: '', precoBase: 0, tipo: ''};
+    this.novoServico = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
   }
 
   salvar() {
@@ -67,16 +76,16 @@ export class ServicoComponent {
       });
     } else if (this.inserirServico) {
       this.servicoService.create(this.novoServico).subscribe({
-      next: () => {
-        this.inserirServico = false;
-        this.novoServico = {id: 0, detalhes: '', precoBase: 0, tipo: ''};
-      },
-      error: (err) => {
-        console.error('Erro ao cadastrar serviço:', err);
-        alert('Não foi possível cadastrar o serviço.');
-      }
-    })
-    } 
+        next: () => {
+          this.inserirServico = false;
+          this.novoServico = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
+        },
+        error: (err) => {
+          console.error('Erro ao cadastrar serviço:', err);
+          alert('Não foi possível cadastrar o serviço.');
+        }
+      })
+    }
   }
 
   excluir(id: number) {
@@ -90,17 +99,17 @@ export class ServicoComponent {
   }
 
   confirmarExclusao() {
-    if (this.idServicoExclusao != null){
+    if (this.idServicoExclusao != null) {
       this.servicoService.delete(this.idServicoExclusao).subscribe({
-      next: () => {
-        this.idServicoExclusao = null;
-        this.excluirSelecionado = false;
-      },
-      error: (err) => {
-        console.error('Erro ao excluir o serviço:', err);
-        alert('Não foi possível excluir o serviço. Tente novamente mais tarde.');
-      }
-    });
+        next: () => {
+          this.idServicoExclusao = null;
+          this.excluirSelecionado = false;
+        },
+        error: (err) => {
+          console.error('Erro ao excluir o serviço:', err);
+          alert('Não foi possível excluir o serviço. Tente novamente mais tarde.');
+        }
+      });
     }
   }
 

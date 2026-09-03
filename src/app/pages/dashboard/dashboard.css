@@ -73,6 +73,48 @@ body {
   transform: scale(1.2);
 }
 
+.user {
+  position: absolute;
+  top: 0.5rem;
+  right: 2.8rem;
+}
+
+.user img {
+  width: 2.5rem;
+  height: 1.8rem;
+  cursor: pointer;
+}
+
+.user ul {
+  position: absolute;
+  right: -0.8rem;
+  padding-top: 0.6rem;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user ul li {
+  width: 4rem;
+  text-align: center;
+}
+
+.user ul li:hover {
+  background-color: #e7e7eb;
+}
+
+.user ul li a {
+  color: #000000;
+  padding: 0.8rem 0;
+  cursor: pointer;
+  transition: none;
+}
+
+.user ul li a:hover {
+  transform: none;
+}
+
 .filtros {
   width: 95%;
   margin: 5rem auto 2rem auto;

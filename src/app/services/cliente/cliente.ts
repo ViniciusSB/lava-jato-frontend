@@ -11,29 +11,34 @@ export class ClienteService {
 
     private clientesSubject = new BehaviorSubject<Cliente[]>([]);
     clientes = this.clientesSubject.asObservable();
+    private token = localStorage.getItem("token");
 
     getAll() {
-        this.http.get<Cliente[]>(`${this.urlBase}/listar`).subscribe(
-            data => {
-                this.clientesSubject.next(data);
+        const headers = { Authorization: `Bearer ${this.token}` };
+        this.http.get<Cliente[]>(`${this.urlBase}/listar`, {headers, observe: 'response'} ).subscribe(
+            response => {
+                this.clientesSubject.next(response.body ?? []);
             }
         );
     }
 
     create(usuario: Cliente){
-        return this.http.post<Cliente>(`${this.urlBase}/cadastrar`, usuario).pipe(
+        const headers = { Authorization: `Bearer ${this.token}` };
+        return this.http.post<Cliente>(`${this.urlBase}/cadastrar`, usuario, {headers}).pipe(
             tap( () => this.getAll() )
         );
     }
 
     update(usuario: Cliente){
-        return this.http.put<Cliente>(`${this.urlBase}/atualizar`, usuario).pipe(
+        const headers = { Authorization: `Bearer ${this.token}` };
+        return this.http.put<Cliente>(`${this.urlBase}/atualizar`, usuario, {headers}).pipe(
             tap( () => this.getAll() )
         );
     }
 
     delete(id: number){
-        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
+        const headers = { Authorization: `Bearer ${this.token}` };
+        return this.http.delete(`${this.urlBase}/deletar/${id}`, {headers}).pipe(
             tap( () => this.getAll() )
         )
     }

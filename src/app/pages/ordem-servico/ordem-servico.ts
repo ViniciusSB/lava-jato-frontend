@@ -19,6 +19,7 @@ import { Usuario } from '../../models/usuario';
 import { Veiculo } from '../../models/veiculo';
 import { ServicoService } from '../../services/servico/servico';
 import { NormalizarEnum } from '../../util/normalizar-enum';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -35,6 +36,8 @@ import { NormalizarEnum } from '../../util/normalizar-enum';
   styleUrl: './ordem-servico.css',
 })
 export class OrdemServicoComponent {
+
+  idUsuarioLogado = 0;
 
   clienteControl = new FormControl();
 
@@ -66,14 +69,15 @@ export class OrdemServicoComponent {
   servicoSelecionado: Servico = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
   servicoAdicionadoId: number | null = null;
 
-  status = [{id: 'EM_ANDAMENTO', label: 'Em andamento'}, {id: 'FINALIZADO', label: 'Finalizado'}];
+  status = [{ id: 'EM_ANDAMENTO', label: 'Em andamento' }, { id: 'FINALIZADO', label: 'Finalizado' }];
 
   constructor(
     private ordemServicoService: OrdemServicoService,
     private clienteService: ClienteService,
     private usuarioService: UsuarioService,
     private veiculoService: VeiculoService,
-    private servicoService: ServicoService) { }
+    private servicoService: ServicoService,
+    private router: Router) { }
 
   inserirOrdem: boolean = false;
   editarOrdem: boolean = false;
@@ -82,7 +86,12 @@ export class OrdemServicoComponent {
   idOrdemExclusao: number | null = null;
 
   ngOnInit() {
-    this.ordemServicoService.getAll();
+    if (localStorage.getItem("token") == '') {
+      this.router.navigate(["/login"]);
+      return;
+    }
+    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
+    this.ordemServicoService.getAll(10, 1);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
   }
 

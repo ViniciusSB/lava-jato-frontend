@@ -14,17 +14,23 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
 
-  usuarioRequest: UsuarioRequest = { nome: '', email: '', senha: '', tipo: '' };
-
-  constructor(private loginService: LoginService, private cdr: ChangeDetectorRef, private router: Router) { }
-
   loginAtivo = true;
   registrarAtivo = false;
   senhaRevelada = false;
   mensagemErro = "";
   mensagemSucesso = "";
 
+  usuarioRequest: UsuarioRequest = { nome: '', email: '', senha: '', tipo: '' };
   tipos = [{ id: 'ADM', label: 'Administrador' }, { id: 'GERENTE', label: 'Gerente' }, { id: 'FUNCIONARIO', label: 'Funcionário' }];
+
+  constructor(private loginService: LoginService, private cdr: ChangeDetectorRef, private router: Router) { }
+
+  ngOnInit() {
+    if (localStorage.getItem("token") != '') {
+      this.router.navigate(["/"]);
+      return;
+    }
+  }
 
   fecharMsg() {
     this.mensagemErro = "";
