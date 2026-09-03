@@ -5,6 +5,7 @@ import { VeiculoComponent } from './pages/veiculo/veiculo';
 import { OrdemServicoComponent } from './pages/ordem-servico/ordem-servico';
 import { ServicoComponent } from './pages/servico/servico';
 import { DashboardComponent } from './pages/dashboard/dashboard';
+import { LoginComponent } from './pages/login/login';
 
 
 export const routes: Routes = [
@@ -14,5 +15,6 @@ export const routes: Routes = [
     { path: 'veiculo', component: VeiculoComponent, title: 'Veículo'},
     { path: 'ordemServico', component: OrdemServicoComponent, title: 'Ordem Serviço'},
     { path: 'servico', component: ServicoComponent, title: 'Serviço'},
+    { path: 'login', component: LoginComponent, title: 'Login'},
     { path: '**', redirectTo: '' }
 ];

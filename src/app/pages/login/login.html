@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+        integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="container">
+        <form>
+            <div class="login-registrar">
+                <a [class.ativo]="loginAtivo" (click)="loginSelecao()"><label>Login</label></a>
+                <a [class.ativo]="registrarAtivo" (click)="registrarSelecao()"><label>Registrar</label></a>
+            </div>
+
+            <div class="msg-container">
+                <div *ngIf="mensagemErro" class="msg msg-erro">
+                    <h4>{{ mensagemErro }}</h4>
+                    <div class="btn-fechar">
+                        <button type="button" (click)="fecharMsg()">x</button>
+                    </div>
+                </div>
+                <div *ngIf="mensagemSucesso" class="msg msg-sucesso">
+                    <h4>{{ mensagemSucesso }}</h4>
+                    <div class="btn-fechar">
+                        <button type="button" (click)="fecharMsg()">x</button>
+                    </div>
+                </div>
+            </div>
+
+            @if (loginAtivo) {
+            <div class="inputs">
+                <input type="text" placeholder="e-mail" name="email" [(ngModel)]="usuarioRequest.email">
+                <i class="fa-regular fa-envelope"></i>
+            </div>
+
+            <div class="inputs">
+                <input [type]="senhaRevelada ? 'text' : 'password'" placeholder="senha" name="senha"
+                    [(ngModel)]="usuarioRequest.senha">
+                <i [class]="senhaRevelada ? 'fa-regular fa-eye' : 'fa-solid fa-lock'" (click)="revelarSenha()"></i>
+            </div>
+
+            <div class="esqueci-senha">
+                <a (click)="esqueciSenha()">esqueci minha senha</a>
+            </div>
+
+            <div class="btn-login">
+                <button (click)="logar()" type="button">Login</button>
+            </div>
+            }
+            @else if (registrarAtivo) {
+
+            <div class="inputs">
+                <input type="text" placeholder="nome" name="nome" [(ngModel)]="usuarioRequest.nome">
+                <i class="fa-regular fa-user"></i>
+            </div>
+
+            <div class="inputs">
+                <input type="text" placeholder="e-mail" name="email" [(ngModel)]="usuarioRequest.email">
+                <i class="fa-regular fa-envelope"></i>
+            </div>
+
+            <div class="inputs">
+                <input [type]="senhaRevelada ? 'text' : 'password'" placeholder="senha" name="senha"
+                    [(ngModel)]="usuarioRequest.senha">
+                <i [class]="senhaRevelada ? 'fa-regular fa-eye' : 'fa-solid fa-lock'" (click)="revelarSenha()"></i>
+            </div>
+
+            <div class="inputs">
+                <select [(ngModel)]="usuarioRequest.tipo" name="tipo">
+                    <option value="" selected disabled>Escolha um tipo</option>
+                    @for (tipo of tipos; track tipo) {
+                    <option [value]="tipo.id">{{ tipo.label }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="btn-registrar">
+                <button type="button" (click)="cadastrar()">Registrar</button>
+            </div>
+            }
+
+
+
+        </form>
+    </div>
+
+</body>
+
+</html>

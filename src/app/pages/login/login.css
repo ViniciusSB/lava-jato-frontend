@@ -1,0 +1,186 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0F172A;
+}
+
+.container {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    border-radius: 1.2rem;
+    width: 25rem;
+    height: 25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    width: 20rem;
+    height: 20rem;
+}
+
+.login-registrar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 2.5rem 0;
+}
+
+.login-registrar a {
+    width: 10rem;
+    padding: 1rem 1rem 0.2rem 1rem ;
+    border: none;
+    color: #ffffff;
+    border-radius: 0.3rem;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.login-registrar a.ativo {
+    border-bottom: 1px solid #ffffff;
+}
+
+.login-registrar a label {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.msg-container {
+    height: 1.5rem;
+    margin: 1.3rem auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.msg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    width: 60%;
+    height: 100%;
+    border-radius: 0.2rem;
+}
+
+.msg-erro {
+    background-color: #b62d4b;
+}
+
+.msg-sucesso {
+    background-color: #149429;
+}
+
+
+.btn-fechar {
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.btn-fechar button {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.inputs{
+    margin-top: 0.5rem;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.inputs input {
+    width: 100%;
+    height: 100%;
+    padding: 0.6rem;
+    padding-right: 2rem;
+    border-radius: 0.6rem;
+    outline: none;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.inputs input:focus {
+    border-color: #6366f1;
+}
+
+.inputs input::placeholder {
+    color: #acacac;
+}
+
+.inputs i {
+    position: absolute;
+    right: 0.4rem;
+    top: 0.9rem;
+    color: #ffffff;
+}
+
+.fa-regular.fa-eye, .fa-solid.fa-lock {
+    cursor: pointer;
+}
+
+select {
+  padding: 0.4rem;
+  border: 2px solid #6970d3;
+  border-radius: 8px;
+  outline: none;
+}
+
+.esqueci-senha {
+    display: flex;
+    justify-content: center;
+}
+
+.esqueci-senha a {
+    margin: 2rem 0;
+    color: #ffffff;
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-login, .btn-registrar {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-login button {
+    padding: 0.8rem;
+    width: 50%;
+    border: none;
+    color: #ffffff;
+    background-color: #6366f1;
+    border-radius: 1.5rem;
+    cursor: pointer;
+}
+
+.btn-registrar button {
+    padding: 0.8rem;
+    margin: 0.8rem 0 0 0;
+    width: 50%;
+    border: none;
+    color: #ffffff;
+    background-color: #6366f1;
+    border-radius: 1.5rem;
+    cursor: pointer;
+}
+
+.btn-login button:hover, .btn-registrar button:hover {
+    background-color: #4f46e5;
+}
+
+

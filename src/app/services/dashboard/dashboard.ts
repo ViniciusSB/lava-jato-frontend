@@ -14,14 +14,14 @@ export class DashboardService {
     funcionarioDados = this.dashboardFuncionarioSubject.asObservable();
 
     getDadosDashboardFuncionario(idFuncionario: number, request: DashboardFuncionarioRequest): Observable<DashboardFuncionario> {
-        return this.http.post<DashboardFuncionario>(`${this.urlUsuario}/funcionario/${idFuncionario}`, 
-        request
+        return this.http.post<DashboardFuncionario>(`${this.urlUsuario}/funcionario/${idFuncionario}`,
+            request
         );
     }
 
     getDadosDashboardGerente(request: DashboardGerenteRequest): Observable<DashboardGerente> {
-        return this.http.post<DashboardGerente>(`${this.urlUsuario}/gerente`, 
-        request
+        return this.http.post<DashboardGerente>(`${this.urlUsuario}/gerente`,
+            request
         );
     }
 
