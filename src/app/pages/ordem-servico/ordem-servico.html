@@ -35,6 +35,21 @@
     <div class="subtitulo-cima">
         <h3>Gerencie os atendimentos em andamento</h3>
     </div>
+
+    <div class="filtros-titulo">
+        <h3>Filtros</h3>
+        <div class="filtros-tipo">
+            <label *ngFor="let tipo of tiposFiltro" [class.active]="filtros.tipo === tipo.id">
+                <input type="radio" name="tipos" [(ngModel)]="filtros.tipo" [value]="tipo.id">
+                {{ tipo.label }}
+            </label>
+        </div>
+        <div class="filtros-pesquisa">
+            <input type="text" [(ngModel)]="filtros.termo">
+            <button type="button" (click)="pesquisar()">🔍</button>
+        </div>
+    </div>
+
     <div class="tabela-responsiva">
         <table>
             <thead>
@@ -49,7 +64,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let os of ordemServicoResponse | async">
+                <tr *ngFor="let os of (ordemServicoResponse | async)?.ordemServico">
                     <td>{{os.id}}</td>
                     <td>{{os.cliente?.nome}}</td>
                     <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
@@ -72,6 +87,22 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="botoes-paginacao">
+        <button type="button" (click)="primPagina()" [disabled]="filtros.pagina <= 1"><<</button>
+        <button type="button" (click)="paginaAnterior()" [disabled]="filtros.pagina <= 1"><</button>
+        <button type="button" (click)="proxPagina()" [disabled]="filtros.pagina >= numUltimaPagina">></button>
+        <button type="button" (click)="ultimaPagina()" [disabled]="filtros.pagina >= numUltimaPagina">>></button>
+    </div>
+    <div class="info-paginacao">
+        <h3>Pag <input type="text" [(ngModel)]="filtros.pagina" (change)="digitarPagina()"> de {{(ordemServicoResponse | async)?.totalPaginas}} </h3>
+        <select name="paginacao" [(ngModel)]="filtros.paginacao" (change)="mudarPaginacao($event)">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+        </select>
     </div>
 
     @if (inserirOrdem) {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrdemServicoService } from '../../services/ordem-servico/ordem-servico';
-import { OrdemServicoResponse } from '../../models/ordemServico';
+import { DadosPaginacaoOrdemServico, OrdemServicoFiltros, OrdemServicoResponse } from '../../models/ordemServico';
 import { OrdemServicoRequest } from '../../models/ordemServico';
 import { Observable } from 'rxjs';
 import { Servico } from '../../models/servico';
@@ -41,7 +41,7 @@ export class OrdemServicoComponent {
 
   clienteControl = new FormControl();
 
-  ordemServicoResponse: Observable<OrdemServicoResponse[]> | undefined;
+  ordemServicoResponse: Observable<DadosPaginacaoOrdemServico> | undefined;
   ordemServicoSelecionada: OrdemServicoResponse | undefined;
 
   novaOrdem: OrdemServicoRequest = {
@@ -52,6 +52,11 @@ export class OrdemServicoComponent {
     veiculoId: null,
     status: ''
   };
+
+  filtros: OrdemServicoFiltros = { tipo: 'cliente', termo: '', paginacao: 10, pagina: 1 };
+  tiposFiltro = [{ "label": "Cliente", "id": "cliente" }, { "label": "Veículo", "id": "veiculo" }, { "label": "Funcionário", "id": "funcionario" }, { "label": "Serviço", "id": "servico" }, { "label": "Status", "id": "status" }];
+  pesquisa = "";
+  numUltimaPagina = 0;
 
   funcionarios: Observable<Usuario[]> | undefined;
   funcionarioSelecionado: Usuario = { id: 0, nome: '', email: '', tipo: '' };
@@ -91,8 +96,11 @@ export class OrdemServicoComponent {
       return;
     }
     this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
-    this.ordemServicoService.getAll(10, 1);
+    this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
+    this.ordemServicoResponse?.subscribe(responses => {
+      this.numUltimaPagina = responses.totalPaginas;
+    });
   }
 
   adicionar() {
@@ -133,6 +141,79 @@ export class OrdemServicoComponent {
 
   fecharModal() {
     this.excluirSelecionado = false;
+  }
+
+  pesquisar() {
+    this.ordemServicoService.getAll(this.filtros);
+    this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
+    this.numUltimaPagina = this.getNumUltimaPagina;
+  }
+
+  proxPagina() {
+    this.filtros.pagina = Number(this.filtros.pagina) + 1;
+    this.ordemServicoService.getAll(this.filtros);
+    this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
+    this.numUltimaPagina = this.getNumUltimaPagina;
+  }
+
+  paginaAnterior() {
+    this.filtros.pagina = Number(this.filtros.pagina) - 1;
+    this.ordemServicoService.getAll(this.filtros);
+    this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
+    this.numUltimaPagina = this.getNumUltimaPagina;
+  }
+
+  ultimaPagina() {
+    let totalPaginas = 0;
+    this.ordemServicoResponse?.subscribe(responses => {
+      totalPaginas = responses.totalPaginas;
+    });
+    this.filtros.pagina = totalPaginas;
+    this.ordemServicoService.getAll(this.filtros);
+    this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
+    this.numUltimaPagina = this.getNumUltimaPagina;
+  }
+
+  primPagina() {
+    this.filtros.pagina = 1;
+    this.ordemServicoService.getAll(this.filtros);
+    this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
+    this.numUltimaPagina = this.getNumUltimaPagina;
+  }
+
+  digitarPagina() {
+    console.log("num digitado ", Number(this.filtros.pagina), " \n Ultima pag: ", this.getNumUltimaPagina);
+    console.log(Number(this.filtros.pagina) <= 0);
+    if (Number(this.filtros.pagina) <= this.getNumUltimaPagina) {
+      if (Number(this.filtros.pagina) <= 0) {
+        this.filtros.pagina = 1;
+        this.ordemServicoService.getAll(this.filtros);
+      }
+      else {
+        this.filtros.pagina = Number(this.filtros.pagina);
+        this.ordemServicoService.getAll(this.filtros);
+      }
+    }
+    else {
+      this.filtros.pagina = this.getNumUltimaPagina;
+      this.ordemServicoService.getAll(this.filtros);
+    }
+    this.numUltimaPagina = this.getNumUltimaPagina;
+  }
+
+  get getNumUltimaPagina(): number {
+    let totalPaginas = 0;
+    this.ordemServicoResponse?.subscribe(responses => {
+      totalPaginas = responses.totalPaginas;
+    });
+    return totalPaginas;
+  }
+
+  mudarPaginacao(event: Event) {
+    const evento = event.target as HTMLSelectElement;
+    this.filtros.paginacao = Number(evento.value);
+    this.ordemServicoService.getAll(this.filtros);
+    this.numUltimaPagina = this.getNumUltimaPagina;
   }
 
   salvar() {

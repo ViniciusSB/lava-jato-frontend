@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DashboardService } from '../../services/dashboard/dashboard';
-import { DadosFaturamento, DadosVeiculos, DashboardFuncionario, DashboardFuncionarioRequest, DashboardGerente, FuncionarioDestaque, GraficoItem } from '../../models/dashboard';
+import { DadosFaturamento, DadosVeiculos, DashboardFuncionarioRequest, FuncionarioDestaque, GraficoItem } from '../../models/dashboard';
 import { FormsModule } from '@angular/forms';
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { Router } from '@angular/router';
 
 @Component({

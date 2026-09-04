@@ -3,6 +3,13 @@ import { Servico } from "./servico";
 import { Usuario } from "./usuario";
 import { Veiculo } from "./veiculo";
 
+export interface DadosPaginacaoOrdemServico {
+    totalItens: number;
+    totalPaginas: number;
+    pagAtual: number;
+    ordemServico: OrdemServicoResponse[];
+}
+
 export interface OrdemServicoResponse {
     id: number;
     preco: number;
@@ -23,4 +30,11 @@ export interface OrdemServicoRequest {
     veiculoId?: number | null;
     servicoId?: number | null;
     status?: string;
+}
+
+export interface OrdemServicoFiltros {
+    tipo: string;
+    termo: string;
+    paginacao: number;
+    pagina: number;
 }

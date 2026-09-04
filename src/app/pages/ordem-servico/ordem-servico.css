@@ -38,10 +38,10 @@ body {
   padding: 0;
 }
 
-.menu a{
+.menu a {
   text-decoration: none;
   display: block;
-  line-height: 0; 
+  line-height: 0;
 }
 
 .menu a img {
@@ -60,7 +60,7 @@ body {
   display: flex;
 }
 
-.menu ul li a{
+.menu ul li a {
   text-decoration: none;
   padding: 0 0.6rem;
   color: black;
@@ -68,7 +68,7 @@ body {
   transition: transform 0.2s ease;
 }
 
-.menu ul li a:hover{
+.menu ul li a:hover {
   transform: scale(1.2);
 }
 
@@ -103,8 +103,73 @@ button:hover {
   background-color: #4338ca;
 }
 
-.lixeira:hover {
-  background-color: #dd3d3d;
+.filtros-titulo {
+  width: 95%;
+  margin: 0.3rem auto;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.filtros-titulo h3 {
+  letter-spacing: 0.1rem;
+}
+
+.filtros-tipo {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.8rem;
+  display: inline-flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.filtros-tipo input {
+  display: none;
+}
+
+.filtros-tipo label {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.filtros-tipo label.active {
+  background-color: #0a0a0a;
+}
+
+.filtros-tipo :hover {
+  background-color: #141414;
+}
+
+.filtros-pesquisa {
+  margin-top: 0.3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.filtros-pesquisa input {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #334155;
+  border-radius: 0.3rem;
+  background-color: #0f172a;
+  color: #ffffff;
+  outline: none;
+  width: 9rem;
+  font-size: 0.85rem;
+}
+
+.filtros-pesquisa button {
+  background-color: transparent;
+  border: 1px solid #334155;
+}
+
+.filtros-pesquisa button:hover {
+  background-color: #182749;
 }
 
 .tabela-responsiva {
@@ -158,8 +223,8 @@ table tr:hover {
 }
 
 .badge-em-andamento {
-  background-color: rgba(245, 158, 11, 0.15); /* Fundo laranja transparente */
-  color: #fbbf24; /* Texto amarelo/laranja */
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
@@ -172,28 +237,77 @@ table tr:hover {
 .acoes {
   display: flex;
   justify-content: start;
-  gap: 5px;                
+  gap: 5px;
+}
+
+.lixeira:hover {
+  background-color: #dd3d3d;
+}
+
+.botoes-paginacao {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.6rem;
+  gap: 0.2rem;
+}
+
+.botoes-paginacao button:disabled {
+  background-color: transparent;
+  cursor: auto;
+}
+
+.info-paginacao {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.3rem;
+  gap: 0.5rem;
+}
+
+.info-paginacao input {
+  width: 2.5rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 0.2rem;
+  outline: none;
+  color: #ffffff;
+  text-align: center;
+}
+
+.info-paginacao select {
+  outline: none;
+  background-color: #1e293b;
+  color: #ffffff;
+  padding: 0.1rem 0.4rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.info-paginacao select:hover {
+  background-color: #0d1016;
 }
 
 .titulo-form {
   display: flex;
   width: 95;
   justify-content: center;
-  margin: 0.5rem 0;
+  margin: 1rem 0 0.5rem 0;
 }
 
 .btn-fechar-form {
-    background-color: #e90707;
-    height: 1.4rem;
-    width: 1.4rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 0.6rem;
+  background-color: #e90707;
+  height: 1.4rem;
+  width: 1.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.6rem;
 }
 
 .btn-fechar-form:hover {
-    background-color: #a00505;
+  background-color: #a00505;
 }
 
 .campos-form {
@@ -203,8 +317,8 @@ table tr:hover {
 }
 
 .campos-form ng-select {
-    cursor: pointer;
-    margin-right: 0.2rem;
+  cursor: pointer;
+  margin-right: 0.2rem;
 }
 
 .modal-externo {
@@ -242,23 +356,23 @@ table tr:hover {
 }
 
 .acoes-modal-excluir {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
-.acoes-modal-excluir .btn-excluir-modal{
-    color: #ffffff;
-    background-color: red;
-    margin-left: 0.2rem;
-    transition: transform 0.2s ease;
+.acoes-modal-excluir .btn-excluir-modal {
+  color: #ffffff;
+  background-color: red;
+  margin-left: 0.2rem;
+  transition: transform 0.2s ease;
 }
 
-.acoes-modal-excluir .btn-cancelar-modal{
-    color: #ffffff;
-    background-color: #979797;
-    transition: transform 0.2s ease;
+.acoes-modal-excluir .btn-cancelar-modal {
+  color: #ffffff;
+  background-color: #979797;
+  transition: transform 0.2s ease;
 }
 
-.acoes-modal-excluir button:hover{
-    transform: scale(1.25);
+.acoes-modal-excluir button:hover {
+  transform: scale(1.25);
 }
