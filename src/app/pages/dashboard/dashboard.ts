@@ -20,6 +20,7 @@ export class DashboardComponent {
   tipoUsuarioLogado = "";
 
   userOpcoes = false;
+  opcoesLowScreen = false;
 
   totalMembros = 0;
   funcionarioDestaque: FuncionarioDestaque | undefined;
@@ -74,6 +75,10 @@ export class DashboardComponent {
     // Inicialmente traz os dados do dia
     this.request = { periodo: this.diaAtual, tipo: 'dia' };
     this.preencherDashboards(this.request.tipo);
+  }
+
+  fecharOpcoesLowScreen() {
+    this.opcoesLowScreen = !this.opcoesLowScreen;
   }
 
   alterarTipo(tipo: string) {

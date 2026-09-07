@@ -1,4 +1,4 @@
-/*  */
+/* Ng-Select */
 
 ng-select.custom-ng-select {
     width: 10rem;
@@ -17,6 +17,39 @@ ng-select.custom-ng-select {
 .ng-arrow-wrapper {
     position: absolute;
     top: 0.5rem;
+}
+
+/* Ng-Select Black mode */
+
+.ng-select-container {
+    background-color: #12193D !important;
+    border: 1px solid #343155 !important;
+    color: #fff !important;
+}
+
+.ng-input input {
+    color: #ffffff;
+}
+
+.ng-clear {
+    color: #ffffff;
+}
+
+.ng-dropdown-panel {
+    border: 1px solid #343155 !important;
+
+}
+
+.ng-option {
+    background-color: #12193D !important;
+}
+
+.ng-option:hover {
+    background-color: #28263b !important;
+}
+
+.ng-option span {
+    color: #FFFFFF;
 }
 
 /* ApexCharts */
@@ -55,7 +88,7 @@ foreignObject {
 }
 
 .apexcharts-menu-item:hover {
-  background-color: #334155 !important;
+    background-color: #334155 !important;
 }
 
 .apexcharts-menu.apexcharts-menu-open div {

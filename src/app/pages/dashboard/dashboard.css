@@ -87,8 +87,8 @@ body {
 
 .user ul {
   position: absolute;
-  right: -0.8rem;
-  padding-top: 0.6rem;
+  right: -1.2rem;
+  margin-top: 0.4rem;
   background-color: #FFFFFF;
   display: flex;
   flex-direction: column;
@@ -96,8 +96,9 @@ body {
 }
 
 .user ul li {
-  width: 4rem;
-  text-align: center;
+  width: 4.6rem;
+  padding: 0.6rem 0.2rem;
+  cursor: pointer;
 }
 
 .user ul li:hover {
@@ -106,13 +107,78 @@ body {
 
 .user ul li a {
   color: #000000;
-  padding: 0.8rem 0;
-  cursor: pointer;
   transition: none;
 }
 
 .user ul li a:hover {
   transform: none;
+}
+
+.menu-low-screen {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.menu-low-screen button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.menu-low-screen button img{
+  width: 2rem;
+  height: 1.5rem;
+}
+
+.ul-low-screen {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2.2rem;
+  right: -2.5rem;
+  background-color: #FFFFFF;
+}
+
+.ul-low-screen li {
+  background-color: #FFFFFF;
+  font-size: 0.8rem;
+  width: 7.4rem;
+  cursor: pointer;
+  color: #000000;
+  padding: 0.6rem 0.2rem;
+}
+
+.ul-low-screen li:hover {
+  background-color: #94a3b8;
+}
+
+.menu-low-screen .ul-low-screen li a {
+  transition: none;
+}
+
+.menu-low-screen .ul-low-screen li a:hover {
+  transform: none;
+}
+
+.li-usuario div {
+  display: flex;
+  align-items: center;
+  margin: 0.2rem 0 0 0.4rem;
+  gap: 0.2rem;
+}
+
+.li-usuario div h4 {
+  font-weight: normal;
+  margin: 0 0 0 0.2rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.li-usuario div img{
+  width: 1.4rem;
+  height: 1rem;
 }
 
 .filtros {
@@ -283,4 +349,20 @@ body {
   color: #f8fafc;
   font-size: 1.85rem;
   font-weight: 700;
+}
+
+/* Responsividade */
+
+@media (min-device-width: 320px) and (max-device-width: 820px) {
+  .navbar-principal, .user {
+    display: none;
+  }
+
+}
+
+@media (min-device-width: 821px) {
+  .menu-low-screen {
+    display: none;
+  }
+
 }

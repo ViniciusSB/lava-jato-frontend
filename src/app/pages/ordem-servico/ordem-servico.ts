@@ -102,11 +102,12 @@ export class OrdemServicoComponent {
       this.numUltimaPagina = responses.totalPaginas;
     });
   }
-
+  
   adicionar() {
     this.inserirOrdem = true;
     this.editarOrdem = false;
     this.limparElementosSelecionados();
+    this.veiculos = undefined;
     this.popularListas();
     this.novaOrdem = {};
   }
@@ -274,6 +275,7 @@ export class OrdemServicoComponent {
 
   atualizarVeiculos(cliente: any) {
     this.veiculoAdicionadoId = null;
+    this.veiculoSelecionado = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, clienteNome: '' };
     this.veiculos = undefined;
 
     if (!cliente) {

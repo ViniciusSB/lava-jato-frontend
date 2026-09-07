@@ -155,7 +155,7 @@
         </ng-select>
         <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
             (change)="atualizarVeiculos($event)" [(ngModel)]="clienteSelecionado.id" [clearable]="true"
-            placeholder="veículo">
+            placeholder="cliente">
             <ng-template ng-option-tmp let-item="item">
                 <span [title]="item.nome">{{ item.nome }}</span>
             </ng-template>
