@@ -18,6 +18,11 @@ import { Router } from '@angular/router';
 })
 export class VeiculoComponent {
   idUsuarioLogado = 0;
+  tipoUsuarioLogado = "";
+
+  userOpcoes = false;
+  opcoesLowScreen = false;
+
   veiculos: Observable<Veiculo[]> | undefined;
   veiculoSelecionado: Veiculo | undefined;
   inserirVeiculo: boolean = false;
@@ -48,6 +53,7 @@ export class VeiculoComponent {
       return;
     }
     this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
+    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.veiculoService.getAll();
     this.veiculos = this.veiculoService.veiculos;
   }
@@ -55,6 +61,25 @@ export class VeiculoComponent {
   fechar() {
     this.veiculoSelecionado = undefined;
     this.inserirVeiculo = false;
+  }
+
+  opcoes() {
+
+  }
+
+  fecharOpcoesLowScreen() {
+    this.opcoesLowScreen = !this.opcoesLowScreen;
+  }
+
+  logout() {
+    localStorage.setItem("token", "");
+    localStorage.setItem("idUsuario", "");
+    localStorage.setItem("tipoUsuaio", "");
+    this.router.navigate(["/login"]);
+  }
+
+  menuOpcoesUsuario() {
+    this.userOpcoes = !this.userOpcoes;
   }
 
   adicionar() {

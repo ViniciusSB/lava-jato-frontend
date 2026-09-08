@@ -374,7 +374,7 @@ select {
 
 /* Responsividade */
 
-@media (min-device-width: 320px) and (max-device-width: 541px) {
+@media (min-device-width: 320px) and (max-device-width: 809px) {
   .navbar-principal,
   .user {
     display: none;
@@ -403,29 +403,6 @@ select {
 
   .modal-excluir {
     width: 12rem;
-  }
-}
-
-@media (min-device-width: 542px) and (max-device-width: 809px) {
-  .navbar-principal,
-  .user {
-    display: none;
-  }
-
-  .campos-form {
-    display: grid;
-    grid-template-columns: repeat(4, max-content);
-    gap: 0.5rem;
-  }
-
-  .campos-form button {
-    grid-column: 1 / -1;
-    width: 7rem;
-    margin: 0.4rem auto;
-  }
-
-  .modal-excluir {
-    width: 15rem;
   }
 }
 

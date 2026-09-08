@@ -431,6 +431,10 @@ body {
 
   .grid-dados div h2 {
     font-size: 1.25rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    max-width: 100%;
   }
 
   .grafico {
@@ -442,9 +446,32 @@ body {
   }
 }
 
-@media (min-device-width: 821px) {
+@media (min-device-width: 821px) and (max-device-width: 1024px) {
   .menu-low-screen {
     display: none;
   }
 
+  .grid-dados div h2 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    max-width: 100%;
+    font-size: 1.20rem;
+    line-height: 1.2;
+  }
+
+}
+
+@media (min-device-width: 1025px) {
+  .menu-low-screen {
+    display: none;
+  }
+
+  .grid-dados div h2 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    max-width: 100%;
+    line-height: 1.2;
+  }
 }

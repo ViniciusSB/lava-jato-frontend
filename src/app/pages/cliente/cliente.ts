@@ -28,6 +28,10 @@ export class ClienteComponent {
   }
 
   idUsuarioLogado = 0;
+  tipoUsuarioLogado = "";
+
+  userOpcoes = false;
+  opcoesLowScreen = false;
 
   revelarVeiculosCliente: boolean = false;
   
@@ -59,6 +63,7 @@ export class ClienteComponent {
       return;
     }
     this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
+    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.clienteService.getAll();
     this.clientes = this.clienteService.clientes;
   }
@@ -86,6 +91,25 @@ export class ClienteComponent {
       }
     });
     }
+  }
+
+  opcoes() {
+
+  }
+
+  fecharOpcoesLowScreen() {
+    this.opcoesLowScreen = !this.opcoesLowScreen;
+  }
+
+  logout() {
+    localStorage.setItem("token", "");
+    localStorage.setItem("idUsuario", "");
+    localStorage.setItem("tipoUsuaio", "");
+    this.router.navigate(["/login"]);
+  }
+
+  menuOpcoesUsuario() {
+    this.userOpcoes = !this.userOpcoes;
   }
 
   adicionar() {

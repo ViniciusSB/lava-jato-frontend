@@ -6,9 +6,20 @@
 
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #0F172A;
+}
+
+.logo {
+    margin-bottom: 0.6rem;
+}
+
+.logo img {
+    width: 15rem;
+    height: auto;
+    mix-blend-mode: screen;
 }
 
 .container {
@@ -135,7 +146,9 @@ form {
 
 select {
   padding: 0.4rem;
-  border: 2px solid #6970d3;
+  border: 1px solid #334155;
+  background-color: #0f172a;
+  color: #ffffff;
   border-radius: 8px;
   outline: none;
 }
@@ -181,6 +194,37 @@ select {
 
 .btn-login button:hover, .btn-registrar button:hover {
     background-color: #4f46e5;
+}
+
+/* Responsividade */
+
+@media (min-device-width: 320px) and (max-device-width: 439px) {
+    .container {
+        width: 95%;
+        height: 25rem;
+        margin: 0 0.5rem;
+    }
+
+    .login-registrar {
+        width: 100%;
+        margin: 0 0 2.5rem 0;
+    }
+
+    .login-registrar a {
+        width: 45%;
+    }
+
+    .inputs{
+        width: 100%;
+    }
+
+    .inputs input {
+        width: 90%;
+    }
+
+    .inputs i {
+        right: 1.5rem;
+    }
 }
 
 

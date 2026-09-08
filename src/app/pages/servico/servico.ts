@@ -17,6 +17,10 @@ import { Router } from '@angular/router';
 export class ServicoComponent {
 
   idUsuarioLogado = 0;
+  tipoUsuarioLogado = "";
+
+  userOpcoes = false;
+  opcoesLowScreen = false;
 
   servicos: Observable<Servico[]> | undefined;
 
@@ -42,8 +46,28 @@ export class ServicoComponent {
       return;
     }
     this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
+     this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.servicoService.getAll();
     this.servicos = this.servicoService.servicos;
+  }
+
+  opcoes() {
+
+  }
+
+  fecharOpcoesLowScreen() {
+    this.opcoesLowScreen = !this.opcoesLowScreen;
+  }
+
+  logout() {
+    localStorage.setItem("token", "");
+    localStorage.setItem("idUsuario", "");
+    localStorage.setItem("tipoUsuaio", "");
+    this.router.navigate(["/login"]);
+  }
+
+  menuOpcoesUsuario() {
+    this.userOpcoes = !this.userOpcoes;
   }
 
   adicionar() {

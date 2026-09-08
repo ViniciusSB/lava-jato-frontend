@@ -244,7 +244,7 @@ export class DashboardComponent {
       series: [],
       chart: { type: tipo, toolbar: { show: true }, background: "#0F172A", foreColor: "#FFFFFF", height: "100%" },
       xaxis: { categories: [], labels: { style: { colors: "94a3b8" } } },
-      title: { text: titulo }
+      title: { text: titulo, style: { fontSize: 12 }  }
     };
   }
 

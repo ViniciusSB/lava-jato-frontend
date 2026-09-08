@@ -11,20 +11,53 @@
 
   <aside class="menu">
     <div class="main-content menu-content">
-      <a href="http://localhost:4200/servico">
+      <a href="http://localhost:4200">
         <div class="menu-superior">
           <img src="logo-lava-jato.png" alt="logo">
           <h3>Lava Jato</h3>
         </div>
       </a>
-      <nav>
+      <nav class="navbar-principal">
         <ul>
           <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
           <li><a href="http://localhost:4200/cliente">Clientes</a></li>
           <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
           <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
+          <li><a href="#">Relatórios</a></li>
         </ul>
       </nav>
+      <div class="menu-low-screen">
+        <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
+            alt=""></button>
+        <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+          <li class="li-usuario">
+            <div (click)="opcoes()">
+              <img
+                [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
+              <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
+                'Funcionário' : 'Admin'}}</h4>
+            </div>
+          </li>
+          <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
+          <li><a href="http://localhost:4200/cliente">Clientes</a></li>
+          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
+          <li><a href="http://localhost:4200/servico">Serviço</a></li>
+          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
+          <li><a href="#">Relatórios</a></li>
+          <li><a (click)="logout()">Sair</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="user">
+      <img
+        [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
+        (click)="menuOpcoesUsuario()">
+      @if (userOpcoes) {
+      <ul>
+        <li><a href="#">Opções</a></li>
+        <li><a (click)="logout()">Sair</a></li>
+      </ul>
+      }
     </div>
   </aside>
 

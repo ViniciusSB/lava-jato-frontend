@@ -1,16 +1,16 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    width: 100%;
-    background-color: #0F172A;
-    background-size: cover;
-    background-position: center center;
-    color: #ffffff;
-    overflow-x: hidden;
+  width: 100%;
+  background-color: #0F172A;
+  background-size: cover;
+  background-position: center center;
+  color: #ffffff;
+  overflow-x: hidden;
 }
 
 .main-content {
@@ -38,10 +38,10 @@ body {
   padding: 0;
 }
 
-.menu a{
+.menu a {
   text-decoration: none;
   display: block;
-  line-height: 0; 
+  line-height: 0;
 }
 
 .menu a img {
@@ -60,7 +60,7 @@ body {
   display: flex;
 }
 
-.menu ul li a{
+.menu ul li a {
   text-decoration: none;
   padding: 0 0.6rem;
   color: black;
@@ -68,8 +68,119 @@ body {
   transition: transform 0.2s ease;
 }
 
-.menu ul li a:hover{
+.menu ul li a:hover {
   transform: scale(1.2);
+}
+
+.user {
+  position: absolute;
+  top: 0.5rem;
+  right: 2.8rem;
+}
+
+.user img {
+  width: 2.5rem;
+  height: 1.8rem;
+  cursor: pointer;
+}
+
+.user ul {
+  position: absolute;
+  right: -1.2rem;
+  margin-top: 0.4rem;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user ul li {
+  width: 4.6rem;
+  padding: 0.6rem 0.2rem;
+  cursor: pointer;
+}
+
+.user ul li:hover {
+  background-color: #e7e7eb;
+}
+
+.user ul li a {
+  color: #000000;
+  transition: none;
+}
+
+.user ul li a:hover {
+  transform: none;
+}
+
+.menu-low-screen {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.menu-low-screen button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.menu-low-screen button img {
+  width: 2rem;
+  height: 1.5rem;
+}
+
+.ul-low-screen {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2.2rem;
+  right: -2.5rem;
+  background-color: #FFFFFF;
+}
+
+.ul-low-screen li {
+  background-color: #FFFFFF;
+  color: #000000;
+  width: 7.4rem;
+}
+
+.ul-low-screen li:hover {
+  background-color: #94a3b8;
+}
+
+.menu-low-screen .ul-low-screen li a {
+  display: block;
+  cursor: pointer;
+  transition: none;
+  padding: 1.2rem 0.6rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.menu-low-screen .ul-low-screen li a:hover {
+  transform: none;
+}
+
+.li-usuario div {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0 0.5rem 0.4rem;
+  gap: 0.2rem;
+  cursor: pointer;
+}
+
+.li-usuario div h4 {
+  font-weight: normal;
+  margin: 0 0 0 0.2rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.li-usuario div img {
+  width: 1.4rem;
+  height: 1rem;
 }
 
 .agrupamento-cima {
@@ -152,10 +263,10 @@ table tr:hover {
 .acoes {
   display: flex;
   justify-content: start;
-  gap: 5px;                
+  gap: 5px;
 }
 
-.titulo-form{
+.titulo-form {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -163,17 +274,17 @@ table tr:hover {
 }
 
 .btn-fechar-form {
-    background-color: #e90707;
-    height: 1.4rem;
-    width: 1.4rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 0.6rem;
+  background-color: #e90707;
+  height: 1.4rem;
+  width: 1.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.6rem;
 }
 
 .btn-fechar-form:hover {
-    background-color: #a00505;
+  background-color: #a00505;
 }
 
 .campos-form {
@@ -181,14 +292,14 @@ table tr:hover {
   justify-content: center;
 }
 
-.campos-form-modal-veiculo{
+.campos-form-modal-veiculo {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
 }
 
 .campos-form input {
-    margin-right: 0.2rem;
+  margin-right: 0.2rem;
 }
 
 .campos-form-modal-veiculo button {
@@ -199,9 +310,20 @@ table tr:hover {
 
 input {
   padding: 0.4rem;
-  border: 2px solid #6970d3;
+  border: 2px solid #343155;
+  color: #FFFFFF;
   border-radius: 8px;
   outline: none;
+  background-color: #12193D;
+}
+
+select {
+  padding: 0.4rem;
+  border: 2px solid #343155;
+  color: #FFFFFF;
+  border-radius: 8px;
+  outline: none;
+  background-color: #12193D;
 }
 
 .modal-externo {
@@ -273,23 +395,145 @@ input {
 }
 
 .acoes-modal-excluir {
-    display: flex;
+  display: flex;
+  justify-content: center;
+}
+
+.acoes-modal-excluir .btn-excluir-modal {
+  color: #ffffff;
+  background-color: red;
+  margin-left: 0.2rem;
+  transition: transform 0.2s ease;
+}
+
+.acoes-modal-excluir .btn-cancelar-modal {
+  color: #ffffff;
+  background-color: #979797;
+  transition: transform 0.2s ease;
+}
+
+.acoes-modal-excluir button:hover {
+  transform: scale(1.25);
+}
+
+/* Responsividade */
+
+@media (min-device-width: 320px) and (max-device-width: 626px) {
+
+  .navbar-principal,
+  .user {
+    display: none;
+  }
+
+  .campos-form {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    gap: 0.5rem;
+  }
+
+  .campos-form input,
+  .campos-form select {
+    width: 9rem;
+  }
+
+  #editar-form input:nth-child(3) {
+    grid-column: 1/-1;
+    margin: 0 auto;
+  }
+
+  .campos-form button {
+    grid-column: 1/-1;
+    width: 7rem;
+    margin: 0.8rem auto;
+  }
+
+  .campos-form-modal-veiculo {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .campos-form-modal-veiculo input,
+  .campos-form-modal-veiculo select {
+    width: 100%;
+  }
+
+  .campos-form-modal-veiculo button {
+    grid-column: 1/-1;
+  }
+
+  .modal-excluir {
+    width: 12rem;
+  }
+}
+
+@media (min-device-width: 627px) and (max-device-width: 809px) {
+
+  .navbar-principal,
+  .user {
+    display: none;
+  }
+
+  .campos-form {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 0.5rem;
+  }
+
+  .campos-form button {
+    grid-column: 1 / -1;
+    width: 7rem;
+    margin: 0.4rem auto;
+  }
+
+  .campos-form-modal-veiculo {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .campos-form-modal-veiculo input,
+  .campos-form-modal-veiculo select {
+    width: 100%;
+  }
+
+  .campos-form-modal-veiculo button {
+    grid-column: 1/-1;
+  }
+  
+}
+
+@media (min-device-width: 810px) {
+  .menu-low-screen {
+    display: none;
+  }
+
+  .campos-form {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 0.5rem;
+  }
+
+  .campos-form button {
+    grid-column: 1/-1;
+    width: 7rem;
+    margin: 0.4rem auto;
+  }
+
+  .campos-form-modal-veiculo {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, max-content);
     justify-content: center;
-}
+    margin: auto;
+  }
 
-.acoes-modal-excluir .btn-excluir-modal{
-    color: #ffffff;
-    background-color: red;
-    margin-left: 0.2rem;
-    transition: transform 0.2s ease;
-}
-
-.acoes-modal-excluir .btn-cancelar-modal{
-    color: #ffffff;
-    background-color: #979797;
-    transition: transform 0.2s ease;
-}
-
-.acoes-modal-excluir button:hover{
-    transform: scale(1.25);
+  .campos-form-modal-veiculo input,
+  .campos-form-modal-veiculo select {
+    width: 100%;
+  }
+  
+  .campos-form-modal-veiculo button {
+    grid-column: 1/-1;
+  }
 }
