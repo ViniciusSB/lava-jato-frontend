@@ -11,6 +11,7 @@ body {
   background-position: center center;
   color: #ffffff;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .main-content {
@@ -127,7 +128,7 @@ body {
   background: transparent;
 }
 
-.menu-low-screen button img{
+.menu-low-screen button img {
   width: 2rem;
   height: 1.5rem;
 }
@@ -143,11 +144,8 @@ body {
 
 .ul-low-screen li {
   background-color: #FFFFFF;
-  font-size: 0.8rem;
-  width: 7.4rem;
-  cursor: pointer;
   color: #000000;
-  padding: 0.6rem 0.2rem;
+  width: 7.4rem;
 }
 
 .ul-low-screen li:hover {
@@ -155,7 +153,12 @@ body {
 }
 
 .menu-low-screen .ul-low-screen li a {
+  display: block;
+  cursor: pointer;
   transition: none;
+  padding: 1.2rem 0.6rem;
+  font-size: 0.9rem;
+  text-decoration: none;
 }
 
 .menu-low-screen .ul-low-screen li a:hover {
@@ -165,8 +168,9 @@ body {
 .li-usuario div {
   display: flex;
   align-items: center;
-  margin: 0.2rem 0 0 0.4rem;
+  margin: 0.5rem 0 0.5rem 0.4rem;
   gap: 0.2rem;
+  cursor: pointer;
 }
 
 .li-usuario div h4 {
@@ -176,7 +180,7 @@ body {
   overflow: hidden;
 }
 
-.li-usuario div img{
+.li-usuario div img {
   width: 1.4rem;
   height: 1rem;
 }
@@ -298,10 +302,19 @@ body {
   gap: 0.6rem;
 }
 
+.separador {
+  grid-column: 1 / -1;
+  border: 0;
+  height: 2px;
+  background-color: #334155;
+  margin: 1.2rem 0;
+}
+
 .grid-dados {
   background-color: #0F172A;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  height: 25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .grid-dados div {
@@ -328,11 +341,16 @@ body {
 .grid-dados .div-func-destaque {
   border: none;
   box-shadow: none;
+  width: 100%;
 }
 
 .grid-dados .div-func-destaque:hover {
   border: none;
   transform: none;
+}
+
+.grid-dados .div-func-destaque div {
+  width: 100%;
 }
 
 .grid-dados .div-func-destaque div:hover {
@@ -343,6 +361,7 @@ body {
   color: #94a3b8;
   font-size: 0.85rem;
   font-weight: 500;
+  text-align: center;
 }
 
 .grid-dados div h2 {
@@ -351,13 +370,76 @@ body {
   font-weight: 700;
 }
 
+.grid-dados .div-func-destaque h2 {
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
 /* Responsividade */
 
 @media (min-device-width: 320px) and (max-device-width: 820px) {
-  .navbar-principal, .user {
+
+  .navbar-principal,
+  .user {
     display: none;
   }
 
+  .filtros {
+    margin: 5rem 0;
+  }
+
+  .filtro-card {
+    padding-left: 0;
+    gap: 0.2rem;
+  }
+
+  .periodo-group input {
+    width: 6rem;
+  }
+
+  .periodo-group input::placeholder {
+    font-size: 0.60rem;
+  }
+
+  .periodo-group button {
+    width: 3.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    margin: 0;
+  }
+
+  .grid-dados {
+    gap: 0.5rem;
+  }
+
+  .grid-dados div {
+    padding: 1rem 0;
+  }
+
+  .grid-dados div h4 {
+    font-size: 0.75rem;
+  }
+
+  .grid-dados div h2 {
+    font-size: 1.25rem;
+  }
+
+  .grafico {
+    height: 20rem;
+  }
+
+  .grafico:last-child {
+    height: 15rem;
+  }
 }
 
 @media (min-device-width: 821px) {

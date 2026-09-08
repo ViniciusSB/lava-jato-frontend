@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -38,6 +38,10 @@ import { Router } from '@angular/router';
 export class OrdemServicoComponent {
 
   idUsuarioLogado = 0;
+  tipoUsuarioLogado = "";
+
+  userOpcoes = false;
+  opcoesLowScreen = false;
 
   clienteControl = new FormControl();
 
@@ -52,6 +56,9 @@ export class OrdemServicoComponent {
     veiculoId: null,
     status: ''
   };
+
+  @ViewChild('novaOrdemForm') novaOrdemForm!: ElementRef;
+  @ViewChild('editarOrdemForm') editarOrdemForm!: ElementRef;
 
   filtros: OrdemServicoFiltros = { tipo: 'cliente', termo: '', paginacao: 10, pagina: 1 };
   tiposFiltro = [{ "label": "Cliente", "id": "cliente" }, { "label": "Veículo", "id": "veiculo" }, { "label": "Funcionário", "id": "funcionario" }, { "label": "Serviço", "id": "servico" }, { "label": "Status", "id": "status" }];
@@ -96,11 +103,31 @@ export class OrdemServicoComponent {
       return;
     }
     this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
+    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
     this.ordemServicoResponse?.subscribe(responses => {
       this.numUltimaPagina = responses.totalPaginas;
     });
+  }
+
+  opcoes() {
+
+  }
+
+  fecharOpcoesLowScreen() {
+    this.opcoesLowScreen = !this.opcoesLowScreen;
+  }
+
+  logout() {
+    localStorage.setItem("token", "");
+    localStorage.setItem("idUsuario", "");
+    localStorage.setItem("tipoUsuaio", "");
+    this.router.navigate(["/login"]);
+  }
+
+  menuOpcoesUsuario() {
+    this.userOpcoes = !this.userOpcoes;
   }
   
   adicionar() {
@@ -110,6 +137,14 @@ export class OrdemServicoComponent {
     this.veiculos = undefined;
     this.popularListas();
     this.novaOrdem = {};
+    setTimeout(() => {
+      if (this.novaOrdemForm) {
+        this.novaOrdemForm.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 50);
   }
 
   addFuncionario() {
@@ -211,6 +246,7 @@ export class OrdemServicoComponent {
   }
 
   mudarPaginacao(event: Event) {
+    this.filtros.pagina = 1;
     const evento = event.target as HTMLSelectElement;
     this.filtros.paginacao = Number(evento.value);
     this.ordemServicoService.getAll(this.filtros);
@@ -269,6 +305,15 @@ export class OrdemServicoComponent {
     if (os.veiculo)
       this.veiculoSelecionado = os.veiculo;
     this.novaOrdem.veiculoId = os.veiculo?.id;
+
+    setTimeout(() => {
+      if (this.editarOrdemForm) {
+        this.editarOrdemForm.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 50);
 
     this.popularListas();
   }

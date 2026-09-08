@@ -77,6 +77,10 @@ export class DashboardComponent {
     this.preencherDashboards(this.request.tipo);
   }
 
+  opcoes() {
+
+  }
+
   fecharOpcoesLowScreen() {
     this.opcoesLowScreen = !this.opcoesLowScreen;
   }
@@ -238,7 +242,7 @@ export class DashboardComponent {
   iniciarGrafico(tipo: string, titulo: string): any {
     return {
       series: [],
-      chart: { type: tipo, toolbar: { show: true }, background: "#0F172A", foreColor: "#FFFFFF" },
+      chart: { type: tipo, toolbar: { show: true }, background: "#0F172A", foreColor: "#FFFFFF", height: "100%" },
       xaxis: { categories: [], labels: { style: { colors: "94a3b8" } } },
       title: { text: titulo }
     };
@@ -286,7 +290,7 @@ export class DashboardComponent {
   logout() {
     localStorage.setItem("token", "");
     localStorage.setItem("idUsuario", "");
-    localStorage.setItem("tipoUsuaio", "");
+    localStorage.setItem("tipoUsuario", "");
     this.router.navigate(["/login"]);
   }
 
@@ -306,11 +310,11 @@ export class DashboardComponent {
         this.graficoFaturamentoFuncionario.series = [{ name: "Ganhos", data: ganhos }];
         this.graficoFaturamentoFuncionario.xaxis = { categories: data };
         if (periodo == 'dia')
-          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Diários R$ x Hora" }
+          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Diários R$ x Hora", style: { fontSize: 12 } }
         else if (periodo == 'mes')
-          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Mensais R$ x Dia" }
+          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Mensais R$ x Dia", style: { fontSize: 12 } }
         else
-          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Anuais R$ x Mês" }
+          this.graficoFaturamentoFuncionario.title = { text: "Ganhos Anuais R$ x Mês", style: { fontSize: 12 } }
         this.cdr.detectChanges();
 
       },
@@ -345,7 +349,7 @@ export class DashboardComponent {
         this.funcionarioDestaque = dados.equipe.funcionarioDestaque;
 
         this.graficoTipoMembros.series = [{ data: [{ x: 'funcionário', y: dados.equipe.qtdFuncionarios }, { x: 'gerente', y: dados.equipe.qtdGerentes }, { x: 'administrador', y: dados.equipe.qtdAdministrador }] }];
-        this.graficoTipoMembros.title = { text: "Equipe Lava Jato" }
+        this.graficoTipoMembros.title = { text: "Equipe Lava Jato", style: { fontSize: 12 } }
         this.cdr.detectChanges();
 
         this.clientesAtendidos = dados.atendimento.clientesAtendidos;
@@ -355,11 +359,11 @@ export class DashboardComponent {
         this.graficoTipoVeiculos.series = [{ name: "quantidade", data: this.extrairQuantidadeVeiculo(dados.atendimento.veiculos) }];
         this.graficoTipoVeiculos.xaxis = { categories: this.extrairTipoVeiculo(dados.atendimento.veiculos) };
         if (periodo == 'dia')
-          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no dia ${this.request.periodo}` }
+          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no dia ${this.request.periodo}`, style: { fontSize: 12 } }
         else if (periodo == 'mes')
-          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no mês ${this.request.periodo}` }
+          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no mês ${this.request.periodo}`, style: { fontSize: 12 } }
         else
-          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no ano de ${this.request.periodo}` }
+          this.graficoTipoVeiculos.title = { text: `Veículos finalizados no ano de ${this.request.periodo}`, style: { fontSize: 12 } }
         this.graficoTipoVeiculos.colors = ['#FF0000', '#00FF00', '#0000FF', '#FFA500'];
         this.graficoTipoVeiculos.plotOptions = { bar: { distributed: true } };
         this.cdr.detectChanges();
@@ -370,11 +374,11 @@ export class DashboardComponent {
         this.graficoFaturamento.series = [{ name: "Valor Líquido", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "liquido") }, { name: "Valor Bruto", data: this.extrairGanhosGraficoFaturamento(dados.faturamento, "bruto") }];
         this.graficoFaturamento.xaxis = { categories: this.extrairDataGraficoFaturamento(dados.faturamento, periodo) };
         if (periodo == 'dia')
-          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do dia ${this.request.periodo}` };
+          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do dia ${this.request.periodo}`, style: { fontSize: 12 } };
         else if (periodo == 'mes')
-          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do mês ${this.request.periodo}` };
+          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do mês ${this.request.periodo}`, style: { fontSize: 12 } };
         else
-          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do ano de ${this.request.periodo}` };
+          this.graficoFaturamento.title = { text: `Faturamento Bruto/Líquido do ano de ${this.request.periodo}`, style: { fontSize: 12 } };
         this.cdr.detectChanges();
       },
       error: (err) => {

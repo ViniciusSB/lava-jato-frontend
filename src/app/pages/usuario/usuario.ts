@@ -17,6 +17,10 @@ import { Router } from '@angular/router';
 export class UsuarioComponent {
 
   idUsuarioLogado = 0;
+  tipoUsuarioLogado = "";
+
+  userOpcoes = false;
+  opcoesLowScreen = false;
   
   usuarios!: Observable<Usuario[]>;
 
@@ -43,8 +47,28 @@ export class UsuarioComponent {
       return;
     }
     this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
+    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.usuarioService.getAll();
     this.usuarios = this.usuarioService.usuarios;
+  }
+
+  opcoes() {
+
+  }
+
+  fecharOpcoesLowScreen() {
+    this.opcoesLowScreen = !this.opcoesLowScreen;
+  }
+
+  logout() {
+    localStorage.setItem("token", "");
+    localStorage.setItem("idUsuario", "");
+    localStorage.setItem("tipoUsuaio", "");
+    this.router.navigate(["/login"]);
+  }
+
+  menuOpcoesUsuario() {
+    this.userOpcoes = !this.userOpcoes;
   }
 
   adicionar() {
