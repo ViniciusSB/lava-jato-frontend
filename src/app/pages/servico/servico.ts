@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Servico } from '../../models/servico';
 import { ServicoService } from '../../services/servico/servico';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-servico',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './servico.html',
   styleUrl: './servico.css',
 })

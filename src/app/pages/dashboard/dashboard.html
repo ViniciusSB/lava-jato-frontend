@@ -19,12 +19,12 @@
             </a>
             <nav class="navbar-principal">
                 <ul>
-                    <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-                    <li><a href="http://localhost:4200/cliente">Clientes</a></li>
-                    <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-                    <li><a href="http://localhost:4200/servico">Serviço</a></li>
-                    <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
-                    <li><a href="#">Relatórios</a></li>
+                    <li><a routerLink="/usuario">Funcionários</a></li>
+                    <li><a routerLink="/cliente">Clientes</a></li>
+                    <li><a routerLink="/veiculo">Veículos</a></li>
+                    <li><a routerLink="/servico">Serviço</a></li>
+                    <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                    <li><a routerLink="#">Relatórios</a></li>
                 </ul>
             </nav>
 
@@ -39,12 +39,12 @@
                                 'Funcionário' : 'Admin'}}</h4>
                         </div>
                     </li>
-                    <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-                    <li><a href="http://localhost:4200/cliente">Clientes</a></li>
-                    <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-                    <li><a href="http://localhost:4200/servico">Serviço</a></li>
-                    <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
-                    <li><a href="#">Relatórios</a></li>
+                    <li><a routerLink="/usuario">Funcionários</a></li>
+                    <li><a routerLink="/cliente">Clientes</a></li>
+                    <li><a routerLink="/veiculo">Veículos</a></li>
+                    <li><a routerLink="/servico">Serviço</a></li>
+                    <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                    <li><a routerLink="#">Relatórios</a></li>
                     <li><a (click)="logout()">Sair</a></li>
                 </ul>
             </div>
@@ -56,7 +56,7 @@
                 (click)="menuOpcoesUsuario()">
             @if (userOpcoes) {
             <ul>
-                <li><a href="#">Opções</a></li>
+                <li><a routerLink="#">Opções</a></li>
                 <li><a (click)="logout()">Sair</a></li>
             </ul>
             }

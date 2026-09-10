@@ -5,12 +5,12 @@ import { DashboardService } from '../../services/dashboard/dashboard';
 import { DadosFaturamento, DadosVeiculos, DashboardFuncionarioRequest, FuncionarioDestaque, GraficoItem } from '../../models/dashboard';
 import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule, FormsModule, NgxMaskDirective],
+  imports: [CommonModule, NgApexchartsModule, FormsModule, NgxMaskDirective, RouterModule],
   providers: [provideNgxMask({ dropSpecialCharacters: false })],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

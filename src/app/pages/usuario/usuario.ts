@@ -5,12 +5,12 @@ import { UsuarioService } from '../../services/usuario/usuario';
 import { Usuario } from '../../models/usuario';
 import { Observable } from 'rxjs';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-usuario',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimCarcMaius],
+  imports: [CommonModule, FormsModule, PrimCarcMaius, RouterModule],
   templateUrl: './usuario.html',
   styleUrls: ['./usuario.css'],
 })

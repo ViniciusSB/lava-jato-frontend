@@ -8,12 +8,12 @@ import { TelefoneMaskDirective } from '../../util/telefone-mak';
 import { VeiculoService } from '../../services/veiculo/veiculo';
 import { Veiculo } from '../../models/veiculo';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
-import { Route, Router } from '@angular/router';
+import { Route, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule, TelefoneMaskDirective, PrimCarcMaius],
+  imports: [CommonModule, FormsModule, TelefoneMaskDirective, PrimCarcMaius, RouterModule],
   templateUrl: './cliente.html',
   styleUrl: './cliente.css',
 })

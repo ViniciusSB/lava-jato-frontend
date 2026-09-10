@@ -1,269 +1,254 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tela Cliente</title>
-</head>
-
-<body>
-
-  <aside class="menu">
-    <div class="main-content menu-content">
-      <a href="http://localhost:4200">
-        <div class="menu-superior">
-          <img src="logo-lava-jato.png" alt="logo">
-          <h3>Lava Jato</h3>
-        </div>
-      </a>
-      <nav class="navbar-principal">
-        <ul>
-          <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-          <li><a href="http://localhost:4200/servico">Serviços</a></li>
-          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
-          <li><a href="#">Relatórios</a></li>
-        </ul>
-      </nav>
-      <div class="menu-low-screen">
-        <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
-            alt=""></button>
-        <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
-          <li class="li-usuario">
-            <div (click)="opcoes()">
-              <img
-                [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
-              <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
-                'Funcionário' : 'Admin'}}</h4>
-            </div>
-          </li>
-          <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-          <li><a href="http://localhost:4200/cliente">Clientes</a></li>
-          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-          <li><a href="http://localhost:4200/servico">Serviço</a></li>
-          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
-          <li><a href="#">Relatórios</a></li>
-          <li><a (click)="logout()">Sair</a></li>
-        </ul>
+<aside class="menu">
+  <div class="main-content menu-content">
+    <a href="http://localhost:4200">
+      <div class="menu-superior">
+        <img src="logo-lava-jato.png" alt="logo">
+        <h3>Lava Jato</h3>
       </div>
-    </div>
-    <div class="user">
-      <img
-        [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
-        (click)="menuOpcoesUsuario()">
-      @if (userOpcoes) {
+    </a>
+    <nav class="navbar-principal">
       <ul>
-        <li><a href="#">Opções</a></li>
+        <li><a routerLink="/usuario">Funcionários</a></li>
+        <li><a routerLink="/veiculo">Veículos</a></li>
+        <li><a routerLink="/servico">Serviços</a></li>
+        <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+        <li><a routerLink="#">Relatórios</a></li>
+      </ul>
+    </nav>
+    <div class="menu-low-screen">
+      <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
+          alt=""></button>
+      <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+        <li class="li-usuario">
+          <div (click)="opcoes()">
+            <img
+              [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
+            <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
+              'Funcionário' : 'Admin'}}</h4>
+          </div>
+        </li>
+        <li><a routerLink="/usuario">Funcionários</a></li>
+        <li><a routerLink="/cliente">Clientes</a></li>
+        <li><a routerLink="/veiculo">Veículos</a></li>
+        <li><a routerLink="/servico">Serviço</a></li>
+        <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+        <li><a routerLink="#">Relatórios</a></li>
         <li><a (click)="logout()">Sair</a></li>
       </ul>
-      }
     </div>
-  </aside>
-
-  <div class="agrupamento-cima">
-    <h2>Lista de Clientes</h2>
-    <button (click)="adicionar()">Adicionar</button>
-    <!-- <input class="filtrar" type="text" placeholder="digite um nome para filtrar" (input)="filtrar($event.target.value)"> -->
   </div>
-  <div class="subtitulo-cima">
-    <h3>Gerencie os clientes</h3>
+  <div class="user">
+    <img
+      [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
+      (click)="menuOpcoesUsuario()">
+    @if (userOpcoes) {
+    <ul>
+      <li><a routerLink="#">Opções</a></li>
+      <li><a (click)="logout()">Sair</a></li>
+    </ul>
+    }
   </div>
+</aside>
+
+<div class="agrupamento-cima">
+  <h2>Lista de Clientes</h2>
+  <button (click)="adicionar()">Adicionar</button>
+  <!-- <input class="filtrar" type="text" placeholder="digite um nome para filtrar" (input)="filtrar($event.target.value)"> -->
+</div>
+<div class="subtitulo-cima">
+  <h3>Gerencie os clientes</h3>
+</div>
 
 
-  <div class="tabela-responsiva">
-    <table>
-      <thead>
+<div class="tabela-responsiva">
+  <table>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>Celular</th>
+        <th>Fidelidade</th>
+        <th>Veiculos</th>
+        <th colspan="2">ações</th>
+      </tr>
+    </thead>
+    @if (!filtroAtivo) {
+    @for (c of clientes | async; track c.id) {
+    <tbody>
+      <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.nome }}</td>
+        <td>{{ c.celular }}</td>
+        <td>{{ c.fidelidade }}</td>
+        <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
+        <td class="acoes">
+          <button (click)="editar(c)">✏️</button>
+          <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+    }
+    }
+    @else {
+    @for (c of clientesFiltrados | async; track c.id) {
+    <tbody>
+      <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.nome }}</td>
+        <td>{{ c.celular }}</td>
+        <td>{{ c.fidelidade }}</td>
+        <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
+        <td>
+          <button (click)="editar(c)">✏️</button>
+          <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+    }
+    }
+
+  </table>
+</div>
+
+@if (clienteSelecionado && !revelarVeiculosCliente) {
+<div>
+  <div class="titulo-form">
+    <h4>Editar Cliente</h4>
+    <button class="btn-fechar-form" (click)="fechar()">x</button>
+  </div>
+  <div id="editar-form" class="campos-form">
+    <input id="nome" type="text" [(ngModel)]="clienteSelecionado.nome" placeholder="nome">
+    <input type="tel" [(ngModel)]="clienteSelecionado.celular" telefoneMask placeholder="celular">
+    <input type="number" [(ngModel)]="clienteSelecionado.fidelidade" placeholder="fidelidade">
+    <button (click)="salvar()">salvar</button>
+  </div>
+</div>
+}
+
+@if (inserirCliente) {
+<div>
+  <div class="titulo-form">
+    <h4>Adicionar Cliente</h4>
+    <button class="btn-fechar-form" (click)="fechar()">x</button>
+  </div>
+  <div id="inserir-form" class="campos-form">
+    <input type="text" [(ngModel)]="novoCliente.nome" placeholder="nome">
+    <input type="tel" [(ngModel)]="novoCliente.celular" placeholder="celular" telefoneMask>
+    <button (click)="salvar()">cadastrar</button>
+  </div>
+</div>
+}
+
+@if (revelarVeiculosCliente) {
+<div class="modal-externo">
+  <div class="modal-tabela">
+    <div class="titulo-form">
+      <h3>Veículos do(a) {{clienteSelecionado?.nome ?? ''}}</h3>
+    </div>
+    <button class="btn-fechar-modal" (click)="fecharModal()">×</button>
+    <div class="tabela-responsiva">
+      <table>
         <tr>
           <th>Id</th>
-          <th>Nome</th>
-          <th>Celular</th>
-          <th>Fidelidade</th>
-          <th>Veiculos</th>
-          <th colspan="2">ações</th>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Cor</th>
+          <th>Placa</th>
+          <th>Tipo</th>
+          <th colspan="2">Ações</th>
         </tr>
-      </thead>
-      @if (!filtroAtivo) {
-      @for (c of clientes | async; track c.id) {
-      <tbody>
+        @for (v of veiculosCliente | async; track v.id) {
         <tr>
-          <td>{{ c.id }}</td>
-          <td>{{ c.nome }}</td>
-          <td>{{ c.celular }}</td>
-          <td>{{ c.fidelidade }}</td>
-          <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
+          <td>{{ v.id }}</td>
+          <td>{{ v.marca }}</td>
+          <td>{{ v.modelo }}</td>
+          <td>{{ v.cor }}</td>
+          <td>{{ v.placa || '-' }}</td>
+          <td>{{ v.tipo | primCaracMaius }}</td>
           <td class="acoes">
-            <button (click)="editar(c)">✏️</button>
-            <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
+            <button (click)="botaoEditarVeiculo(v)">✏️</button>
+            <button (click)="excluirVeiculo(v.id!)" class="lixeira">🗑️</button>
           </td>
         </tr>
-      </tbody>
-      }
-      }
-      @else {
-      @for (c of clientesFiltrados | async; track c.id) {
-      <tbody>
-        <tr>
-          <td>{{ c.id }}</td>
-          <td>{{ c.nome }}</td>
-          <td>{{ c.celular }}</td>
-          <td>{{ c.fidelidade }}</td>
-          <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
-          <td>
-            <button (click)="editar(c)">✏️</button>
-            <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
-          </td>
-        </tr>
-      </tbody>
-      }
-      }
+        }
+      </table>
+    </div>
 
-    </table>
-  </div>
+    <div class="btn-adicionar-veiculo">
+      <button *ngIf="!inserirVeiculo && !editarVeiculo" (click)="botaoAdicionarVeiculo()">Adicionar</button>
+    </div>
 
-  @if (clienteSelecionado && !revelarVeiculosCliente) {
-  <div>
+    @if (inserirVeiculo) {
     <div class="titulo-form">
-      <h4>Editar Cliente</h4>
-      <button class="btn-fechar-form" (click)="fechar()">x</button>
+      <h4>Adicionar Veículo</h4>
+      <button class="btn-fechar-form" (click)="fecharAdicionarVeiculo()">x</button>
     </div>
-    <div id="editar-form" class="campos-form">
-      <input id="nome" type="text" [(ngModel)]="clienteSelecionado.nome" placeholder="nome">
-      <input type="tel" [(ngModel)]="clienteSelecionado.celular" telefoneMask placeholder="celular">
-      <input type="number" [(ngModel)]="clienteSelecionado.fidelidade" placeholder="fidelidade">
-      <button (click)="salvar()">salvar</button>
+    <div class="campos-form-modal-veiculo">
+      <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
+      <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
+      <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
+      <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
+      <select [(ngModel)]="novoVeiculo.tipo">
+        <option value="" disabled selected>escolha um tipo</option>
+        @for (tipo of tipos; track tipo) {
+        <option [value]="tipo.id">{{ tipo.label }}</option>
+        }
+      </select>
+      <input type="text" [value]="clienteSelecionado?.nome" readonly>
+      <button (click)="salvarVeiculo()">Cadastrar</button>
     </div>
-  </div>
-  }
+    }
 
-  @if (inserirCliente) {
-  <div>
+    @if (editarVeiculo) {
     <div class="titulo-form">
-      <h4>Adicionar Cliente</h4>
-      <button class="btn-fechar-form" (click)="fechar()">x</button>
+      <h4>Editar Veículo</h4>
+      <button class="btn-fechar-form" (click)="fecharEditarVeiculo()">x</button>
     </div>
-    <div id="inserir-form" class="campos-form">
-      <input type="text" [(ngModel)]="novoCliente.nome" placeholder="nome">
-      <input type="tel" [(ngModel)]="novoCliente.celular" placeholder="celular" telefoneMask>
-      <button (click)="salvar()">cadastrar</button>
-    </div>
-  </div>
-  }
-
-  @if (revelarVeiculosCliente) {
-  <div class="modal-externo">
-    <div class="modal-tabela">
-      <div class="titulo-form">
-        <h3>Veículos do(a) {{clienteSelecionado?.nome ?? ''}}</h3>
-      </div>
-      <button class="btn-fechar-modal" (click)="fecharModal()">×</button>
-      <div class="tabela-responsiva">
-        <table>
-          <tr>
-            <th>Id</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Cor</th>
-            <th>Placa</th>
-            <th>Tipo</th>
-            <th colspan="2">Ações</th>
-          </tr>
-          @for (v of veiculosCliente | async; track v.id) {
-          <tr>
-            <td>{{ v.id }}</td>
-            <td>{{ v.marca }}</td>
-            <td>{{ v.modelo }}</td>
-            <td>{{ v.cor }}</td>
-            <td>{{ v.placa || '-' }}</td>
-            <td>{{ v.tipo | primCaracMaius }}</td>
-            <td class="acoes">
-              <button (click)="botaoEditarVeiculo(v)">✏️</button>
-              <button (click)="excluirVeiculo(v.id!)" class="lixeira">🗑️</button>
-            </td>
-          </tr>
-          }
-        </table>
-      </div>
-
-      <div class="btn-adicionar-veiculo">
-        <button *ngIf="!inserirVeiculo && !editarVeiculo" (click)="botaoAdicionarVeiculo()">Adicionar</button>
-      </div>
-
-      @if (inserirVeiculo) {
-      <div class="titulo-form">
-        <h4>Adicionar Veículo</h4>
-        <button class="btn-fechar-form" (click)="fecharAdicionarVeiculo()">x</button>
-      </div>
-      <div class="campos-form-modal-veiculo">
-        <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
-        <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
-        <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
-        <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
-        <select [(ngModel)]="novoVeiculo.tipo">
-          <option value="" disabled selected>escolha um tipo</option>
-          @for (tipo of tipos; track tipo) {
-          <option [value]="tipo.id">{{ tipo.label }}</option>
-          }
-        </select>
-        <input type="text" [value]="clienteSelecionado?.nome" readonly>
-        <button (click)="salvarVeiculo()">Cadastrar</button>
-      </div>
-      }
-
-      @if (editarVeiculo) {
-      <div class="titulo-form">
-        <h4>Editar Veículo</h4>
-        <button class="btn-fechar-form" (click)="fecharEditarVeiculo()">x</button>
-      </div>
-      <div class="campos-form-modal-veiculo">
-        <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
-        <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
-        <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
-        <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
-        <select [(ngModel)]="novoVeiculo.tipo">
-          <option value="" disabled selected>escolha um tipo</option>
-          @for (tipo of tipos; track tipo) {
-          <option [value]="tipo.id">{{ tipo.label }}</option>
-          }
-        </select>
-        <input type="text" [value]="clienteSelecionado?.nome" readonly>
-        <button (click)="salvarVeiculo()">Editar</button>
-      </div>
-      }
-    </div>
-
-    @if (excluirVeiculoSelecionado) {
-    <div class="modal-externo">
-      <div class="modal-excluir">
-        <div class="excluir-superior">
-          <h3>Excluir veículo?</h3>
-          <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
-        </div>
-        <div class="acoes-modal-excluir">
-          <button class="btn-cancelar-modal" (click)="cancelarExclusaoVeiculo()">cancelar</button>
-          <button class="btn-excluir-modal" (click)="confirmarExclusaoVeiculo()">confirmar</button>
-        </div>
-      </div>
+    <div class="campos-form-modal-veiculo">
+      <input type="text" [(ngModel)]="novoVeiculo.marca" placeholder="marca">
+      <input type="text" [(ngModel)]="novoVeiculo.modelo" placeholder="modelo">
+      <input type="text" [(ngModel)]="novoVeiculo.cor" placeholder="cor">
+      <input type="text" [(ngModel)]="novoVeiculo.placa" placeholder="placa">
+      <select [(ngModel)]="novoVeiculo.tipo">
+        <option value="" disabled selected>escolha um tipo</option>
+        @for (tipo of tipos; track tipo) {
+        <option [value]="tipo.id">{{ tipo.label }}</option>
+        }
+      </select>
+      <input type="text" [value]="clienteSelecionado?.nome" readonly>
+      <button (click)="salvarVeiculo()">Editar</button>
     </div>
     }
   </div>
-  }
 
-  @if (excluirSelecionado) {
-  <div class="modal-externo" (click)="fecharModal()">
+  @if (excluirVeiculoSelecionado) {
+  <div class="modal-externo">
     <div class="modal-excluir">
       <div class="excluir-superior">
-        <h3>Excluir serviço?</h3>
+        <h3>Excluir veículo?</h3>
         <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
       </div>
       <div class="acoes-modal-excluir">
-        <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
-        <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+        <button class="btn-cancelar-modal" (click)="cancelarExclusaoVeiculo()">cancelar</button>
+        <button class="btn-excluir-modal" (click)="confirmarExclusaoVeiculo()">confirmar</button>
       </div>
     </div>
   </div>
   }
+</div>
+}
 
-</body>
-
-</html>
+@if (excluirSelecionado) {
+<div class="modal-externo" (click)="fecharModal()">
+  <div class="modal-excluir">
+    <div class="excluir-superior">
+      <h3>Excluir serviço?</h3>
+      <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+    </div>
+    <div class="acoes-modal-excluir">
+      <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
+      <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+    </div>
+  </div>
+</div>
+}

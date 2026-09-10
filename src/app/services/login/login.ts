@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { Usuario, UsuarioRequest } from '../../models/usuario';
+import { UsuarioRequest } from '../../models/usuario';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
-
-    private urlAuth = "http://localhost:8080/auth";
+    private apiUrl = environment.apiUrl;
+    private urlAuth = `${this.apiUrl}/auth`;
 
     constructor(private http: HttpClient) { }
 

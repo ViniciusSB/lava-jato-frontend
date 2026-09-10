@@ -1,237 +1,224 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de Ordem Serviço</title>
-</head>
-
-<body>
-
-    <aside class="menu">
-        <div class="main-content menu-content">
-            <a href="http://localhost:4200">
-                <div class="menu-superior">
-                    <img src="logo-lava-jato.png" alt="logo">
-                    <h3>Lava Jato</h3>
-                </div>
-            </a>
-            <nav class="navbar-principal">
-                <ul>
-                    <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-                    <li><a href="http://localhost:4200/cliente">Clientes</a></li>
-                    <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-                    <li><a href="http://localhost:4200/servico">Serviços</a></li>
-                    <li><a href="#">Relatórios</a></li>
-                </ul>
-            </nav>
-
-            <div class="menu-low-screen">
-                <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'" alt=""></button>
-                <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
-                    <li class="li-usuario">
-                        <div (click)="opcoes()">
-                            <img
-                                [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
-                            <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
-                                'Funcionário' : 'Admin'}}</h4>
-                        </div>
-                    </li>
-                    <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-                    <li><a href="http://localhost:4200/cliente">Clientes</a></li>
-                    <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-                    <li><a href="http://localhost:4200/servico">Serviço</a></li>
-                    <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
-                    <li><a href="#">Relatórios</a></li>
-                    <li><a (click)="logout()">Sair</a></li>
-                </ul>
+<aside class="menu">
+    <div class="main-content menu-content">
+        <a href="http://localhost:4200">
+            <div class="menu-superior">
+                <img src="logo-lava-jato.png" alt="logo">
+                <h3>Lava Jato</h3>
             </div>
-            
-        </div>
-
-        <div class="user">
-            <img [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
-                (click)="menuOpcoesUsuario()">
-            @if (userOpcoes) {
+        </a>
+        <nav class="navbar-principal">
             <ul>
-                <li><a href="#">Opções</a></li>
+                <li><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviços</a></li>
+                <li><a routerLink="#">Relatórios</a></li>
+            </ul>
+        </nav>
+
+        <div class="menu-low-screen">
+            <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'" alt=""></button>
+            <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+                <li class="li-usuario">
+                    <div (click)="opcoes()">
+                        <img
+                            [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
+                        <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
+                            'Funcionário' : 'Admin'}}</h4>
+                    </div>
+                </li>
+                <li><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviços</a></li>
+                <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                <li><a routerLink="#">Relatórios</a></li>
                 <li><a (click)="logout()">Sair</a></li>
             </ul>
-            }
         </div>
-    </aside>
-
-    <div class="agrupamento-cima">
-        <h2>Ordens de Serviço</h2>
-        <button (click)="adicionar()">Nova Ordem</button>
-    </div>
-    <div class="subtitulo-cima">
-        <h3>Gerencie os atendimentos em andamento</h3>
+        
     </div>
 
-    <div class="filtros-titulo">
-        <h3>Filtros</h3>
-        <div class="filtros-tipo">
-            <label *ngFor="let tipo of tiposFiltro" [class.active]="filtros.tipo === tipo.id">
-                <input type="radio" name="tipos" [(ngModel)]="filtros.tipo" [value]="tipo.id">
-                {{ tipo.label }}
-            </label>
+    <div class="user">
+        <img [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
+            (click)="menuOpcoesUsuario()">
+        @if (userOpcoes) {
+        <ul>
+            <li><a routerLink="#">Opções</a></li>
+            <li><a (click)="logout()">Sair</a></li>
+        </ul>
+        }
+    </div>
+</aside>
+
+<div class="agrupamento-cima">
+    <h2>Ordens de Serviço</h2>
+    <button (click)="adicionar()">Nova Ordem</button>
+</div>
+<div class="subtitulo-cima">
+    <h3>Gerencie os atendimentos em andamento</h3>
+</div>
+
+<div class="filtros-titulo">
+    <h3>Filtros</h3>
+    <div class="filtros-tipo">
+        <label *ngFor="let tipo of tiposFiltro" [class.active]="filtros.tipo === tipo.id">
+            <input type="radio" name="tipos" [(ngModel)]="filtros.tipo" [value]="tipo.id">
+            {{ tipo.label }}
+        </label>
+    </div>
+    <div class="filtros-pesquisa">
+        <input type="text" [(ngModel)]="filtros.termo">
+        <button type="button" (click)="pesquisar()">🔍</button>
+    </div>
+</div>
+
+<div class="tabela-responsiva">
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Cliente</th>
+                <th>Veículo</th>
+                <th>Funcionário</th>
+                <th>Serviço</th>
+                <th>Status</th>
+                <th colspan="2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let os of (ordemServicoResponse | async)?.ordemServico">
+                <td>{{os.id}}</td>
+                <td>{{os.cliente?.nome}}</td>
+                <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
+                <td>{{os.funcionario?.nome}}</td>
+                <td>{{os.servico?.tipo}}</td>
+                <td>
+                    @switch (os.status) {
+                    @case ('EM_ANDAMENTO') {
+                    <span class="badge badge-em-andamento">{{os.status | normalizarEnum}}</span>
+                    }
+                    @case ('FINALIZADO') {
+                    <span class="badge badge-finalizado">{{os.status | normalizarEnum}}</span>
+                    }
+                    }
+                </td>
+                <td>
+                    <div class="acoes">
+                    <button (click)="editar(os)">✏️</button>
+                    <button class="lixeira" (click)="excluir(os.id)">🗑️</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="botoes-paginacao">
+    <button type="button" (click)="primPagina()" [disabled]="filtros.pagina <= 1"><<</button>
+    <button type="button" (click)="paginaAnterior()" [disabled]="filtros.pagina <= 1"><</button>
+    <button type="button" (click)="proxPagina()" [disabled]="filtros.pagina >= numUltimaPagina">></button>
+    <button type="button" (click)="ultimaPagina()" [disabled]="filtros.pagina >= numUltimaPagina">>></button>
+</div>
+<div class="info-paginacao">
+    <h3>Pag <input type="text" [(ngModel)]="filtros.pagina" (change)="digitarPagina()"> de {{(ordemServicoResponse | async)?.totalPaginas}} </h3>
+    <select name="paginacao" [(ngModel)]="filtros.paginacao" (change)="mudarPaginacao($event)">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+    </select>
+</div>
+
+@if (inserirOrdem) {
+<div class="titulo-form">
+    <h3>Inserir Ordem</h3>
+    <button class="btn-fechar-form" (click)="fechar()">x</button>
+</div>
+<div id="nova-ordem" #novaOrdemForm class="campos-form">
+    <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
+        [(ngModel)]="funcionarioAdicionadoId" [clearable]="true" placeholder="funcionário">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.nome">{{ item.nome }}</span>
+        </ng-template>
+    </ng-select>
+    <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
+        (change)="atualizarVeiculos($event)" [(ngModel)]="clienteAdicionadoId" [clearable]="true"
+        placeholder="cliente">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.nome">{{ item.nome }}</span>
+        </ng-template>
+    </ng-select>
+    <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
+        [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo"
+        notFoundText="selecione um cliente">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.modelo">{{ item.modelo }}</span>
+        </ng-template>
+    </ng-select>
+    <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
+        [(ngModel)]="servicoAdicionadoId" [clearable]="true" placeholder="serviço">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.tipo">{{ item.tipo }}</span>
+        </ng-template>
+    </ng-select>
+    <button (click)="salvar()">Gerar</button>
+</div>
+}
+
+@if (editarOrdem) {
+<div class="titulo-form">
+    <h3>Editar Ordem</h3>
+    <button class="btn-fechar-form" (click)="fechar()">x</button>
+</div>
+<div id="editar-ordem" #editarOrdemForm class="campos-form">
+    <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
+        [(ngModel)]="funcionarioSelecionado.id" [clearable]="true" placeholder="funcionário">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.nome">{{ item.nome }}</span>
+        </ng-template>
+    </ng-select>
+    <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
+        (change)="atualizarVeiculos($event)" [(ngModel)]="clienteSelecionado.id" [clearable]="true"
+        placeholder="cliente">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.nome">{{ item.nome }}</span>
+        </ng-template>
+    </ng-select>
+    <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
+        [(ngModel)]="veiculoSelecionado.id" [clearable]="true" placeholder="veículo"
+        notFoundText="selecione um cliente">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.modelo">{{ item.modelo }}</span>
+        </ng-template>
+    </ng-select>
+    <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
+        [(ngModel)]="servicoSelecionado.id" [clearable]="true" placeholder="serviço">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.tipo">{{ item.tipo }}</span>
+        </ng-template>
+    </ng-select>
+    <ng-select class="custom-ng-select" [items]="status" bindLabel="label" bindValue="id"
+        [(ngModel)]="novaOrdem.status" [clearable]="true" placeholder="status">
+        <ng-template ng-option-tmp let-item="item">
+            <span [title]="item.label">{{ item.label }}</span>
+        </ng-template>
+    </ng-select>
+    <button (click)="salvar()">Editar</button>
+</div>
+}
+
+@if (excluirSelecionado) {
+<div class="modal-externo" (click)="fecharModal()">
+    <div class="modal-excluir">
+        <div class="excluir-superior">
+            <h3>Excluir ordem?</h3>
+            <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
         </div>
-        <div class="filtros-pesquisa">
-            <input type="text" [(ngModel)]="filtros.termo">
-            <button type="button" (click)="pesquisar()">🔍</button>
+        <div class="acoes-modal-excluir">
+            <button class="btn-cancelar-modal" (click)="cancelarExclusao()">Cancelar</button>
+            <button class="btn-excluir-modal" (click)="confirmarExclusao()">Confirmar</button>
         </div>
     </div>
-
-    <div class="tabela-responsiva">
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Cliente</th>
-                    <th>Veículo</th>
-                    <th>Funcionário</th>
-                    <th>Serviço</th>
-                    <th>Status</th>
-                    <th colspan="2">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let os of (ordemServicoResponse | async)?.ordemServico">
-                    <td>{{os.id}}</td>
-                    <td>{{os.cliente?.nome}}</td>
-                    <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
-                    <td>{{os.funcionario?.nome}}</td>
-                    <td>{{os.servico?.tipo}}</td>
-                    <td>
-                        @switch (os.status) {
-                        @case ('EM_ANDAMENTO') {
-                        <span class="badge badge-em-andamento">{{os.status | normalizarEnum}}</span>
-                        }
-                        @case ('FINALIZADO') {
-                        <span class="badge badge-finalizado">{{os.status | normalizarEnum}}</span>
-                        }
-                        }
-                    </td>
-                    <td class="acoes">
-                        <button (click)="editar(os)">✏️</button>
-                        <button class="lixeira" (click)="excluir(os.id)">🗑️</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="botoes-paginacao">
-        <button type="button" (click)="primPagina()" [disabled]="filtros.pagina <= 1"><<</button>
-        <button type="button" (click)="paginaAnterior()" [disabled]="filtros.pagina <= 1"><</button>
-        <button type="button" (click)="proxPagina()" [disabled]="filtros.pagina >= numUltimaPagina">></button>
-        <button type="button" (click)="ultimaPagina()" [disabled]="filtros.pagina >= numUltimaPagina">>></button>
-    </div>
-    <div class="info-paginacao">
-        <h3>Pag <input type="text" [(ngModel)]="filtros.pagina" (change)="digitarPagina()"> de {{(ordemServicoResponse | async)?.totalPaginas}} </h3>
-        <select name="paginacao" [(ngModel)]="filtros.paginacao" (change)="mudarPaginacao($event)">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-        </select>
-    </div>
-
-    @if (inserirOrdem) {
-    <div class="titulo-form">
-        <h3>Inserir Ordem</h3>
-        <button class="btn-fechar-form" (click)="fechar()">x</button>
-    </div>
-    <div id="nova-ordem" #novaOrdemForm class="campos-form">
-        <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
-            [(ngModel)]="funcionarioAdicionadoId" [clearable]="true" placeholder="funcionário">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.nome">{{ item.nome }}</span>
-            </ng-template>
-        </ng-select>
-        <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
-            (change)="atualizarVeiculos($event)" [(ngModel)]="clienteAdicionadoId" [clearable]="true"
-            placeholder="cliente">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.nome">{{ item.nome }}</span>
-            </ng-template>
-        </ng-select>
-        <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
-            [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo"
-            notFoundText="selecione um cliente">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.modelo">{{ item.modelo }}</span>
-            </ng-template>
-        </ng-select>
-        <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
-            [(ngModel)]="servicoAdicionadoId" [clearable]="true" placeholder="serviço">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.tipo">{{ item.tipo }}</span>
-            </ng-template>
-        </ng-select>
-        <button (click)="salvar()">Gerar</button>
-    </div>
-    }
-
-    @if (editarOrdem) {
-    <div class="titulo-form">
-        <h3>Editar Ordem</h3>
-        <button class="btn-fechar-form" (click)="fechar()">x</button>
-    </div>
-    <div id="editar-ordem" #editarOrdemForm class="campos-form">
-        <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
-            [(ngModel)]="funcionarioSelecionado.id" [clearable]="true" placeholder="funcionário">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.nome">{{ item.nome }}</span>
-            </ng-template>
-        </ng-select>
-        <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
-            (change)="atualizarVeiculos($event)" [(ngModel)]="clienteSelecionado.id" [clearable]="true"
-            placeholder="cliente">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.nome">{{ item.nome }}</span>
-            </ng-template>
-        </ng-select>
-        <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
-            [(ngModel)]="veiculoSelecionado.id" [clearable]="true" placeholder="veículo"
-            notFoundText="selecione um cliente">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.modelo">{{ item.modelo }}</span>
-            </ng-template>
-        </ng-select>
-        <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
-            [(ngModel)]="servicoSelecionado.id" [clearable]="true" placeholder="serviço">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.tipo">{{ item.tipo }}</span>
-            </ng-template>
-        </ng-select>
-        <ng-select class="custom-ng-select" [items]="status" bindLabel="label" bindValue="id"
-            [(ngModel)]="novaOrdem.status" [clearable]="true" placeholder="status">
-            <ng-template ng-option-tmp let-item="item">
-                <span [title]="item.label">{{ item.label }}</span>
-            </ng-template>
-        </ng-select>
-        <button (click)="salvar()">Editar</button>
-    </div>
-    }
-
-    @if (excluirSelecionado) {
-    <div class="modal-externo" (click)="fecharModal()">
-        <div class="modal-excluir">
-            <div class="excluir-superior">
-                <h3>Excluir ordem?</h3>
-                <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
-            </div>
-            <div class="acoes-modal-excluir">
-                <button class="btn-cancelar-modal" (click)="cancelarExclusao()">Cancelar</button>
-                <button class="btn-excluir-modal" (click)="confirmarExclusao()">Confirmar</button>
-            </div>
-        </div>
-    </div>
-    }
-
-</body>
-
-</html>
+</div>
+}

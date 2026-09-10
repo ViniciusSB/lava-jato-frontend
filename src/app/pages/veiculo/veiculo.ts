@@ -7,12 +7,12 @@ import { VeiculoService } from '../../services/veiculo/veiculo';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente/cliente';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-veiculo',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimCarcMaius],
+  imports: [CommonModule, FormsModule, PrimCarcMaius, RouterModule],
   templateUrl: './veiculo.html',
   styleUrl: './veiculo.css',
 })

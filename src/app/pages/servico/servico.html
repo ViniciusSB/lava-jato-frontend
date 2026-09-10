@@ -1,143 +1,128 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tela de Serviços</title>
-</head>
-
-<body>
-
-  <aside class="menu">
-    <div class="main-content menu-content">
-      <a href="http://localhost:4200">
-        <div class="menu-superior">
-          <img src="logo-lava-jato.png" alt="logo">
-          <h3>Lava Jato</h3>
-        </div>
-      </a>
-      <nav class="navbar-principal">
-        <ul>
-          <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-          <li><a href="http://localhost:4200/cliente">Clientes</a></li>
-          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
-          <li><a href="#">Relatórios</a></li>
-        </ul>
-      </nav>
-      <div class="menu-low-screen">
-        <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
-            alt=""></button>
-        <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
-          <li class="li-usuario">
-            <div (click)="opcoes()">
-              <img
-                [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
-              <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
-                'Funcionário' : 'Admin'}}</h4>
-            </div>
-          </li>
-          <li><a href="http://localhost:4200/usuario">Funcionários</a></li>
-          <li><a href="http://localhost:4200/cliente">Clientes</a></li>
-          <li><a href="http://localhost:4200/veiculo">Veículos</a></li>
-          <li><a href="http://localhost:4200/servico">Serviço</a></li>
-          <li><a href="http://localhost:4200/ordemServico">Ordem Serviço</a></li>
-          <li><a href="#">Relatórios</a></li>
-          <li><a (click)="logout()">Sair</a></li>
-        </ul>
+<aside class="menu">
+  <div class="main-content menu-content">
+    <a href="http://localhost:4200">
+      <div class="menu-superior">
+        <img src="logo-lava-jato.png" alt="logo">
+        <h3>Lava Jato</h3>
       </div>
-    </div>
-    <div class="user">
-      <img
-        [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
-        (click)="menuOpcoesUsuario()">
-      @if (userOpcoes) {
+    </a>
+    <nav class="navbar-principal">
       <ul>
-        <li><a href="#">Opções</a></li>
+        <li><a routerLink="/usuario">Funcionários</a></li>
+        <li><a routerLink="/cliente">Clientes</a></li>
+        <li><a routerLink="/veiculo">Veículos</a></li>
+        <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+        <li><a routerLink="#">Relatórios</a></li>
+      </ul>
+    </nav>
+    <div class="menu-low-screen">
+      <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
+          alt=""></button>
+      <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+        <li class="li-usuario">
+          <div (click)="opcoes()">
+            <img
+              [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
+            <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
+              'Funcionário' : 'Admin'}}</h4>
+          </div>
+        </li>
+        <li><a routerLink="/usuario">Funcionários</a></li>
+        <li><a routerLink="/cliente">Clientes</a></li>
+        <li><a routerLink="/veiculo">Veículos</a></li>
+        <li><a routerLink="/servico">Serviço</a></li>
+        <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+        <li><a routerLink="#">Relatórios</a></li>
         <li><a (click)="logout()">Sair</a></li>
       </ul>
-      }
-    </div>
-  </aside>
-
-  <div class="agrupamento-cima">
-    <h2>Lista de Serviços</h2>
-    <button (click)="adicionar()">Adicionar</button>
-  </div>
-  <div class="subtitulo-cima">
-    <h3>Gerencie os atendimentos em andamento</h3>
-  </div>
-
-  <div class="tabela-responsiva">
-    <table>
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Tipo</th>
-          <th>Detalhes</th>
-          <th>Preço</th>
-          <th colspan="2">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let s of servicos | async">
-          <td>{{s.id}}</td>
-          <td>{{s.tipo}}</td>
-          <td>{{s.detalhes}}</td>
-          <td>{{s.precoBase }}</td>
-          <td class="acoes">
-            <button (click)="editar(s)">✏️</button>
-            <button class="lixeira" (click)="excluir(s.id!)">🗑️</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="servicoSelecionado">
-    <div class="titulo-form">
-      <h3>Editar Serviço</h3>
-      <button class="btn-fechar-form" (click)="fechar()">x</button>
-    </div>
-    <div class="campos-form">
-      <input type="text" [(ngModel)]="servicoSelecionado.tipo" placeholder="digite uma breve descrição">
-      <input type="text" [(ngModel)]="servicoSelecionado.detalhes" placeholder="digite os detalhes do serviço">
-      <input type="text" [(ngModel)]="servicoSelecionado.precoBase" placeholder="preço do serviço">
-      <button (click)="salvar()">salvar</button>
     </div>
   </div>
+  <div class="user">
+    <img
+      [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
+      (click)="menuOpcoesUsuario()">
+    @if (userOpcoes) {
+    <ul>
+      <li><a routerLink="#">Opções</a></li>
+      <li><a (click)="logout()">Sair</a></li>
+    </ul>
+    }
+  </div>
+</aside>
 
-  @if (inserirServico) {
-  <div>
-    <div class="titulo-form">
-      <h3>Adicionar Serviço</h3>
-      <button class="btn-fechar-form" (click)="fechar()">x</button>
+<div class="agrupamento-cima">
+  <h2>Lista de Serviços</h2>
+  <button (click)="adicionar()">Adicionar</button>
+</div>
+<div class="subtitulo-cima">
+  <h3>Gerencie os atendimentos em andamento</h3>
+</div>
+
+<div class="tabela-responsiva">
+  <table>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Tipo</th>
+        <th>Detalhes</th>
+        <th>Preço</th>
+        <th colspan="2">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of servicos | async">
+        <td>{{s.id}}</td>
+        <td>{{s.tipo}}</td>
+        <td>{{s.detalhes}}</td>
+        <td>{{s.precoBase }}</td>
+        <td class="acoes">
+          <button (click)="editar(s)">✏️</button>
+          <button class="lixeira" (click)="excluir(s.id!)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="servicoSelecionado">
+  <div class="titulo-form">
+    <h3>Editar Serviço</h3>
+    <button class="btn-fechar-form" (click)="fechar()">x</button>
+  </div>
+  <div class="campos-form">
+    <input type="text" [(ngModel)]="servicoSelecionado.tipo" placeholder="digite uma breve descrição">
+    <input type="text" [(ngModel)]="servicoSelecionado.detalhes" placeholder="digite os detalhes do serviço">
+    <input type="text" [(ngModel)]="servicoSelecionado.precoBase" placeholder="preço do serviço">
+    <button (click)="salvar()">salvar</button>
+  </div>
+</div>
+
+@if (inserirServico) {
+<div>
+  <div class="titulo-form">
+    <h3>Adicionar Serviço</h3>
+    <button class="btn-fechar-form" (click)="fechar()">x</button>
+  </div>
+  <div class="campos-form">
+    <input type="text" [(ngModel)]="novoServico.tipo" placeholder="digite uma breve descrição">
+    <input type="text" [(ngModel)]="novoServico.detalhes" placeholder="digite os detalhes do serviço">
+    <input type="text" [(ngModel)]="novoServico.precoBase" placeholder="preço do serviço">
+    <button (click)="salvar()">cadastrar</button>
+  </div>
+</div>
+}
+
+@if (excluirSelecionado) {
+<div class="modal-externo" (click)="fecharModal()">
+  <div class="modal-excluir">
+    <div class="excluir-superior">
+      <h3>Excluir serviço?</h3>
+      <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
     </div>
-    <div class="campos-form">
-      <input type="text" [(ngModel)]="novoServico.tipo" placeholder="digite uma breve descrição">
-      <input type="text" [(ngModel)]="novoServico.detalhes" placeholder="digite os detalhes do serviço">
-      <input type="text" [(ngModel)]="novoServico.precoBase" placeholder="preço do serviço">
-      <button (click)="salvar()">cadastrar</button>
+    <div class="acoes-modal-excluir">
+      <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
+      <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
     </div>
   </div>
-  }
-
-  @if (excluirSelecionado) {
-  <div class="modal-externo" (click)="fecharModal()">
-    <div class="modal-excluir">
-      <div class="excluir-superior">
-        <h3>Excluir serviço?</h3>
-        <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
-      </div>
-      <div class="acoes-modal-excluir">
-        <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
-        <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
-      </div>
-    </div>
-  </div>
-  }
-
-</body>
-
-</html>
+</div>
+}

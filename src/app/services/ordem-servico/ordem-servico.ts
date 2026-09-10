@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
 import { DadosPaginacaoOrdemServico, OrdemServicoFiltros, OrdemServicoRequest, OrdemServicoResponse } from '../../models/ordemServico';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class OrdemServicoService {
-    private urlBase = "http://localhost:8080/ordemServico";
-    private token = localStorage.getItem("token");
+    private apiUrl = environment.apiUrl;
+    private urlBase = `${this.apiUrl}/ordemServico`;
 
     constructor(private http: HttpClient) { }
     filtros: OrdemServicoFiltros = { tipo: '', termo: '', paginacao: 10, pagina: 1 };
@@ -20,8 +21,7 @@ export class OrdemServicoService {
     ordemServicos = this.ordemServicoSubject.asObservable();
 
     getAll(filtros: OrdemServicoFiltros) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        this.http.post<DadosPaginacaoOrdemServico>(`${this.urlBase}/listar`, filtros, { headers }).subscribe(
+        this.http.post<DadosPaginacaoOrdemServico>(`${this.urlBase}/listar`, filtros).subscribe(
             data => {
                 this.ordemServicoSubject.next(data);
             }
@@ -29,22 +29,19 @@ export class OrdemServicoService {
     }
 
     create(osr: OrdemServicoRequest) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.post<OrdemServicoRequest>(`${this.urlBase}/gerar`, osr, { headers }).pipe(
+        return this.http.post<OrdemServicoRequest>(`${this.urlBase}/gerar`, osr).pipe(
             tap(() => this.getAll(this.filtros))
         );
     }
 
     update(osr: OrdemServicoRequest) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.put<OrdemServicoRequest>(`${this.urlBase}/atualizar`, osr, { headers }).pipe(
+        return this.http.put<OrdemServicoRequest>(`${this.urlBase}/atualizar`, osr).pipe(
             tap(() => this.getAll(this.filtros))
         );
     }
 
     delete(id: number) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.delete(`${this.urlBase}/deletar/${id}`, { headers }).pipe(
+        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
             tap(() => this.getAll(this.filtros))
         )
     }

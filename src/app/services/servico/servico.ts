@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
 import { Servico } from '../../models/servico';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ServicoService {
-    private urlBase = "http://localhost:8080/servico";
-    private token = localStorage.getItem("token");
+    private apiUrl = environment.apiUrl;
+    private urlBase = `${this.apiUrl}/servico`;
 
     constructor(private http: HttpClient) { }
 
@@ -14,8 +15,7 @@ export class ServicoService {
     servicos = this.servicoSubject.asObservable();
 
     getAll() {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        this.http.get<Servico[]>(`${this.urlBase}/listar`, {headers}).subscribe(
+        this.http.get<Servico[]>(`${this.urlBase}/listar`).subscribe(
             data => {
                 this.servicoSubject.next(data);
             }
@@ -23,22 +23,19 @@ export class ServicoService {
     }
 
     create(usuario: Servico) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.post<Servico>(`${this.urlBase}/criar`, usuario, {headers}).pipe(
+        return this.http.post<Servico>(`${this.urlBase}/criar`, usuario).pipe(
             tap(() => this.getAll())
         );
     }
 
     update(usuario: Servico) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.put<Servico>(`${this.urlBase}/atualizar`, usuario, {headers}).pipe(
+        return this.http.put<Servico>(`${this.urlBase}/atualizar`, usuario).pipe(
             tap(() => this.getAll())
         );
     }
 
     delete(id: number) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.delete(`${this.urlBase}/deletar/${id}`, {headers}).pipe(
+        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
             tap(() => this.getAll())
         )
     }

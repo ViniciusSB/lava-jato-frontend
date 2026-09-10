@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Veiculo } from '../../models/veiculo';
+import { environment } from '../../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class VeiculoService {
-    private urlBase = "http://localhost:8080/veiculo";
-    private token = localStorage.getItem("token");
+    private apiUrl = environment.apiUrl;
+    private urlBase = `${this.apiUrl}/veiculo`;
 
     constructor(private http: HttpClient){}
 
@@ -14,8 +15,7 @@ export class VeiculoService {
     veiculos = this.veiculosSubject.asObservable();
 
     getAll() {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        this.http.get<Veiculo[]>(`${this.urlBase}/listar`, {headers}).subscribe(
+        this.http.get<Veiculo[]>(`${this.urlBase}/listar`).subscribe(
             data => {
                 this.veiculosSubject.next(data);
             }
@@ -23,50 +23,43 @@ export class VeiculoService {
     }
 
     create(veiculo: Veiculo){
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.post<Veiculo>(`${this.urlBase}/cadastrar`, veiculo, {headers}).pipe(
+        return this.http.post<Veiculo>(`${this.urlBase}/cadastrar`, veiculo).pipe(
             tap( () => this.getAll() )
         );
     }
 
     criarEListarClienteSelecionado(veiculo: Veiculo, clienteId: number){
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.post<Veiculo>(`${this.urlBase}/cadastrar`, veiculo, {headers}).pipe(
+        return this.http.post<Veiculo>(`${this.urlBase}/cadastrar`, veiculo).pipe(
             tap( () => this.obterVeiculosPorClienteId(clienteId))
         );
     }
 
     update(veiculo: Veiculo){
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.put<Veiculo>(`${this.urlBase}/atualizar`, veiculo, {headers}).pipe(
+        return this.http.put<Veiculo>(`${this.urlBase}/atualizar`, veiculo).pipe(
             tap( () => this.getAll() )
         );
     }
 
     atualizarEListarClienteSelecionado(veiculo: Veiculo, clienteId: number){
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.put<Veiculo>(`${this.urlBase}/atualizar`, veiculo, {headers}).pipe(
+        return this.http.put<Veiculo>(`${this.urlBase}/atualizar`, veiculo).pipe(
             tap( () => this.obterVeiculosPorClienteId(clienteId))
         );
     }
 
     delete(id: number){
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.delete(`${this.urlBase}/deletar/${id}`, {headers}).pipe(
+        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
             tap( () => this.getAll() )
         )
     }
 
     deletarEListarClienteSelecionado(id: number, clienteId: number){
-        const headers = { Authorization: `Bearer ${this.token}` };
-        return this.http.delete(`${this.urlBase}/deletar/${id}`, {headers}).pipe(
+        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
             tap( () => this.obterVeiculosPorClienteId(clienteId) )
         )
     }
 
     obterVeiculosPorClienteId(id: number) {
-        const headers = { Authorization: `Bearer ${this.token}` };
-        this.http.get<Veiculo[]>(`${this.urlBase}/listar/cliente/${id}`, {headers}).subscribe(
+        this.http.get<Veiculo[]>(`${this.urlBase}/listar/cliente/${id}`).subscribe(
             data => {
                 this.veiculosSubject.next(data);
             }

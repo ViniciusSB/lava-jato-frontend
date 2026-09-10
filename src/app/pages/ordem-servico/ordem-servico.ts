@@ -19,7 +19,7 @@ import { Usuario } from '../../models/usuario';
 import { Veiculo } from '../../models/veiculo';
 import { ServicoService } from '../../services/servico/servico';
 import { NormalizarEnum } from '../../util/normalizar-enum';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
@@ -31,7 +31,8 @@ import { Router } from '@angular/router';
     MatAutocompleteModule,
     MatOptionModule,
     NormalizarEnum,
-    NgSelectModule],
+    NgSelectModule,
+    RouterModule],
   templateUrl: './ordem-servico.html',
   styleUrl: './ordem-servico.css',
 })
@@ -129,7 +130,7 @@ export class OrdemServicoComponent {
   menuOpcoesUsuario() {
     this.userOpcoes = !this.userOpcoes;
   }
-  
+
   adicionar() {
     this.inserirOrdem = true;
     this.editarOrdem = false;
@@ -180,6 +181,7 @@ export class OrdemServicoComponent {
   }
 
   pesquisar() {
+    this.filtros.pagina = 1;
     this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
     this.numUltimaPagina = this.getNumUltimaPagina;
@@ -306,6 +308,8 @@ export class OrdemServicoComponent {
       this.veiculoSelecionado = os.veiculo;
     this.novaOrdem.veiculoId = os.veiculo?.id;
 
+    this.popularListas();
+
     setTimeout(() => {
       if (this.editarOrdemForm) {
         this.editarOrdemForm.nativeElement.scrollIntoView({
@@ -314,8 +318,6 @@ export class OrdemServicoComponent {
         });
       }
     }, 50);
-
-    this.popularListas();
   }
 
   atualizarVeiculos(cliente: any) {
