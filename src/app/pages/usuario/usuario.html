@@ -1,6 +1,6 @@
 <aside class="menu">
   <div class="main-content menu-content">
-    <a href="http://localhost:4200">
+    <a routerLink="/">
       <div class="menu-superior">
         <img src="logo-lava-jato.png" alt="logo">
         <h3>Lava Jato</h3>
@@ -12,7 +12,7 @@
         <li><a routerLink="/veiculo">Veículos</a></li>
         <li><a routerLink="/servico">Serviços</a></li>
         <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
-        <li><a routerLink="#">Relatórios</a></li>
+        <li><a routerLink="/relatorio">Relatórios</a></li>
       </ul>
     </nav>
     <div class="menu-low-screen">
@@ -27,12 +27,11 @@
               'Funcionário' : 'Admin'}}</h4>
           </div>
         </li>
-        <li><a routerLink="/usuario">Funcionários</a></li>
         <li><a routerLink="/cliente">Clientes</a></li>
         <li><a routerLink="/veiculo">Veículos</a></li>
         <li><a routerLink="/servico">Serviço</a></li>
         <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
-        <li><a routerLink="#">Relatórios</a></li>
+        <li><a routerLink="/relatorio">Relatórios</a></li>
         <li><a (click)="logout()">Sair</a></li>
       </ul>
     </div>

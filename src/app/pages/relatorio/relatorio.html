@@ -1,0 +1,73 @@
+<aside class="menu">
+    <div class="main-content menu-content">
+        <a routerLink="/">
+            <div class="menu-superior">
+                <img src="logo-lava-jato.png" alt="logo">
+                <h3>Lava Jato</h3>
+            </div>
+        </a>
+        <nav class="navbar-principal">
+            <ul>
+                <li *ngIf="tipoUsuarioLogado != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviços</a></li>
+                <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+            </ul>
+        </nav>
+
+        <div class="menu-low-screen">
+            <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
+                    alt=""></button>
+            <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+                <li class="li-usuario">
+                    <div (click)="opcoes()">
+                        <img
+                            [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
+                        <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
+                            'Funcionário' : 'Admin'}}</h4>
+                    </div>
+                </li>
+                <li *ngIf="tipoUsuarioLogado != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviços</a></li>
+                <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                <li><a (click)="logout()">Sair</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="user">
+        <img [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
+            (click)="menuOpcoesUsuario()">
+        @if (userOpcoes) {
+        <ul>
+            <li><a routerLink="#">Opções</a></li>
+            <li><a (click)="logout()">Sair</a></li>
+        </ul>
+        }
+    </div>
+</aside>
+
+<div class="main-content">
+    <h2>Relatórios</h2>
+    <h3>Emissões de relátorios</h3>
+
+
+    <div class="periodo">
+        <select id="tipo" [(ngModel)]="relatorioRequest.tipo" (change)="mudarTipoPeriodo()">
+            <option *ngFor="let tipo of tipos" [value]="tipo.id">{{tipo.label}}</option>
+        </select>
+        <input type="text" [(ngModel)]="relatorioRequest.periodo" [mask]="mascaraPeriodo"
+            [placeholder]="placeholderPeriodo" [dropSpecialCharacters]="false" />
+    </div>
+    <div class="tipo-relatorio">
+        <select id="tipoRelatorio" [(ngModel)]="relatorioRequest.tipoRelatorio">
+            <option *ngFor="let relatorio of relatoriosPermitidos" [value]="relatorio.id">{{relatorio.label}}</option>
+        </select>
+        <button (click)="emitir()" >Emitir</button>
+    </div>
+
+</div>
