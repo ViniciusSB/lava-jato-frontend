@@ -13,7 +13,25 @@ export class RelatorioService {
     constructor(private http: HttpClient) { }
 
     relatorioFuncionario(request: RelatorioRequest): Observable<Blob> {
+        return this.http.post(`${this.urlRelatorio}/funcionario`, request, {
+            responseType: 'blob'
+        });
+    }
+
+    relatorioFaturamento(request: RelatorioRequest): Observable<Blob> {
+        return this.http.post(`${this.urlRelatorio}/faturamento`, request, {
+            responseType: 'blob'
+        });
+    }
+
+    relatorioClientes(request: RelatorioRequest): Observable<Blob> {
         return this.http.post(`${this.urlRelatorio}/clientes`, request, {
+            responseType: 'blob'
+        });
+    }
+
+    relatorioFuncionarios(request: RelatorioRequest): Observable<Blob> {
+        return this.http.post(`${this.urlRelatorio}/funcionarios`, request, {
             responseType: 'blob'
         });
     }

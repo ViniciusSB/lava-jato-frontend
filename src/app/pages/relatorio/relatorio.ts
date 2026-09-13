@@ -38,13 +38,14 @@ export class RelatorioComponent {
     { id: 'funcionarios', label: 'Funcionários', acesso: 'GERENTE' }
   ];
 
+  relatorioSelecionado = "";
+
   mascaraPeriodo = '00-00-0000';
   placeholderPeriodo = 'dd-mm-aaaa';
 
   relatorioRequest: RelatorioRequest = {
     tipo: 'dia',
-    periodo: this.obterDataAtualFormatada('dia'),
-    tipoRelatorio: ''
+    periodo: this.obterDataAtualFormatada('dia')
   };
 
   constructor(private relatorioService: RelatorioService, private router: Router) { }
@@ -127,6 +128,12 @@ export class RelatorioComponent {
 
   validarPeriodoFiltroDia(): boolean {
     const caracteres = this.relatorioRequest.periodo.length;
+
+    if (!(caracteres == 2 || caracteres == 5 || caracteres == 10)) {
+      this.mensagemErro = "Data mal formatada";
+      return false;
+    }
+
     // Verficacao do dia
     let dia = this.relatorioRequest.periodo;
     if (caracteres >= 2) {
@@ -168,6 +175,12 @@ export class RelatorioComponent {
 
   validarPeriodoFiltroMes(): boolean {
     const caracteres = this.relatorioRequest.periodo.length;
+
+    if (!(caracteres == 2 || caracteres == 7)) {
+      this.mensagemErro = "Data mal formatada";
+      return false;
+    }
+
     // Verficacao do mes
     let mes = this.relatorioRequest.periodo;
     if (caracteres >= 2) {
@@ -213,15 +226,79 @@ export class RelatorioComponent {
     }
   }
 
+  fecharMsgErro() {
+    this.mensagemErro = "";
+  }
+
+  relizarValidacoes(): boolean {
+    if (this.relatorioRequest.tipo === "dia") {
+      if (!this.validarPeriodoFiltroDia())
+        return false;
+    } else if (this.relatorioRequest.tipo === "mes") {
+      if (!this.validarPeriodoFiltroMes())
+        return false;
+    } else {
+      if (!this.validarPeriodoFiltroAno())
+        return false;
+    }
+    if (this.relatorioSelecionado === '') {
+      this.mensagemErro = "Selecione um relatório";
+      return false;
+    }
+    this.mensagemErro = "";
+    return true;
+  }
+
   emitir() {
-    this.relatorioService.relatorioFuncionario(this.relatorioRequest).subscribe({
-      next: (data: Blob) => {
-        const fileURL = URL.createObjectURL(data);
-        window.open(fileURL);
-      },
-      error: (erro) => {
-        console.log(erro);
-      }
-    });
+    if (!this.relizarValidacoes()) {
+      return;
+    }
+    switch (this.relatorioSelecionado) {
+      case 'funcionario':
+        this.relatorioRequest.funcionarioId = this.idUsuarioLogado;
+        this.relatorioService.relatorioFuncionario(this.relatorioRequest).subscribe({
+          next: (data: Blob) => {
+            const fileURL = URL.createObjectURL(data);
+            window.open(fileURL);
+          },
+          error: (erro) => {
+            console.log(erro);
+          }
+        });
+        break;
+      case 'faturamento':
+        this.relatorioService.relatorioFaturamento(this.relatorioRequest).subscribe({
+          next: (data: Blob) => {
+            const fileURL = URL.createObjectURL(data);
+            window.open(fileURL);
+          },
+          error: (erro) => {
+            console.log(erro);
+          }
+        });
+        break;
+      case 'clientes':
+        this.relatorioService.relatorioClientes(this.relatorioRequest).subscribe({
+          next: (data: Blob) => {
+            const fileURL = URL.createObjectURL(data);
+            window.open(fileURL);
+          },
+          error: (erro) => {
+            console.log(erro);
+          }
+        });
+        break;
+      case 'funcionarios':
+        this.relatorioService.relatorioFuncionarios(this.relatorioRequest).subscribe({
+          next: (data: Blob) => {
+            const fileURL = URL.createObjectURL(data);
+            window.open(fileURL);
+          },
+          error: (erro) => {
+            console.log(erro);
+          }
+        });
+        break;
+    }
   }
 }

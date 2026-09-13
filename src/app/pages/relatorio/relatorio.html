@@ -51,23 +51,36 @@
     </div>
 </aside>
 
-<div class="main-content">
+<div class="titulo">
     <h2>Relatórios</h2>
+    <div *ngIf="mensagemErro" class="msg-erro">
+        <h4>{{ mensagemErro }}</h4>
+        <div class="btn-fechar">
+            <button type="button" (click)="fecharMsgErro()">x</button>
+        </div>
+    </div>
+</div>
+<div class="subtitulo">
     <h3>Emissões de relátorios</h3>
+</div>
 
-
-    <div class="periodo">
-        <select id="tipo" [(ngModel)]="relatorioRequest.tipo" (change)="mudarTipoPeriodo()">
-            <option *ngFor="let tipo of tipos" [value]="tipo.id">{{tipo.label}}</option>
-        </select>
-        <input type="text" [(ngModel)]="relatorioRequest.periodo" [mask]="mascaraPeriodo"
-            [placeholder]="placeholderPeriodo" [dropSpecialCharacters]="false" />
+<div class="espacamento">
+    <div class="card-relatorio">
+        <div class="periodo">
+            <label *ngFor="let tipo of tipos" [class.ativo]="relatorioRequest.tipo === tipo.id"
+                (change)="mudarTipoPeriodo()">
+                <input type="radio" name="tipos" [(ngModel)]="relatorioRequest.tipo" [value]="tipo.id">
+                {{ tipo.label }}
+            </label>
+            <input type="text" [(ngModel)]="relatorioRequest.periodo" [mask]="mascaraPeriodo"
+                [placeholder]="placeholderPeriodo" [dropSpecialCharacters]="false" />
+        </div>
+        <div class="tipo-relatorio">
+            <select id="tipoRelatorio" [(ngModel)]="relatorioSelecionado">
+                <option *ngFor="let relatorio of relatoriosPermitidos" [value]="relatorio.id">{{relatorio.label}}
+                </option>
+            </select>
+            <button (click)="emitir()">Emitir</button>
+        </div>
     </div>
-    <div class="tipo-relatorio">
-        <select id="tipoRelatorio" [(ngModel)]="relatorioRequest.tipoRelatorio">
-            <option *ngFor="let relatorio of relatoriosPermitidos" [value]="relatorio.id">{{relatorio.label}}</option>
-        </select>
-        <button (click)="emitir()" >Emitir</button>
-    </div>
-
 </div>

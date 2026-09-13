@@ -63,7 +63,6 @@ export class LoginComponent {
       return;
     this.loginService.fazerLogin(this.usuarioRequest).subscribe({
       next: (response) => {
-        console.log(localStorage.getItem("idUsuario"), ". Tipo: ", localStorage.getItem("tipoUsuario"), " token: ", localStorage.getItem("token"));
         this.cdr.markForCheck();
         this.router.navigate(['/']);
       },
