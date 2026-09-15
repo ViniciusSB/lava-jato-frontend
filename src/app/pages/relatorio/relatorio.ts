@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RelatorioService } from '../../services/relatorio/relatorio';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RelatorioRequest } from '../../models/relatorio';
 import { FormsModule } from '@angular/forms';
-import { NgxMaskDirective, provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { AuthUtil } from '../../util/auth-util';
+import { UsuarioLogado } from '../../models/usuario';
 
 @Component({
   selector: 'app-relatorio',
@@ -18,12 +20,13 @@ import { NgxMaskDirective, provideEnvironmentNgxMask, provideNgxMask } from 'ngx
 })
 export class RelatorioComponent {
 
-  idUsuarioLogado = 0;
-  tipoUsuarioLogado = '';
+  usuarioLogado: UsuarioLogado = AuthUtil.obterDadosUsuarioLogado();
+  urlFoto: string = "";
 
   userOpcoes = false;
   opcoesLowScreen = false;
   mensagemErro = '';
+  loading = false;
 
   tipos = [
     { id: 'dia', label: 'Dia' },
@@ -48,20 +51,13 @@ export class RelatorioComponent {
     periodo: this.obterDataAtualFormatada('dia')
   };
 
-  constructor(private relatorioService: RelatorioService, private router: Router) { }
+  constructor(private relatorioService: RelatorioService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    const token = localStorage.getItem('token');
-    const tipoUsuario = localStorage.getItem('tipoUsuario');
-
-    // Validação de Sessão e Permissão
-    if (!token) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    this.idUsuarioLogado = Number(localStorage.getItem('idUsuario')) || 0;
-    this.tipoUsuarioLogado = tipoUsuario || '';
+    if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
+      this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
+    else
+      this.urlFoto = this.usuarioLogado.urlFoto;
   }
 
   opcoes() {
@@ -105,9 +101,8 @@ export class RelatorioComponent {
   }
 
   logout(): void {
-    localStorage.setItem("token", "");
-    localStorage.setItem("idUsuario", "");
-    localStorage.setItem("tipoUsuario", "");
+    AuthUtil.limparDadosLocaisUsuario();
+    this.cdr.markForCheck();
     this.router.navigate(["/login"]);
   }
 
@@ -120,10 +115,10 @@ export class RelatorioComponent {
   }
 
   get relatoriosPermitidos() {
-    if (this.tipoUsuarioLogado === 'ADM') {
+    if (this.usuarioLogado.tipoUsuario === 'ADM') {
       return this.tipoRelatorio;
     }
-    return this.tipoRelatorio.filter(r => r.acesso === this.tipoUsuarioLogado);
+    return this.tipoRelatorio.filter(r => r.acesso === this.usuarioLogado.tipoUsuario);
   }
 
   validarPeriodoFiltroDia(): boolean {
@@ -253,16 +248,23 @@ export class RelatorioComponent {
     if (!this.relizarValidacoes()) {
       return;
     }
+
+    this.loading = true;
+
     switch (this.relatorioSelecionado) {
       case 'funcionario':
-        this.relatorioRequest.funcionarioId = this.idUsuarioLogado;
+        this.relatorioRequest.funcionarioId = this.usuarioLogado.idUsuario;
         this.relatorioService.relatorioFuncionario(this.relatorioRequest).subscribe({
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
+            this.loading = false;
             window.open(fileURL);
+            this.cdr.markForCheck();
           },
           error: (erro) => {
+            this.loading = false;
             console.log(erro);
+            this.cdr.markForCheck();
           }
         });
         break;
@@ -270,10 +272,14 @@ export class RelatorioComponent {
         this.relatorioService.relatorioFaturamento(this.relatorioRequest).subscribe({
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
+            this.loading = false;
             window.open(fileURL);
+            this.cdr.markForCheck();
           },
           error: (erro) => {
+            this.loading = false;
             console.log(erro);
+            this.cdr.markForCheck();
           }
         });
         break;
@@ -281,10 +287,14 @@ export class RelatorioComponent {
         this.relatorioService.relatorioClientes(this.relatorioRequest).subscribe({
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
+            this.loading = false;
             window.open(fileURL);
+            this.cdr.markForCheck();
           },
           error: (erro) => {
+            this.loading = false;
             console.log(erro);
+            this.cdr.markForCheck();
           }
         });
         break;
@@ -292,10 +302,14 @@ export class RelatorioComponent {
         this.relatorioService.relatorioFuncionarios(this.relatorioRequest).subscribe({
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
+            this.loading = false;
             window.open(fileURL);
+            this.cdr.markForCheck();
           },
           error: (erro) => {
+            this.loading = false;
             console.log(erro);
+            this.cdr.markForCheck();
           }
         });
         break;

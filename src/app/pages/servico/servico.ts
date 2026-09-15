@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Servico } from '../../models/servico';
 import { ServicoService } from '../../services/servico/servico';
 import { Router, RouterModule } from '@angular/router';
+import { AuthUtil } from '../../util/auth-util';
+import { UsuarioLogado } from '../../models/usuario';
 
 
 @Component({
@@ -16,8 +18,8 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class ServicoComponent {
 
-  idUsuarioLogado = 0;
-  tipoUsuarioLogado = "";
+  usuarioLogado: UsuarioLogado = AuthUtil.obterDadosUsuarioLogado();
+  urlFoto: string = "";
 
   userOpcoes = false;
   opcoesLowScreen = false;
@@ -37,18 +39,16 @@ export class ServicoComponent {
 
   idServicoExclusao: number | null = null;
 
-  constructor(private servicoService: ServicoService, private router: Router
+  constructor(private servicoService: ServicoService, private router: Router, private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    if (localStorage.getItem("token") == '') {
-      this.router.navigate(["/login"]);
-      return;
-    }
-    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
-     this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.servicoService.getAll();
     this.servicos = this.servicoService.servicos;
+    if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
+      this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
+    else
+      this.urlFoto = this.usuarioLogado.urlFoto;
   }
 
   opcoes() {
@@ -60,9 +60,8 @@ export class ServicoComponent {
   }
 
   logout() {
-    localStorage.setItem("token", "");
-    localStorage.setItem("idUsuario", "");
-    localStorage.setItem("tipoUsuaio", "");
+    AuthUtil.limparDadosLocaisUsuario();
+    this.cdr.markForCheck();
     this.router.navigate(["/login"]);
   }
 

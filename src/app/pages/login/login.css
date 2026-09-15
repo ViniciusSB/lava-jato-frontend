@@ -1,4 +1,3 @@
-
 .center {
     display: flex;
     flex-direction: column;
@@ -191,9 +190,45 @@ select {
     background-color: #4f46e5;
 }
 
+.loading-background {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: wait;
+    backdrop-filter: blur(3px);
+    background-color: rgba(15, 23, 42, 0.75);
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: #1e293b;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    border: 1px solid #334155;
+
+    .gif-loading {
+        width: 4.2rem;
+        height: 4.2rem;
+    }
+
+    p {
+        font-size: 0.85rem;
+    }
+}
+
 /* Responsividade */
 
-@media (min-device-width: 320px) and (max-device-width: 439px) {
+@media (min-width: 320px) and (max-width: 439px) {
     .container {
         width: 95%;
         height: 25rem;

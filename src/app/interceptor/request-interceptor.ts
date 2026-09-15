@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { AuthUtil } from '../util/auth-util';
 
 @Injectable()
 export class RequisicaoInterceptor implements HttpInterceptor {
@@ -27,9 +28,7 @@ export class RequisicaoInterceptor implements HttpInterceptor {
       }),
       catchError((error: HttpErrorResponse) => {
         if (error.status == 401) {
-          localStorage.setItem('token', '');
-          localStorage.setItem("idUsuario", "");
-          localStorage.setItem("tipoUsuaio", "");
+          AuthUtil.limparDadosLocaisUsuario();
           router.navigate(['/login']);
         }
         return throwError(() => error);

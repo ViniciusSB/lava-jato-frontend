@@ -6,6 +6,8 @@ import { DadosFaturamento, DadosVeiculos, DashboardFuncionarioRequest, Funcionar
 import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { Router, RouterModule } from '@angular/router';
+import { AuthUtil } from '../../util/auth-util';
+import { UsuarioLogado } from '../../models/usuario';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,8 +18,8 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './dashboard.css',
 })
 export class DashboardComponent {
-  idUsuarioLogado = 0;
-  tipoUsuarioLogado = "";
+  usuarioLogado: UsuarioLogado = AuthUtil.obterDadosUsuarioLogado();
+  urlFoto: string = "";
 
   userOpcoes = false;
   opcoesLowScreen = false;
@@ -63,14 +65,12 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
-    if (localStorage.getItem("token") == "") {
-      this.router.navigate(["/login"]);
-      return;
-    }
-
-    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
-    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.iniciarGraficos();
+
+    if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
+      this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
+    else
+      this.urlFoto = this.usuarioLogado.urlFoto;
 
     // Inicialmente traz os dados do dia
     this.request = { periodo: this.diaAtual, tipo: 'dia' };
@@ -249,10 +249,9 @@ export class DashboardComponent {
   }
 
   preencherDashboards(periodo: string) {
-    if (this.tipoUsuarioLogado == 'GERENTE' || this.tipoUsuarioLogado == 'ADM') {
-      this.preecherDashboardFuncionario(periodo);
+    if (this.usuarioLogado.tipoUsuario === 'GERENTE' || this.usuarioLogado.tipoUsuario === 'ADM') {
       this.preecherDashboardGerente(periodo);
-    } else if (this.tipoUsuarioLogado == 'FUNCIONARIO')
+    } else if (this.usuarioLogado.tipoUsuario === 'FUNCIONARIO')
       this.preecherDashboardFuncionario(periodo);
   }
 
@@ -288,15 +287,14 @@ export class DashboardComponent {
   }
 
   logout() {
-    localStorage.setItem("token", "");
-    localStorage.setItem("idUsuario", "");
-    localStorage.setItem("tipoUsuario", "");
+    AuthUtil.limparDadosLocaisUsuario();
+    this.cdr.markForCheck();
     this.router.navigate(["/login"]);
   }
 
   /* FUNCIONARIO */
   preecherDashboardFuncionario(periodo: string) {
-    this.dashboardService.getDadosDashboardFuncionario(this.idUsuarioLogado, this.request).subscribe({
+    this.dashboardService.getDadosDashboardFuncionario(this.usuarioLogado.idUsuario, this.request).subscribe({
       next: (response) => {
 
         const dados = response.body!;

@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { UsuarioRequest } from '../../models/usuario';
+import { UsuarioLoginResponse, UsuarioRequest } from '../../models/usuario';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../services/login/login';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthUtil } from '../../util/auth-util';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginComponent {
   senhaRevelada = false;
   mensagemErro = "";
   mensagemSucesso = "";
+  loading = false;
 
   usuarioRequest: UsuarioRequest = { nome: '', email: '', senha: '', tipo: '' };
   tipos = [{ id: 'ADM', label: 'Administrador' }, { id: 'GERENTE', label: 'Gerente' }, { id: 'FUNCIONARIO', label: 'Funcionário' }];
@@ -61,13 +63,21 @@ export class LoginComponent {
     this.fecharMsg();
     if (!this.validarCampos())
       return;
+
+    this.loading = true;
+
     this.loginService.fazerLogin(this.usuarioRequest).subscribe({
       next: (response) => {
+        AuthUtil.coletarDadosLogin(response); 
+        console.log(response);
+        this.loading = false;
         this.cdr.markForCheck();
         this.router.navigate(['/']);
       },
       error: (erro) => {
-        this.mensagemErro = erro.error?.erro;
+        console.log(erro);
+        this.mensagemErro = erro.error?.mensagem;
+        this.loading = false;
         this.cdr.markForCheck();
       }
     });
@@ -77,17 +87,20 @@ export class LoginComponent {
     this.fecharMsg();
     if (!this.validarCampos())
       return;
+
+    this.loading = true;
+
     this.loginService.cadastrar(this.usuarioRequest).subscribe({
       next: (response) => {
-        console.log(response.status);
-        console.log("Body:", response.body);
         this.mensagemSucesso = "Usuário cadastrado"
         this.usuarioRequest = { nome: '', email: '', senha: '', tipo: '' };
         this.senhaRevelada = false;
+        this.loading = false;
         this.cdr.markForCheck();
       },
       error: (erro) => {
         this.mensagemErro = "Não foi possível cadastrar o usuário";
+        this.loading = true;
         this.cdr.markForCheck();
       }
     });

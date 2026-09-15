@@ -1,205 +1,193 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-
-<body>
-
-    <aside class="menu">
-        <div class="main-content menu-content">
-            <a routerLink="/">
-                <div class="menu-superior">
-                    <img src="logo-lava-jato.png" alt="logo">
-                    <h3>Lava Jato</h3>
-                </div>
-            </a>
-            <nav class="navbar-principal">
-                <ul>
-                    <li *ngIf="tipoUsuarioLogado != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
-                    <li><a routerLink="/cliente">Clientes</a></li>
-                    <li><a routerLink="/veiculo">Veículos</a></li>
-                    <li><a routerLink="/servico">Serviço</a></li>
-                    <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
-                    <li><a routerLink="/relatorio">Relatórios</a></li>
-                </ul>
-            </nav>
-
-            <div class="menu-low-screen">
-                <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'" alt=""></button>
-                <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
-                    <li class="li-usuario">
-                        <div (click)="opcoes()">
-                            <img
-                                [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
-                            <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
-                                'Funcionário' : 'Admin'}}</h4>
-                        </div>
-                    </li>
-                    <li *ngIf="tipoUsuarioLogado != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
-                    <li><a routerLink="/cliente">Clientes</a></li>
-                    <li><a routerLink="/veiculo">Veículos</a></li>
-                    <li><a routerLink="/servico">Serviço</a></li>
-                    <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
-                    <li><a routerLink="/relatorio">Relatórios</a></li>
-                    <li><a (click)="logout()">Sair</a></li>
-                </ul>
+<aside class="menu">
+    <div class="menu-content">
+        <a routerLink="/">
+            <div class="menu-logo">
+                <img src="logo-lava-jato.png" alt="logo">
+                <h3>Lava Jato</h3>
             </div>
-
-
-        </div>
-        <div class="user">
-            <img [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
-                (click)="menuOpcoesUsuario()">
-            @if (userOpcoes) {
+        </a>
+        <nav class="menu-navegacao">
             <ul>
-                <li><a routerLink="#">Opções</a></li>
+                <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a>
+                </li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviços</a></li>
+                <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                <li><a routerLink="/relatorio">Relatórios</a></li>
+            </ul>
+            <div class="usuario" (click)="menuOpcoesUsuario()">
+                <img [src]="urlFoto">
+                @if (userOpcoes) {
+                <ul>
+                    <li class="usuario-dropdown">
+                        <img [src]="urlFoto">
+                        <h4>{{usuarioLogado.nome}}</h4>
+                    </li>
+                    <li><a routerLink="#">
+                            <h4>Opcões</h4>
+                        </a></li>
+                    <li><a (click)="logout()">
+                            <h4>Sair</h4>
+                        </a></li>
+                </ul>
+                }
+            </div>
+        </nav>
+        <nav class="menu-low-screen">
+            <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
+                    alt=""></button>
+            <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+                <li class="li-usuario">
+                    <div (click)="opcoes()">
+                        <img [src]="urlFoto">
+                        <h4>{{usuarioLogado.nome}}</h4>
+                    </div>
+                </li>
+                <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a>
+                </li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviço</a></li>
+                <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                <li><a routerLink="/relatorio">Relatórios</a></li>
                 <li><a (click)="logout()">Sair</a></li>
             </ul>
-            }
+        </nav>
+    </div>
+</aside>
+
+<div class="filtros">
+    <div class="filtro-card">
+        <div class="radio-group">
+            <label class="radio-btn" [class.active]="request.tipo === tipos[0]">
+                <input type="radio" id="radio1" name="tipoPeriodo" [value]="tipos[0]" [(ngModel)]="request.tipo"
+                    (click)="alterarTipo(tipos[0])">
+                <span>Dia</span>
+            </label>
+
+            <label class="radio-btn" [class.active]="request.tipo === tipos[1]">
+                <input type="radio" id="radio2" name="tipoPeriodo" [value]="tipos[1]" [(ngModel)]="request.tipo"
+                    (click)="alterarTipo(tipos[1])">
+                <span>Mês</span>
+            </label>
+
+            <label class="radio-btn" [class.active]="request.tipo === tipos[2]">
+                <input type="radio" id="radio3" name="tipoPeriodo" [value]="tipos[2]" [(ngModel)]="request.tipo"
+                    (click)="alterarTipo(tipos[2])">
+                <span>Ano</span>
+            </label>
         </div>
 
-    </aside>
-
-    <div class="filtros">
-        <div class="filtro-card">
-            <div class="radio-group">
-                <label class="radio-btn" [class.active]="request.tipo === tipos[0]">
-                    <input type="radio" id="radio1" name="tipoPeriodo" [value]="tipos[0]" [(ngModel)]="request.tipo"
-                        (click)="alterarTipo(tipos[0])">
-                    <span>Dia</span>
-                </label>
-
-                <label class="radio-btn" [class.active]="request.tipo === tipos[1]">
-                    <input type="radio" id="radio2" name="tipoPeriodo" [value]="tipos[1]" [(ngModel)]="request.tipo"
-                        (click)="alterarTipo(tipos[1])">
-                    <span>Mês</span>
-                </label>
-
-                <label class="radio-btn" [class.active]="request.tipo === tipos[2]">
-                    <input type="radio" id="radio3" name="tipoPeriodo" [value]="tipos[2]" [(ngModel)]="request.tipo"
-                        (click)="alterarTipo(tipos[2])">
-                    <span>Ano</span>
-                </label>
-            </div>
-
-            <div class="periodo-group">
-                <input type="text" [(ngModel)]="campoPeriodo" [placeholder]="placeholderPeriodo"
-                    [mask]="mascaraPeriodo">
-                <button type="button" class="btn-filtrar" (click)="filtrar()">Filtrar</button>
-            </div>
+        <div class="periodo-group">
+            <input type="text" [(ngModel)]="campoPeriodo" [placeholder]="placeholderPeriodo" [mask]="mascaraPeriodo">
+            <button type="button" class="btn-filtrar" (click)="filtrar()">Filtrar</button>
         </div>
+    </div>
 
-        <div *ngIf="mensagemErro" class="msg-erro">
-            <h4>{{ mensagemErro }}</h4>
-            <div class="btn-fechar">
-                <button type="button" (click)="fecharMsgErro()">x</button>
+    <div *ngIf="mensagemErro" class="msg-erro">
+        <h4>{{ mensagemErro }}</h4>
+        <div class="btn-fechar">
+            <button type="button" (click)="fecharMsgErro()">x</button>
+        </div>
+    </div>
+</div>
+
+<div class="grid">
+
+    <!-- Tela do gerente -->
+    @if (usuarioLogado.tipoUsuario === 'GERENTE' || usuarioLogado.tipoUsuario === 'ADM') {
+    <!-- Atendimento -->
+    <div class="grid-dados">
+        <div>
+            <h4>Clientes atendidos</h4>
+            <h2>{{ clientesAtendidos }}</h2>
+        </div>
+        <div>
+            <h4>Serviços finalizados</h4>
+            <h2>{{ servicosFinalizados }}</h2>
+        </div>
+        <div>
+            <h4>Ordens em andamento</h4>
+            <h2>{{ ordensEmAndamento }}</h2>
+        </div>
+    </div>
+
+    <div class="grafico">
+        <apx-chart [series]="graficoTipoVeiculos.series" [chart]="graficoTipoVeiculos.chart"
+            [xaxis]="graficoTipoVeiculos.xaxis" [title]="graficoTipoVeiculos.title"
+            [colors]="graficoTipoVeiculos.colors" [plotOptions]="graficoTipoVeiculos.plotOptions">
+        </apx-chart>
+    </div>
+
+    <hr class="separador">
+
+    <!-- Faturamento -->
+    <div class="grid-dados">
+        <div>
+            <h4>Total Bruto</h4>
+            <h2>R${{ totalBruto }}</h2>
+        </div>
+        <div>
+            <h4>Total Líquido</h4>
+            <h2>R${{ totalLiquido }}</h2>
+        </div>
+    </div>
+
+    <div class="grafico">
+        <apx-chart [series]="graficoFaturamento.series" [chart]="graficoFaturamento.chart"
+            [xaxis]="graficoFaturamento.xaxis" [title]="graficoFaturamento.title">
+        </apx-chart>
+    </div>
+
+    <hr class="separador">
+
+    <!-- Dados Equipe -->
+    <div class="grid-dados">
+        <div>
+            <h4>Membros totais</h4>
+            <h2>{{ totalMembros }}</h2>
+        </div>
+        <div *ngIf="funcionarioDestaque != undefined" class="div-func-destaque">
+            <div>
+                <h4>Funcionário destaque</h4>
+                <h2>{{ funcionarioDestaque.nome }}</h2>
+            </div>
+            <div>
+                <h4>Atendimentos concluídos</h4>
+                <h2>{{ funcionarioDestaque.servicosConcluidos }}</h2>
             </div>
         </div>
     </div>
 
-    <div class="grid">
+    <div class="grafico">
+        <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
+            [title]="graficoTipoMembros.title">
+        </apx-chart>
+    </div>
+    }
 
-        <!-- Tela do gerente -->
-        @if (tipoUsuarioLogado == 'GERENTE' || tipoUsuarioLogado == 'ADM') {
-        <!-- Atendimento -->
-        <div class="grid-dados">
-            <div>
-                <h4>Clientes atendidos</h4>
-                <h2>{{ clientesAtendidos }}</h2>
-            </div>
-            <div>
-                <h4>Serviços finalizados</h4>
-                <h2>{{ servicosFinalizados }}</h2>
-            </div>
-            <div>
-                <h4>Ordens em andamento</h4>
-                <h2>{{ ordensEmAndamento }}</h2>
-            </div>
+    <!-- Tela do funcionário -->
+    @else if (usuarioLogado.tipoUsuario === 'FUNCIONARIO') {
+    <div class="grid-dados">
+        <div>
+            <h4>Ordens finalizadas</h4>
+            <h2>{{ ordensFinalizadasFuncionario }}</h2>
         </div>
-
-        <div class="grafico">
-            <apx-chart [series]="graficoTipoVeiculos.series" [chart]="graficoTipoVeiculos.chart"
-                [xaxis]="graficoTipoVeiculos.xaxis" [title]="graficoTipoVeiculos.title"
-                [colors]="graficoTipoVeiculos.colors" [plotOptions]="graficoTipoVeiculos.plotOptions">
-            </apx-chart>
+        <div>
+            <h4>Ordens em andamento</h4>
+            <h2>{{ ordensEmAndamentoFuncionario }}</h2>
         </div>
-
-        <hr class="separador">
-
-        <!-- Faturamento -->
-        <div class="grid-dados">
-            <div>
-                <h4>Total Bruto</h4>
-                <h2>R${{ totalBruto }}</h2>
-            </div>
-            <div>
-                <h4>Total Líquido</h4>
-                <h2>R${{ totalLiquido }}</h2>
-            </div>
+        <div>
+            <h4>Faturamento total</h4>
+            <h2>R${{ faturamentoTotalFuncionario }}</h2>
         </div>
-
-        <div class="grafico">
-            <apx-chart [series]="graficoFaturamento.series" [chart]="graficoFaturamento.chart"
-                [xaxis]="graficoFaturamento.xaxis" [title]="graficoFaturamento.title">
-            </apx-chart>
-        </div>
-
-        <hr class="separador">
-
-        <!-- Dados Equipe -->
-        <div class="grid-dados">
-            <div>
-                <h4>Membros totais</h4>
-                <h2>{{ totalMembros }}</h2>
-            </div>
-            <div *ngIf="funcionarioDestaque != undefined" class="div-func-destaque">
-                <div>
-                    <h4>Funcionário destaque</h4>
-                    <h2>{{ funcionarioDestaque.nome }}</h2>
-                </div>
-                <div>
-                    <h4>Atendimentos concluídos</h4>
-                    <h2>{{ funcionarioDestaque.servicosConcluidos }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="grafico">
-            <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
-                [title]="graficoTipoMembros.title">
-            </apx-chart>
-        </div>
-        }
-
-        <!-- Tela do funcionário -->
-        @else if (tipoUsuarioLogado == 'FUNCIONARIO') {
-        <div class="grid-dados">
-            <div>
-                <h4>Ordens finalizadas</h4>
-                <h2>{{ ordensFinalizadasFuncionario }}</h2>
-            </div>
-            <div>
-                <h4>Ordens em andamento</h4>
-                <h2>{{ ordensEmAndamentoFuncionario }}</h2>
-            </div>
-            <div>
-                <h4>Faturamento total</h4>
-                <h2>R${{ faturamentoTotalFuncionario }}</h2>
-            </div>
-        </div>
-
-        <div class="grafico">
-            <apx-chart [series]="graficoFaturamentoFuncionario.series" [chart]="graficoFaturamentoFuncionario.chart"
-                [xaxis]="graficoFaturamentoFuncionario.xaxis" [title]="graficoFaturamentoFuncionario.title">
-            </apx-chart>
-        </div>
-        }
     </div>
 
-</body>
-
-</html>
+    <div class="grafico">
+        <apx-chart [series]="graficoFaturamentoFuncionario.series" [chart]="graficoFaturamentoFuncionario.chart"
+            [xaxis]="graficoFaturamentoFuncionario.xaxis" [title]="graficoFaturamentoFuncionario.title">
+        </apx-chart>
+    </div>
+    }
+</div>

@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario/usuario';
-import { Usuario } from '../../models/usuario';
+import { Usuario, UsuarioLogado } from '../../models/usuario';
 import { Observable } from 'rxjs';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 import { Router, RouterModule } from '@angular/router';
+import { AuthUtil } from '../../util/auth-util';
 
 @Component({
   selector: 'app-usuario',
@@ -16,12 +17,12 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class UsuarioComponent {
 
-  idUsuarioLogado = 0;
-  tipoUsuarioLogado = "";
+  usuarioLogado: UsuarioLogado = AuthUtil.obterDadosUsuarioLogado();
+  urlFoto: string = "";
 
   userOpcoes = false;
   opcoesLowScreen = false;
-  
+
   usuarios!: Observable<Usuario[]>;
 
   usuarioSelecionado: Usuario | undefined;
@@ -30,26 +31,25 @@ export class UsuarioComponent {
 
   inserirUsuario: boolean = false;
 
-  novoUsuario: Usuario = {nome: '', email: '', senha: '', tipo: ''};
+  novoUsuario: Usuario = { nome: '', email: '', senha: '', tipo: '' };
 
   excluirSelecionado: boolean = false;
 
   idUsuarioExclusao: number | null = null;
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    if (localStorage.getItem("token") == '') {
-      this.router.navigate(["/login"]);
-      return;
-    } else if (localStorage.getItem("tipoUsuario") == 'FUNCIONARIO') {
+    if (this.usuarioLogado.tipoUsuario === 'FUNCIONARIO') {
       this.router.navigate(["/"]);
       return;
     }
-    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
-    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.usuarioService.getAll();
     this.usuarios = this.usuarioService.usuarios;
+    if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
+      this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
+    else
+      this.urlFoto = this.usuarioLogado.urlFoto;
   }
 
   opcoes() {
@@ -61,9 +61,8 @@ export class UsuarioComponent {
   }
 
   logout() {
-    localStorage.setItem("token", "");
-    localStorage.setItem("idUsuario", "");
-    localStorage.setItem("tipoUsuaio", "");
+    AuthUtil.limparDadosLocaisUsuario();
+    this.cdr.markForCheck();
     this.router.navigate(["/login"]);
   }
 
@@ -77,7 +76,7 @@ export class UsuarioComponent {
   }
 
   editar(u: Usuario) {
-    this.usuarioSelecionado = {... u};
+    this.usuarioSelecionado = { ...u };
     this.inserirUsuario = false;
   }
 
@@ -112,7 +111,7 @@ export class UsuarioComponent {
           alert('Não foi possível cadastrar o usuário.');
         }
       })
-    } 
+    }
   }
 
   excluir(id: number) {
@@ -126,19 +125,19 @@ export class UsuarioComponent {
   }
 
   confirmarExclusao() {
-    if (this.idUsuarioExclusao != null){
+    if (this.idUsuarioExclusao != null) {
       this.usuarioService.delete(this.idUsuarioExclusao).subscribe({
-      next: () => {
-        this.idUsuarioExclusao = null;
-        this.excluirSelecionado = false;
-      },
-      error: (err) => {
-        console.error('Erro ao excluir usuário:', err);
-        alert('Não foi possível excluir o usuário. Tente novamente mais tarde.');
-      }
-    });
+        next: () => {
+          this.idUsuarioExclusao = null;
+          this.excluirSelecionado = false;
+        },
+        error: (err) => {
+          console.error('Erro ao excluir usuário:', err);
+          alert('Não foi possível excluir o usuário. Tente novamente mais tarde.');
+        }
+      });
     }
   }
 
-  
+
 }

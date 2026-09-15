@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,11 +15,12 @@ import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente/cliente';
 import { UsuarioService } from '../../services/usuario/usuario';
 import { VeiculoService } from '../../services/veiculo/veiculo';
-import { Usuario } from '../../models/usuario';
+import { Usuario, UsuarioLogado } from '../../models/usuario';
 import { Veiculo } from '../../models/veiculo';
 import { ServicoService } from '../../services/servico/servico';
 import { NormalizarEnum } from '../../util/normalizar-enum';
 import { Router, RouterModule } from '@angular/router';
+import { AuthUtil } from '../../util/auth-util';
 
 
 @Component({
@@ -38,8 +39,8 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class OrdemServicoComponent {
 
-  idUsuarioLogado = 0;
-  tipoUsuarioLogado = "";
+  usuarioLogado: UsuarioLogado = AuthUtil.obterDadosUsuarioLogado();
+  urlFoto: string = "";
 
   userOpcoes = false;
   opcoesLowScreen = false;
@@ -90,7 +91,8 @@ export class OrdemServicoComponent {
     private usuarioService: UsuarioService,
     private veiculoService: VeiculoService,
     private servicoService: ServicoService,
-    private router: Router) { }
+    private router: Router,
+    private cdr: ChangeDetectorRef) { }
 
   inserirOrdem: boolean = false;
   editarOrdem: boolean = false;
@@ -99,17 +101,15 @@ export class OrdemServicoComponent {
   idOrdemExclusao: number | null = null;
 
   ngOnInit() {
-    if (localStorage.getItem("token") == '') {
-      this.router.navigate(["/login"]);
-      return;
-    }
-    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
-    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
     this.ordemServicoResponse?.subscribe(responses => {
       this.numUltimaPagina = responses.totalPaginas;
     });
+    if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
+      this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
+    else
+      this.urlFoto = this.usuarioLogado.urlFoto;
   }
 
   opcoes() {
@@ -121,9 +121,8 @@ export class OrdemServicoComponent {
   }
 
   logout() {
-    localStorage.setItem("token", "");
-    localStorage.setItem("idUsuario", "");
-    localStorage.setItem("tipoUsuaio", "");
+    AuthUtil.limparDadosLocaisUsuario();
+    this.cdr.markForCheck();
     this.router.navigate(["/login"]);
   }
 

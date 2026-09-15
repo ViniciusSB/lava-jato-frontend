@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Veiculo } from '../../models/veiculo';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,8 @@ import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente/cliente';
 import { Router, RouterModule } from '@angular/router';
+import { AuthUtil } from '../../util/auth-util';
+import { UsuarioLogado } from '../../models/usuario';
 
 @Component({
   selector: 'app-veiculo',
@@ -17,8 +19,9 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './veiculo.css',
 })
 export class VeiculoComponent {
-  idUsuarioLogado = 0;
-  tipoUsuarioLogado = "";
+
+  usuarioLogado: UsuarioLogado = AuthUtil.obterDadosUsuarioLogado();
+  urlFoto: string = "";
 
   userOpcoes = false;
   opcoesLowScreen = false;
@@ -45,17 +48,15 @@ export class VeiculoComponent {
   tipoSecionado: string = '';
   tipos: string[] = ['MOTO', 'CARRO', 'CAMINHONETE', 'CAMINHAO'];
 
-  constructor(private veiculoService: VeiculoService, private clienteService: ClienteService, private router: Router) { }
+  constructor(private veiculoService: VeiculoService, private clienteService: ClienteService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    if (localStorage.getItem("token") == '') {
-      this.router.navigate(["/login"]);
-      return;
-    }
-    this.idUsuarioLogado = Number(localStorage.getItem("idUsuario"));
-    this.tipoUsuarioLogado = localStorage.getItem("tipoUsuario")!;
     this.veiculoService.getAll();
     this.veiculos = this.veiculoService.veiculos;
+    if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
+      this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
+    else
+      this.urlFoto = this.usuarioLogado.urlFoto;
   }
 
   fechar() {
@@ -72,9 +73,8 @@ export class VeiculoComponent {
   }
 
   logout() {
-    localStorage.setItem("token", "");
-    localStorage.setItem("idUsuario", "");
-    localStorage.setItem("tipoUsuaio", "");
+    AuthUtil.limparDadosLocaisUsuario();
+    this.cdr.markForCheck();
     this.router.navigate(["/login"]);
   }
 

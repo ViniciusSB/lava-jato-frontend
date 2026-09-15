@@ -1,52 +1,55 @@
 <aside class="menu">
-  <div class="main-content menu-content">
-    <a routerLink="/">
-      <div class="menu-superior">
-        <img src="logo-lava-jato.png" alt="logo">
-        <h3>Lava Jato</h3>
-      </div>
-    </a>
-    <nav class="navbar-principal">
-      <ul>
-        <li *ngIf="tipoUsuarioLogado != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
-        <li><a routerLink="/cliente">Clientes</a></li>
-        <li><a routerLink="/veiculo">Veículos</a></li>
-        <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
-        <li><a routerLink="/relatorio">Relatórios</a></li>
-      </ul>
-    </nav>
-    <div class="menu-low-screen">
-      <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
-          alt=""></button>
-      <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
-        <li class="li-usuario">
-          <div (click)="opcoes()">
-            <img
-              [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'">
-            <h4>{{tipoUsuarioLogado == 'GERENTE' ? 'Gerente' : tipoUsuarioLogado == 'FUNCIONARIO' ?
-              'Funcionário' : 'Admin'}}</h4>
-          </div>
-        </li>
-        <li *ngIf="tipoUsuarioLogado != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
-        <li><a routerLink="/cliente">Clientes</a></li>
-        <li><a routerLink="/veiculo">Veículos</a></li>
-        <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
-        <li><a routerLink="/relatorio">Relatórios</a></li>
-        <li><a (click)="logout()">Sair</a></li>
-      </ul>
+    <div class="menu-content">
+        <a routerLink="/">
+            <div class="menu-logo">
+                <img src="logo-lava-jato.png" alt="logo">
+                <h3>Lava Jato</h3>
+            </div>
+        </a>
+        <nav class="menu-navegacao">
+            <ul>
+                <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                <li><a routerLink="/relatorio">Relatórios</a></li>
+            </ul>
+            <div class="usuario" (click)="menuOpcoesUsuario()">
+                <img [src]="urlFoto">
+                @if (userOpcoes) {
+                <ul>
+                    <li class="usuario-dropdown">
+                        <img [src]="urlFoto">
+                        <h4>{{usuarioLogado.nome}}</h4>
+                    </li>
+                    <li><a routerLink="#">
+                            <h4>Opcões</h4>
+                        </a></li>
+                    <li><a (click)="logout()">
+                            <h4>Sair</h4>
+                        </a></li>
+                </ul>
+                }
+            </div>
+        </nav>
+        <nav class="menu-low-screen">
+            <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
+                    alt=""></button>
+            <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+                <li class="li-usuario">
+                    <div (click)="opcoes()">
+                        <img [src]="urlFoto">
+                        <h4>{{usuarioLogado.nome}}</h4>
+                    </div>
+                </li>
+                <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/ordemServico">Ordem Serviço</a></li>
+                <li><a routerLink="/relatorio">Relatórios</a></li>
+            </ul>
+        </nav>
     </div>
-  </div>
-  <div class="user">
-    <img
-      [src]="tipoUsuarioLogado == 'GERENTE' ? 'gerente.png' : tipoUsuarioLogado == 'FUNCIONARIO' ? 'funcionario.png' : 'admin.png'"
-      (click)="menuOpcoesUsuario()">
-    @if (userOpcoes) {
-    <ul>
-      <li><a routerLink="#">Opções</a></li>
-      <li><a (click)="logout()">Sair</a></li>
-    </ul>
-    }
-  </div>
 </aside>
 
 <div class="agrupamento-cima">
