@@ -7,6 +7,7 @@ import { ServicoComponent } from './pages/servico/servico';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { LoginComponent } from './pages/login/login';
 import { RelatorioComponent } from './pages/relatorio/relatorio';
+import { OpcoesComponent } from './pages/opcoes/opcoes';
 
 
 export const routes: Routes = [
@@ -18,5 +19,6 @@ export const routes: Routes = [
     { path: 'servico', component: ServicoComponent, title: 'Serviço'},
     { path: 'login', component: LoginComponent, title: 'Login'},
     { path: 'relatorio', component: RelatorioComponent, title: 'Relatório'},
+    { path: 'opcoes', component: OpcoesComponent, title: 'Opçoes Usuário'},
     { path: '**', redirectTo: '' }
 ];

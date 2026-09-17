@@ -22,7 +22,7 @@
             <img [src]="urlFoto">
             <h4>{{usuarioLogado.nome}}</h4>
           </li>
-          <li><a routerLink="#"><h4>Opcões</h4></a></li>
+          <li><a routerLink="/opcoes"><h4>Opcões</h4></a></li>
           <li><a (click)="logout()"><h4>Sair</h4></a></li>
         </ul>
         }
@@ -33,10 +33,10 @@
           alt=""></button>
       <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
         <li class="li-usuario">
-          <div (click)="opcoes()">
+          <a routerLink="/opcoes">
             <img [src]="urlFoto">
             <h4>{{usuarioLogado.nome}}</h4>
-          </div>
+          </a>
         </li>
         <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
         <li><a routerLink="/cliente">Clientes</a></li>

@@ -79,9 +79,10 @@
   margin-left: 0.8rem;
 
   img {
-    width: 3.5rem;
+    width: 3rem;
     height: 2.5rem;
     border-radius: 10px;
+    object-fit: cover;
   }
 
   ul {
@@ -139,7 +140,8 @@
 
       img {
         width: 3rem;
-        height: 2.4rem;
+        height: 2.5rem;
+        object-fit: cover;
       }
 
       h4 {
@@ -213,25 +215,30 @@
 
 }
 
-.li-usuario div {
+.li-usuario a {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.5rem 0 0.5rem 0.4rem;
-  gap: 0.2rem;
+  gap: 0.5rem;
   cursor: pointer;
 
   h4 {
     font-weight: normal;
-    margin: 0 0 0 0.2rem;
+    line-height: 1.2rem;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     text-overflow: ellipsis;
     overflow: hidden;
   }
 
   img {
-    width: 2.5rem;
-    height: 2rem;
+    width: 3rem;
+    height: 2.5rem;
     border-radius: 10px;
+    flex-shrink: 0;
+    object-fit: cover;
   }
 }
 

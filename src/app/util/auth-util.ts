@@ -1,4 +1,4 @@
-import { UsuarioLogado, UsuarioLoginResponse } from "../models/usuario";
+import { UsuarioLogado, UsuarioLoginResponse, UsuarioRequest } from "../models/usuario";
 
 export class AuthUtil {
 
@@ -29,5 +29,10 @@ export class AuthUtil {
             urlFoto: localStorage.getItem('urlFoto') || ""
         };
         return usuario;
+    }
+
+    static atualizarDadosUsuario(usuario: UsuarioRequest):void {
+        localStorage.setItem('nome', usuario.nome!);
+        localStorage.setItem('urlFoto', usuario.urlFoto!);
     }
 }

@@ -7,10 +7,12 @@ export interface Usuario {
 }
 
 export interface UsuarioRequest {
+    id?: number,
     nome?: string;
-    email: string;
-    senha: string;
+    email?: string;
+    senha?: string;
     tipo?: string;
+    urlFoto?: string;
 }
 
 export interface UsuarioLoginResponse {
@@ -20,6 +22,15 @@ export interface UsuarioLoginResponse {
     token: string;
     tipoUsuario: string;
     urlFoto: string;
+}
+
+export interface UsuarioResponse {
+    idUsuario: string;
+    nome: string;
+    email: string;
+    tipoUsuario: string;
+    urlFoto: string;
+    mensagem: string;
 }
 
 export interface UsuarioLogado {

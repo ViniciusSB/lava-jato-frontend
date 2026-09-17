@@ -115,7 +115,7 @@ export class LoginComponent {
     } else if (this.registrarAtivo && (this.usuarioRequest.nome == '' || this.usuarioRequest.tipo == '')) {
       this.mensagemErro = "Preencha os campos";
       return false;
-    } else if (!emailRegex.test(this.usuarioRequest.email)) {
+    } else if (!emailRegex.test(this.usuarioRequest.email!)) {
       this.mensagemErro = "Digite um e-mail válido";
       return false;
     }

@@ -1,7 +1,7 @@
 import { Injectable, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Usuario } from '../../models/usuario';
+import { Usuario, UsuarioRequest, UsuarioResponse } from '../../models/usuario';
 import { environment } from '../../../environments/environment';
 
 @Injectable({providedIn: 'root'})
@@ -32,6 +32,14 @@ export class UsuarioService {
         return this.http.put<Usuario>(`${this.urlBase}/atualizar`, usuario).pipe(
             tap( () => this.getAll() )
         );
+    }
+
+    updateUsuarioOpcoes(usuario: UsuarioRequest){
+        return this.http.put<Usuario>(`${this.urlBase}/atualizar`, usuario);
+    }
+
+    atualizarSenha(senhaAtual: string, novaSenha: string, usuarioId: number): Observable<UsuarioResponse> {
+        return this.http.put<UsuarioResponse>(`${this.urlBase}/atualizarSenha`, {senhaAtual, novaSenha, usuarioId});
     }
 
     delete(id: number){
