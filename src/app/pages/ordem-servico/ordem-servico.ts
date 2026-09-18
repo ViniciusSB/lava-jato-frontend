@@ -84,6 +84,8 @@ export class OrdemServicoComponent {
   servicoAdicionadoId: number | null = null;
 
   status = [{ id: 'EM_ANDAMENTO', label: 'Em andamento' }, { id: 'FINALIZADO', label: 'Finalizado' }];
+  veiculosList = [{ id: 'MOTO', label: 'Moto' }, { id: 'CARRO', label: 'Carro' }, { id: 'CAMINHONETE', label: 'Caminhonete' }, { id: 'CAMINHAO', label: 'Caminhão' }];
+  servicosList = [{ id: 'Lavagem Completa' }, { id: "Lavagem Completa + Cera" }, { id: "Lavagem Simples" }];
 
   constructor(
     private ordemServicoService: OrdemServicoService,
@@ -360,6 +362,29 @@ export class OrdemServicoComponent {
           alert('Não foi possível excluir a ordem. Tente novamente mais tarde.');
         }
       });
+    }
+  }
+
+  mudarTipoFiltro() {
+    if (this.filtros.tipo === 'veiculo') {
+      this.filtros.termo = "MOTO";
+      this.pesquisar();
+    }
+    else if (this.filtros.tipo === 'servico') {
+      this.filtros.termo = "Lavagem Completa";
+      this.pesquisar();
+    }
+    else if (this.filtros.tipo === 'status') {
+      this.filtros.termo = "EM_ANDAMENTO";
+      this.pesquisar();
+    }
+    else if (this.filtros.tipo === 'funcionario') {
+      this.filtros.termo = '';
+      this.pesquisar();
+    }
+    else if (this.filtros.tipo === 'cliente') {
+      this.filtros.termo = '';
+      this.pesquisar();
     }
   }
 

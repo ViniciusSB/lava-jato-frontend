@@ -60,14 +60,34 @@
 <div class="filtros-titulo">
     <h3>Filtros</h3>
     <div class="filtros-tipo">
-        <label *ngFor="let tipo of tiposFiltro" [class.active]="filtros.tipo === tipo.id">
+        <label *ngFor="let tipo of tiposFiltro" (change)="mudarTipoFiltro()" [class.active]="filtros.tipo === tipo.id">
             <input type="radio" name="tipos" [(ngModel)]="filtros.tipo" [value]="tipo.id">
             {{ tipo.label }}
         </label>
     </div>
     <div class="filtros-pesquisa">
-        <input type="text" [(ngModel)]="filtros.termo">
-        <button type="button" (click)="pesquisar()">🔍</button>
+        @if (filtros.tipo === 'cliente' || filtros.tipo === 'funcionario') {
+            <input type="text" [(ngModel)]="filtros.termo" [placeholder]="filtros.tipo === 'cliente' ? 'Nome cliente' : 'Nome funcionário'">
+            <button type="button" (click)="pesquisar()">🔍</button>
+        }
+        @else if (filtros.tipo === 'status') {
+            <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
+                <option *ngFor="let s of status" [value]="s.id">{{s.label}}
+                </option>
+            </select>
+        } 
+        @else if (filtros.tipo === 'veiculo') {
+            <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
+                <option *ngFor="let veiculo of veiculosList" [value]="veiculo.id">{{veiculo.label}}
+                </option>
+            </select>
+        } 
+        @else if (filtros.tipo === 'servico') {
+            <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
+                <option *ngFor="let servico of servicosList" [value]="servico.id">{{servico.id}}
+                </option>
+            </select>
+        }
     </div>
 </div>
 

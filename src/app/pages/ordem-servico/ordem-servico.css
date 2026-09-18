@@ -334,6 +334,17 @@ button:hover {
   font-size: 0.85rem;
 }
 
+.filtros-pesquisa select {
+  width: 13rem;
+  background-color: #0f172a;
+  color: #FFFFFF;
+  padding: 0.3rem 0.6rem;
+  outline: none;
+  border-radius: 0.3rem;
+  border: 1px solid #3d4249;
+  margin-bottom: 0.28rem;
+}
+
 .filtros-pesquisa button {
   background-color: transparent;
   border: 1px solid #334155;
@@ -439,7 +450,7 @@ table tr:hover {
 }
 
 .info-paginacao input {
-  width: 2.5rem;
+  width: 3.5rem;
   background-color: transparent;
   border: none;
   border-bottom: 1px solid #ffffff;
