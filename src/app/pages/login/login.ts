@@ -23,7 +23,7 @@ export class LoginComponent {
   loading = false;
 
   usuarioRequest: UsuarioRequest = { nome: '', email: '', senha: '', tipo: '' };
-  tipos = [{ id: 'ADM', label: 'Administrador' }, { id: 'GERENTE', label: 'Gerente' }, { id: 'FUNCIONARIO', label: 'Funcionário' }];
+  tipos = [{ id: 'FUNCIONARIO', label: 'Funcionário' }, { id: 'GERENTE', label: 'Gerente' }];
 
   constructor(private loginService: LoginService, private cdr: ChangeDetectorRef, private router: Router) { }
 
@@ -50,7 +50,7 @@ export class LoginComponent {
   registrarSelecao() {
     this.loginAtivo = false;
     this.registrarAtivo = true;
-    this.usuarioRequest = { nome: '', email: '', senha: '', tipo: '' };
+    this.usuarioRequest = { nome: '', email: '', senha: '', tipo: 'FUNCIONARIO' };
     this.senhaRevelada = false;
     this.mensagemErro = "";
   }
@@ -99,8 +99,9 @@ export class LoginComponent {
         this.cdr.markForCheck();
       },
       error: (erro) => {
-        this.mensagemErro = "Não foi possível cadastrar o usuário";
-        this.loading = true;
+        console.log(erro);
+        this.mensagemErro = erro.error.mensagem;
+        this.loading = false;
         this.cdr.markForCheck();
       }
     });
@@ -123,6 +124,6 @@ export class LoginComponent {
   }
 
   esqueciSenha() {
-
+    this.mensagemSucesso = "Em breve";
   }
 }

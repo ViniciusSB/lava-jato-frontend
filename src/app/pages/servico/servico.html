@@ -55,7 +55,7 @@
 
 <div class="agrupamento-cima">
   <h2>Lista de Serviços</h2>
-  <button (click)="adicionar()">Adicionar</button>
+  <button *ngIf="usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" (click)="adicionar()">Adicionar</button>
 </div>
 <div class="subtitulo-cima">
   <h3>Gerencie os atendimentos em andamento</h3>
@@ -69,7 +69,7 @@
         <th>Tipo</th>
         <th>Detalhes</th>
         <th>Preço</th>
-        <th colspan="2">Ações</th>
+        <th *ngIf="usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" colspan="2">Ações</th>
       </tr>
     </thead>
     <tbody>
@@ -77,8 +77,8 @@
         <td>{{s.id}}</td>
         <td>{{s.tipo}}</td>
         <td>{{s.detalhes}}</td>
-        <td>{{s.precoBase }}</td>
-        <td class="acoes">
+        <td>{{s.precoBase }} R$</td>
+        <td *ngIf="usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" class="acoes">
           <button (click)="editar(s)">✏️</button>
           <button class="lixeira" (click)="excluir(s.id!)">🗑️</button>
         </td>

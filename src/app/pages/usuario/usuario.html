@@ -55,10 +55,33 @@
 
 <div class="agrupamento-cima">
   <h2>Lista de Usuários</h2>
-  <button (click)="adicionar()">Adicionar</button>
 </div>
 <div class="subtitulo-cima">
   <h3>Gerencie os Usuários</h3>
+</div>
+
+<div class="filtros-titulo">
+  <h3>Filtros</h3>
+  <div class="filtros-tipo">
+    <label *ngFor="let tipo of filtros" (change)="filtrarUsuarios()" [class.active]="filtroSelecionado === tipo.id">
+      <input type="radio" name="tipos" [(ngModel)]="filtroSelecionado" [value]="tipo.id">
+      {{ tipo.label }}
+    </label>
+  </div>
+</div>
+<div class="msg-container">
+  <div *ngIf="mensagemErro" class="msg msg-erro">
+    <h4>{{ mensagemErro }}</h4>
+    <div class="btn-fechar">
+      <button type="button" class="erro" (click)="limparMensagens()">x</button>
+    </div>
+  </div>
+  <div *ngIf="mensagemSucesso" class="msg msg-sucesso">
+    <h4>{{ mensagemSucesso }}</h4>
+    <div class="btn-fechar">
+      <button type="button" class="sucesso" (click)="limparMensagens()">x</button>
+    </div>
+  </div>
 </div>
 
 <div class="tabela-responsiva">
@@ -69,7 +92,7 @@
         <th>Nome</th>
         <th>E-mail</th>
         <th>Tipo</th>
-        <th colspan="2">Ações</th>
+        <th>Status</th>
       </tr>
     </thead>
     <tbody>
@@ -78,63 +101,26 @@
         <td>{{u.nome}}</td>
         <td>{{u.email}}</td>
         <td>{{u.tipo | primCaracMaius }}</td>
-        <td class="acoes">
-          <button (click)="editar(u)">✏️</button>
-          <button class="lixeira" (click)="excluir(u.id!)">🗑️</button>
+        <td>
+          <img [src]="filtroSelecionado === 'ativo' ? 'switch-on.png' : 'switch-off.png'" alt="Ativo"
+            (click)="alternarStatus(u.id!)" />
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<div *ngIf="usuarioSelecionado">
-  <div class="titulo-form">
-    <h3>Editar Usuário</h3>
-    <button class="btn-fechar-form" (click)="fechar()">x</button>
-  </div>
-  <div id="editar-form" class="campos-form">
-    <input type="text" [(ngModel)]="usuarioSelecionado.nome" placeholder="digite o nome">
-    <input type="email" [(ngModel)]="usuarioSelecionado.email" placeholder="digite o email">
-    <select [(ngModel)]="usuarioSelecionado.tipo">
-      @for (tipo of tipos; track tipo) {
-      <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
-      }
-    </select>
-    <button (click)="salvar()">salvar</button>
-  </div>
-</div>
-
-@if (inserirUsuario) {
-<div>
-  <div class="titulo-form">
-    <h3>Adicionar Usuário</h3>
-    <button class="btn-fechar-form" (click)="fechar()">x</button>
-  </div>
-  <div class="campos-form">
-    <input type="text" [(ngModel)]="novoUsuario.nome" placeholder="digite o nome">
-    <input type="email" [(ngModel)]="novoUsuario.email" placeholder="digite o email">
-    <input type="password" [(ngModel)]="novoUsuario.senha" placeholder="digite a senha">
-    <select [(ngModel)]="novoUsuario.tipo">
-      <option value="" disabled selected>Escolha um tipo</option>
-      @for (tipo of tipos; track tipo) {
-      <option [value]="tipo">{{ tipo | primCaracMaius }}</option>
-      }
-    </select>
-    <button (click)="salvar()">cadastrar</button>
-  </div>
-</div>
-}
-
-@if (excluirSelecionado) {
+@if (alternarStatusUsuario) {
 <div class="modal-externo" (click)="fecharModal()">
-  <div class="modal-excluir">
-    <div class="excluir-superior">
-      <h3>Excluir serviço?</h3>
+  <div class="modal-status">
+    <div class="modal-status-superior">
+      <h3>{{filtroSelecionado === 'ativo' ? 'Desativar Usuário?' : 'Ativar Usuário?' }}</h3>
       <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
     </div>
-    <div class="acoes-modal-excluir">
-      <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
-      <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+    <div class="acoes-modal-status">
+      <button class="btn-cancelar-modal" (click)="cancelarTrocaDeStatus()">cancelar</button>
+      <button class="btn-modal" [class.ativar]="filtroSelecionado === 'inativo'"
+        (click)="confirmarTrocaDeStatus()">confirmar</button>
     </div>
   </div>
 </div>

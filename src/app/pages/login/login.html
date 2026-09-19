@@ -65,8 +65,7 @@
 
             <div class="inputs">
                 <select [(ngModel)]="usuarioRequest.tipo" name="tipo">
-                    <option value="" selected disabled>Escolha um tipo</option>
-                    @for (tipo of tipos; track tipo) {
+                    @for (tipo of tipos; track tipo.id) {
                     <option [value]="tipo.id">{{ tipo.label }}</option>
                     }
                 </select>

@@ -246,7 +246,7 @@
 
 .agrupamento-cima {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 95%;
   margin: 0 auto;
@@ -324,10 +324,10 @@ table tr:hover {
 .acoes {
   display: flex;
   justify-content: start;
-  gap: 5px;                
+  gap: 5px;
 }
 
-.titulo-form{
+.titulo-form {
   display: flex;
   width: 95;
   justify-content: center;
@@ -336,17 +336,17 @@ table tr:hover {
 }
 
 .btn-fechar-form {
-    background-color: #e90707;
-    height: 1.4rem;
-    width: 1.4rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 0.6rem;
+  background-color: #e90707;
+  height: 1.4rem;
+  width: 1.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.6rem;
 }
 
 .btn-fechar-form:hover {
-    background-color: #a00505;
+  background-color: #a00505;
 }
 
 .campos-form {
@@ -356,7 +356,7 @@ table tr:hover {
 }
 
 .campos-form input {
-    margin-right: 0.2rem;
+  margin-right: 0.2rem;
 }
 
 input {
@@ -403,25 +403,25 @@ input {
 }
 
 .acoes-modal-excluir {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
-.acoes-modal-excluir .btn-excluir-modal{
-    color: #ffffff;
-    background-color: red;
-    margin-left: 0.2rem;
-    transition: transform 0.2s ease;
+.acoes-modal-excluir .btn-excluir-modal {
+  color: #ffffff;
+  background-color: red;
+  margin-left: 0.2rem;
+  transition: transform 0.2s ease;
 }
 
-.acoes-modal-excluir .btn-cancelar-modal{
-    color: #ffffff;
-    background-color: #979797;
-    transition: transform 0.2s ease;
+.acoes-modal-excluir .btn-cancelar-modal {
+  color: #ffffff;
+  background-color: #979797;
+  transition: transform 0.2s ease;
 }
 
-.acoes-modal-excluir button:hover{
-    transform: scale(1.25);
+.acoes-modal-excluir button:hover {
+  transform: scale(1.25);
 }
 
 /* Responsividade */
@@ -463,6 +463,7 @@ input {
 }
 
 @media (min-width: 627px) and (max-width: 810px) {
+
   .menu-navegacao,
   .user {
     display: none;
@@ -487,7 +488,7 @@ input {
   .menu-low-screen {
     display: none;
   }
-  
+
   .campos-form {
     display: grid;
     grid-template-columns: repeat(3, max-content);
@@ -501,5 +502,3 @@ input {
     margin: 0.6rem auto;
   }
 }
-
-

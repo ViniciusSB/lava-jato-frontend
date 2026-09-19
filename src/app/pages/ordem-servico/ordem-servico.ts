@@ -375,7 +375,7 @@ export class OrdemServicoComponent {
       this.pesquisar();
     }
     else if (this.filtros.tipo === 'status') {
-      this.filtros.termo = "EM_ANDAMENTO";
+      this.filtros.termo = "FINALIZADO";
       this.pesquisar();
     }
     else if (this.filtros.tipo === 'funcionario') {

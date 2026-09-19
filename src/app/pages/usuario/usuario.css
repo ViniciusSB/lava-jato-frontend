@@ -246,7 +246,7 @@
 
 .agrupamento-cima {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 95%;
   margin: 0 auto;
@@ -275,9 +275,114 @@ button:hover {
   background-color: #4338ca;
 }
 
-.lixeira:hover {
-  background-color: #dd3d3d;
+.filtros-titulo {
+  width: 95%;
+  margin: 0.3rem auto;
+  padding: 0.5rem;
+  text-align: center;
 }
+
+.filtros-titulo h3 {
+  letter-spacing: 0.1rem;
+}
+
+.filtros-tipo {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.8rem;
+  display: inline-flex;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 0.2rem;
+}
+
+.filtros-tipo input {
+  display: none;
+}
+
+.filtros-tipo label {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.filtros-tipo label.active {
+  background-color: #0a0a0a;
+}
+
+.filtros-tipo :hover {
+  background-color: #141414;
+}
+
+.msg-container {
+    height: 1.5rem;
+    margin: 0.4rem auto 0.4rem auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .msg {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        color: #ffffff;
+        width: fit-content;
+        gap: 0.5rem;
+        padding: 0 1.8rem 0 0.3rem;
+        border-radius: 0.2rem;
+        position: relative;
+
+        h4 {
+            font-size: 0.85rem;
+        }
+    }
+
+    .msg-erro {
+        background-color: #b62d4b;
+    }
+
+    .msg-sucesso {
+        background-color: #149429;
+    }
+
+    .btn-fechar {
+        margin-left: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        right: 0.2rem;
+        top: 0.1rem;
+
+        button {
+            padding: 0.2rem 0.4rem;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+
+            &.sucesso {
+                background: #157925;
+                &:hover{
+                  background: #11641f;
+                }
+            }
+
+            &.erro {
+                background: #a51313;
+                &:hover{
+                  background: #911111;
+                }
+            }
+        }
+    }
+}
+
 
 .tabela-responsiva {
   max-width: 100%;
@@ -315,66 +420,17 @@ table td {
   text-align: left;
   border-bottom: 1px solid #334155;
   font-size: 0.875rem;
+
+  img {
+    display: flex;
+    width: 2rem;
+    filter: invert(1);
+    cursor: pointer;
+  }
 }
 
 table tr:hover {
   background-color: rgba(255, 255, 255, 0.03);
-}
-
-.acoes {
-  display: flex;
-  justify-content: start;
-  gap: 5px;                
-}
-
-.titulo-form{
-  display: flex;
-  width: 95;
-  justify-content: center;
-  align-items: center;
-  margin: 0.5rem 0;
-}
-
-.btn-fechar-form {
-    background-color: #e90707;
-    height: 1.4rem;
-    width: 1.4rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 0.6rem;
-}
-
-.btn-fechar-form:hover {
-    background-color: #a00505;
-}
-
-.campos-form {
-  display: flex;
-  width: 95;
-  justify-content: center;
-}
-
-.campos-form input, .campos-form select {
-    margin-right: 0.2rem;
-}
-
-input {
-  padding: 0.4rem;
-  border: 2px solid #343155;
-  border-radius: 8px;
-  outline: none;
-  background-color: #12193D;
-  color: #FFFFFF;
-}
-
-select {
-  padding: 0.4rem;
-  border: 2px solid #343155;
-  background-color: #12193D;
-  color: #FFFFFF;
-  border-radius: 8px;
-  outline: none;
 }
 
 .modal-externo {
@@ -386,83 +442,72 @@ select {
   background: #00000080;
 }
 
-.modal-excluir {
+.modal-status {
   position: fixed;
   top: 50%;
   left: 50%;
   width: 30%;
+  height: 10rem;
   background: #152946;
   max-height: 80%;
   transform: translate(-50%, -50%);
   padding: 1rem;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.excluir-superior {
+.modal-status-superior {
   display: flex;
   justify-content: center;
+  text-wrap: nowrap;
   align-items: center;
   margin-bottom: 0.8rem;
+
+  img {
+    margin-left: 0.4rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
 
-.modal-excluir img {
-  margin-left: 0.4rem;
-  width: 1.5rem;
-  height: 1.5rem;
-}
+.acoes-modal-status {
+  display: flex;
+  justify-content: center;
 
-.acoes-modal-excluir {
-    display: flex;
-    justify-content: center;
-}
-
-.acoes-modal-excluir .btn-excluir-modal{
+  .btn-modal {
     color: #ffffff;
     background-color: red;
     margin-left: 0.2rem;
     transition: transform 0.2s ease;
-}
 
-.acoes-modal-excluir .btn-cancelar-modal{
+    &.ativar {
+      background-color: #518108;
+    }
+  }
+
+  .btn-cancelar-modal {
     color: #ffffff;
     background-color: #979797;
     transition: transform 0.2s ease;
-}
+  }
 
-.acoes-modal-excluir button:hover{
+  button:hover {
     transform: scale(1.25);
+  }
 }
 
 /* Responsividade */
 
 @media (min-width: 320px) and (max-width: 809px) {
+
   .menu-navegacao,
   .user {
     display: none;
   }
 
-  .campos-form {
-    display: grid;
-    grid-template-columns: max-content max-content;
-    gap: 0.5rem;
-  }
-
-  .campos-form input, .campos-form select {
-    width: 9rem;
-  }
-
-  #editar-form select {
-    grid-column: 1/-1;
-    margin: 0 auto;
-  }
-
-  .campos-form button {
-    grid-column: 1/-1;
-    width: 7rem;
-    margin: 0.8rem auto;
-  }
-
-  .modal-excluir {
+  .modal-status {
     width: 12rem;
   }
 }
@@ -471,20 +516,4 @@ select {
   .menu-low-screen {
     display: none;
   }
-
-  .campos-form {
-    display: grid;
-    grid-template-columns: repeat(4, max-content);
-    gap: 0.5rem;
-  }
-
-  .campos-form button {
-    grid-column: 1 / -1;
-    width: 7rem;
-    margin: 0.4rem auto;
-  }
 }
-
-
-
-

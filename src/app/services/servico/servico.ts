@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
 import { Servico } from '../../models/servico';
 import { environment } from '../../../environments/environment';
+import { AuthUtil } from '../../util/auth-util';
+import { UsuarioLogado } from '../../models/usuario';
 
 @Injectable({ providedIn: 'root' })
 export class ServicoService {
@@ -10,6 +12,7 @@ export class ServicoService {
     private urlBase = `${this.apiUrl}/servico`;
 
     constructor(private http: HttpClient) { }
+    usuarioLogado: UsuarioLogado = AuthUtil.obterDadosUsuarioLogado();
 
     private servicoSubject = new BehaviorSubject<Servico[]>([]);
     servicos = this.servicoSubject.asObservable();

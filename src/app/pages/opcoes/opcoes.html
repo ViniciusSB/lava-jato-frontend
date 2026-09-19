@@ -65,6 +65,9 @@
     <button type="button" (click)="rotaAlterarSenha()" [class.active]="alterarSenha">
         Alterar senha
     </button>
+    <button type="button" (click)="rotaDesativarConta()" [class.active]="desativarConta">
+        Desativar conta
+    </button>
 </div>
 
 <main class="main-container">
@@ -160,6 +163,21 @@
             </div>
         </div>
         <button (click)="btnAlterarSenha()" type="button">Alterar Senha</button>
+    </div>
+    }
+
+    @if (desativarConta) {
+    <div class="modal-externo" (click)="fecharModal()">
+        <div class="modal-status">
+            <div class="modal-status-superior">
+                <h3>Desativar a conta?</h3>
+                <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+            </div>
+            <div class="acoes-modal-status">
+                <button class="btn-cancelar-modal" (click)="fecharModal()">cancelar</button>
+                <button class="btn-modal" (click)="confirmarDesativamento()">confirmar</button>
+            </div>
+        </div>
     </div>
     }
 </main>

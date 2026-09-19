@@ -23,19 +23,19 @@ export class UsuarioComponent {
   userOpcoes = false;
   opcoesLowScreen = false;
 
+  filtros = [{ "id": "ativo", "label": "Usuários ativos" }, { "id": "inativo", "label": "Usuários inativos" }];
+
+  filtroSelecionado = "ativo";
+
   usuarios!: Observable<Usuario[]>;
-
-  usuarioSelecionado: Usuario | undefined;
-
   tipos: string[] = ['ADM', 'GERENTE', 'FUNCIONARIO']
 
-  inserirUsuario: boolean = false;
+  alternarStatusUsuario: boolean = false;
 
-  novoUsuario: Usuario = { nome: '', email: '', senha: '', tipo: '' };
+  idUsuarioTrocaStatus: number | null = null;
 
-  excluirSelecionado: boolean = false;
-
-  idUsuarioExclusao: number | null = null;
+  mensagemErro = "";
+  mensagemSucesso = "";
 
   constructor(private usuarioService: UsuarioService, private router: Router, private cdr: ChangeDetectorRef) { }
 
@@ -46,14 +46,11 @@ export class UsuarioComponent {
     }
     this.usuarioService.getAll();
     this.usuarios = this.usuarioService.usuarios;
+    console.log(this.usuarios);
     if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
       this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
     else
       this.urlFoto = this.usuarioLogado.urlFoto;
-  }
-
-  opcoes() {
-
   }
 
   fecharOpcoesLowScreen() {
@@ -70,70 +67,63 @@ export class UsuarioComponent {
     this.userOpcoes = !this.userOpcoes;
   }
 
-  adicionar() {
-    this.inserirUsuario = true;
-    this.usuarioSelecionado = undefined;
-  }
-
-  editar(u: Usuario) {
-    this.usuarioSelecionado = { ...u };
-    this.inserirUsuario = false;
-  }
-
-  fechar() {
-    this.usuarioSelecionado = undefined;
-    this.inserirUsuario = false;
-  }
-
   fecharModal() {
-    this.idUsuarioExclusao = null;
-    this.excluirSelecionado = false;
+    this.idUsuarioTrocaStatus = null;
+    this.alternarStatusUsuario = false;
   }
 
-  salvar() {
-    if (this.usuarioSelecionado) {
-      this.usuarioService.update(this.usuarioSelecionado).subscribe({
-        next: () => {
-          this.usuarioSelecionado = undefined;
+  filtrarUsuarios() {
+    this.limparMensagens();
+    if (this.filtroSelecionado === 'ativo') {
+      this.usuarioService.getAll();
+      this.usuarios = this.usuarioService.usuarios;
+    } else {
+      this.usuarioService.listarUsuarioInativos();
+      this.usuarios = this.usuarioService.usuarios;
+    }
+
+  }
+
+  alternarStatus(id: number) {
+    this.alternarStatusUsuario = true;
+    this.idUsuarioTrocaStatus = id;
+  }
+
+  cancelarTrocaDeStatus() {
+    this.alternarStatusUsuario = false;
+  }
+
+  limparMensagens() {
+    this.mensagemErro = "";
+    this.mensagemSucesso = "";
+  }
+
+  confirmarTrocaDeStatus() {
+    if (this.idUsuarioTrocaStatus != null && this.filtroSelecionado === 'ativo') {
+      this.usuarioService.desativar(this.idUsuarioTrocaStatus).subscribe({
+        next: (response) => {
+          this.idUsuarioTrocaStatus = null;
+          this.alternarStatusUsuario = false;
+          this.mensagemSucesso = response.mensagem;
+          this.cdr.markForCheck();
         },
         error: (err) => {
-          console.error('Erro ao atualizar usuário:', err);
-          alert('Não foi possível atualizar o usuário.');
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
-    } else if (this.inserirUsuario) {
-      this.usuarioService.create(this.novoUsuario).subscribe({
-        next: () => {
-          this.inserirUsuario = false;
+    } else if (this.filtroSelecionado === 'inativo' && this.idUsuarioTrocaStatus != null) {
+      this.usuarioService.ativar(this.idUsuarioTrocaStatus).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.idUsuarioTrocaStatus = null;
+          this.alternarStatusUsuario = false;
+          this.mensagemSucesso = response.mensagem;
+          this.cdr.markForCheck();
         },
         error: (err) => {
-          console.error('Erro ao cadastrar usuário:', err);
-          alert('Não foi possível cadastrar o usuário.');
-        }
-      })
-    }
-  }
-
-  excluir(id: number) {
-    this.excluirSelecionado = true;
-    this.idUsuarioExclusao = id;
-    this.fechar();
-  }
-
-  cancelarExclusao() {
-    this.excluirSelecionado = false;
-  }
-
-  confirmarExclusao() {
-    if (this.idUsuarioExclusao != null) {
-      this.usuarioService.delete(this.idUsuarioExclusao).subscribe({
-        next: () => {
-          this.idUsuarioExclusao = null;
-          this.excluirSelecionado = false;
-        },
-        error: (err) => {
-          console.error('Erro ao excluir usuário:', err);
-          alert('Não foi possível excluir o usuário. Tente novamente mais tarde.');
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
     }

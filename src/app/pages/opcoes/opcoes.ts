@@ -24,6 +24,7 @@ export class OpcoesComponent {
   animacaoAtiva = false;
   dadosUsuario = true;
   alterarSenha = false;
+  desativarConta = false;
 
   mensagemErro = "";
   mensagemSucesso = "";
@@ -70,6 +71,8 @@ export class OpcoesComponent {
   }
 
   rotaDadosUsuario() {
+    if (this.desativarConta == true)
+      return;
     this.dadosUsuario = true;
     this.alterarSenha = false;
     this.limparCamposAlterarSenha();
@@ -77,10 +80,37 @@ export class OpcoesComponent {
   }
 
   rotaAlterarSenha() {
+    if (this.desativarConta == true)
+      return;
     this.dadosUsuario = false;
     this.alterarSenha = true;
     this.resetarDadosUsuario();
     this.limparMensagens();
+  }
+
+  rotaDesativarConta() {
+    this.dadosUsuario = false;
+    this.alterarSenha = false;
+    this.desativarConta = true;
+    this.resetarDadosUsuario();
+    this.limparMensagens();
+  }
+
+  fecharModal() {
+    this.desativarConta = false;
+    this.dadosUsuario = true;
+  }
+
+  confirmarDesativamento() {
+    this.usuarioService.desativarPropriaConta(this.usuarioLogado.idUsuario).subscribe({
+      next: (response) => {
+        AuthUtil.limparDadosLocaisUsuario();
+        this.router.navigate(["/login"]);
+      },
+      error: (erro) => {
+        alert(erro.error.mensagem);
+      }
+    });
   }
 
   alternarMenu() {

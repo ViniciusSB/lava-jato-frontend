@@ -22,6 +22,14 @@ export class UsuarioService {
         );
     }
 
+    listarUsuarioInativos() {
+        this.http.get<Usuario[]>(`${this.urlBase}/listarInativos`).subscribe(
+            data => {
+                this.usuariosSubject.next(data);
+            }
+        );
+    }
+
     create(usuario: Usuario){
         return this.http.post<Usuario>(`${this.urlBase}/cadastrar`, usuario).pipe(
             tap( () => this.getAll() )
@@ -42,9 +50,19 @@ export class UsuarioService {
         return this.http.put<UsuarioResponse>(`${this.urlBase}/atualizarSenha`, {senhaAtual, novaSenha, usuarioId});
     }
 
-    delete(id: number){
-        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
+    desativar(id: number): Observable<UsuarioResponse> {
+        return this.http.patch<UsuarioResponse>(`${this.urlBase}/desativar/${id}`, {}).pipe(
             tap( () => this.getAll() )
+        )
+    }
+
+    desativarPropriaConta(id: number): Observable<UsuarioResponse> {
+        return this.http.patch<UsuarioResponse>(`${this.urlBase}/desativarPropriaConta/${id}`, {})
+    }
+
+    ativar(id: number): Observable<UsuarioResponse> {
+        return this.http.patch<UsuarioResponse>(`${this.urlBase}/ativar/${id}`, {}).pipe(
+            tap( () => this.listarUsuarioInativos() )
         )
     }
 }

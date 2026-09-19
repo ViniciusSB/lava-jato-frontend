@@ -36,7 +36,7 @@ form {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 0 2.5rem 0;
+    margin: 0 0 1.2rem 0;
 }
 
 .login-registrar a {
@@ -61,19 +61,21 @@ form {
 
 .msg-container {
     height: 1.5rem;
-    margin: 1.3rem auto;
+    margin: 0.8rem auto 1.6rem auto;
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
 .msg {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #ffffff;
     width: 60%;
     height: 100%;
+    padding: 1.2rem 0.4rem;
     border-radius: 0.2rem;
 }
 
@@ -90,6 +92,8 @@ form {
     margin-left: 0.5rem;
     display: flex;
     align-items: center;
+    position: absolute;
+    right: 0.6rem;
 }
 
 .btn-fechar button {
@@ -254,6 +258,9 @@ select {
 
     .inputs i {
         right: 1.5rem;
+    }
+
+    .msg-erro .msg-sucesso {
     }
 }
 
