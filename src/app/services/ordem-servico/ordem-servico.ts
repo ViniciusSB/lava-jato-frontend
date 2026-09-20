@@ -10,7 +10,7 @@ export class OrdemServicoService {
     private urlBase = `${this.apiUrl}/ordemServico`;
 
     constructor(private http: HttpClient) { }
-    filtros: OrdemServicoFiltros = { tipo: '', termo: '', paginacao: 10, pagina: 1 };
+    filtros: OrdemServicoFiltros = { tipo: '', termo: '', intervaloTempo: '', periodo: '', paginacao: 10, pagina: 1 };
 
     private ordemServicoSubject = new BehaviorSubject<DadosPaginacaoOrdemServico>({
         totalItens: 0,

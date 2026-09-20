@@ -1,65 +1,89 @@
 <aside class="menu">
-  <div class="menu-content">
-    <a routerLink="/">
-      <div class="menu-logo">
-        <img src="logo-lava-jato.png" alt="logo">
-        <h3>Lava Jato</h3>
-      </div>
-    </a>
-    <nav class="menu-navegacao">
-      <ul>
-        <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
-        <li><a routerLink="/cliente">Clientes</a></li>
-        <li><a routerLink="/veiculo">Veículos</a></li>
-        <li><a routerLink="/servico">Serviços</a></li>
-        <li><a routerLink="/relatorio">Relatórios</a></li>
-      </ul>
-      <div class="usuario" (click)="menuOpcoesUsuario()">
-        <img [src]="urlFoto">
-        @if (userOpcoes) {
-        <ul>
-          <li class="usuario-dropdown">
-            <img [src]="urlFoto">
-            <h4>{{usuarioLogado.nome}}</h4>
-          </li>
-          <li><a routerLink="/opcoes"><h4>Opcões</h4></a></li>
-          <li><a (click)="logout()"><h4>Sair</h4></a></li>
-        </ul>
-        }
-      </div>
-    </nav>
-    <nav class="menu-low-screen">
-      <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
-          alt=""></button>
-      <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
-        <li class="li-usuario">
-          <a routerLink="/opcoes">
-            <img [src]="urlFoto">
-            <h4>{{usuarioLogado.nome}}</h4>
-          </a>
-        </li>
-        <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
-        <li><a routerLink="/cliente">Clientes</a></li>
-        <li><a routerLink="/veiculo">Veículos</a></li>
-        <li><a routerLink="/servico">Serviços</a></li>
-        <li><a routerLink="/relatorio">Relatórios</a></li>
-        <li><a (click)="logout()">Sair</a></li>
-      </ul>
-    </nav>
-  </div>
+    <div class="menu-content">
+        <a routerLink="/">
+            <div class="menu-logo">
+                <img src="logo-lava-jato.png" alt="logo">
+                <h3>Lava Jato</h3>
+            </div>
+        </a>
+        <nav class="menu-navegacao">
+            <ul>
+                <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviços</a></li>
+                <li><a routerLink="/relatorio">Relatórios</a></li>
+            </ul>
+            <div class="usuario" (click)="menuOpcoesUsuario()">
+                <img [src]="urlFoto">
+                @if (userOpcoes) {
+                <ul>
+                    <li class="usuario-dropdown">
+                        <img [src]="urlFoto">
+                        <h4>{{usuarioLogado.nome}}</h4>
+                    </li>
+                    <li><a routerLink="/opcoes">
+                            <h4>Opcões</h4>
+                        </a></li>
+                    <li><a (click)="logout()">
+                            <h4>Sair</h4>
+                        </a></li>
+                </ul>
+                }
+            </div>
+        </nav>
+        <nav class="menu-low-screen">
+            <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
+                    alt="" [class.ativo]="opcoesLowScreen"></button>
+            <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
+                <li class="li-usuario">
+                    <a routerLink="/opcoes">
+                        <img [src]="urlFoto">
+                        <h4>{{usuarioLogado.nome}}</h4>
+                    </a>
+                </li>
+                <li *ngIf="usuarioLogado.tipoUsuario != 'FUNCIONARIO'"><a routerLink="/usuario">Funcionários</a></li>
+                <li><a routerLink="/cliente">Clientes</a></li>
+                <li><a routerLink="/veiculo">Veículos</a></li>
+                <li><a routerLink="/servico">Serviços</a></li>
+                <li><a routerLink="/relatorio">Relatórios</a></li>
+                <li><a (click)="logout()">Sair</a></li>
+            </ul>
+        </nav>
+    </div>
 </aside>
 
 <div class="agrupamento-cima">
     <h2>Ordens de Serviço</h2>
     <button (click)="adicionar()">Nova Ordem</button>
 </div>
-<div class="subtitulo-cima">
+<div class="filtro-cima">
     <h3>Gerencie os atendimentos em andamento</h3>
+    <div class="filtro" title="Filtros">
+        <button (click)="alternarStatusFiltro()" [class.ativo]="filtrosAtivos">
+            <i class="fa-solid fa-filter"></i>
+        </button>
+    </div>
 </div>
 
-<div class="filtros-titulo">
+<div class="filtros-grupo" [class.ativo]="filtrosAtivos" [class.animacao]="animacaoAtiva">
     <h3>Filtros</h3>
+
+    <div class="filtros-intervalo-tempo">
+        <label>Data:</label>
+        @for (tempo of intervaloTempo; track tempo.id) {
+        <label [class.active]="filtros.intervaloTempo === tempo.id">
+            <input type="radio" name="tipoPeriodo" [id]="tempo.id" [value]="tempo.id"
+                [(ngModel)]="filtros.intervaloTempo" (change)="alterarIntervaloTempo()">
+            <span>{{tempo.label}}</span>
+        </label>
+        }
+        <input *ngIf="filtros.intervaloTempo !== 'geral'" type="text" [(ngModel)]="filtros.periodo"
+            [placeholder]="placeholderPeriodo" [mask]="mascaraPeriodo" [dropSpecialCharacters]="false">
+    </div>
+
     <div class="filtros-tipo">
+        <label>Tipos:</label>
         <label *ngFor="let tipo of tiposFiltro" (change)="mudarTipoFiltro()" [class.active]="filtros.tipo === tipo.id">
             <input type="radio" name="tipos" [(ngModel)]="filtros.tipo" [value]="tipo.id">
             {{ tipo.label }}
@@ -67,26 +91,27 @@
     </div>
     <div class="filtros-pesquisa">
         @if (filtros.tipo === 'cliente' || filtros.tipo === 'funcionario') {
-            <input type="text" [(ngModel)]="filtros.termo" [placeholder]="filtros.tipo === 'cliente' ? 'Nome cliente' : 'Nome funcionário'">
-            <button type="button" (click)="pesquisar()">🔍</button>
+        <input type="text" [(ngModel)]="filtros.termo"
+            [placeholder]="filtros.tipo === 'cliente' ? 'Nome cliente' : 'Nome funcionário'">
+        <button type="button" (click)="pesquisar()">🔍</button>
         }
         @else if (filtros.tipo === 'status') {
-            <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
-                <option *ngFor="let s of status" [value]="s.id">{{s.label}}
-                </option>
-            </select>
-        } 
+        <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
+            <option *ngFor="let s of status" [value]="s.id">{{s.label}}
+            </option>
+        </select>
+        }
         @else if (filtros.tipo === 'veiculo') {
-            <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
-                <option *ngFor="let veiculo of veiculosList" [value]="veiculo.id">{{veiculo.label}}
-                </option>
-            </select>
-        } 
+        <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
+            <option *ngFor="let veiculo of veiculosList" [value]="veiculo.id">{{veiculo.label}}
+            </option>
+        </select>
+        }
         @else if (filtros.tipo === 'servico') {
-            <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
-                <option *ngFor="let servico of servicosList" [value]="servico.id">{{servico.id}}
-                </option>
-            </select>
+        <select [(ngModel)]="filtros.termo" (change)="pesquisar()">
+            <option *ngFor="let servico of servicosList" [value]="servico.id">{{servico.id}}
+            </option>
+        </select>
         }
     </div>
 </div>
@@ -100,6 +125,7 @@
                 <th>Veículo</th>
                 <th>Funcionário</th>
                 <th>Serviço</th>
+                <th>Início</th>
                 <th>Status</th>
                 <th colspan="2">Ações</th>
             </tr>
@@ -111,6 +137,7 @@
                 <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
                 <td>{{os.funcionario?.nome}}</td>
                 <td>{{os.servico?.tipo}}</td>
+                <td>{{os.dataInicio}}</td>
                 <td>
                     @switch (os.status) {
                     @case ('EM_ANDAMENTO') {
@@ -123,8 +150,8 @@
                 </td>
                 <td>
                     <div class="acoes">
-                    <button (click)="editar(os)">✏️</button>
-                    <button class="lixeira" (click)="excluir(os.id)">🗑️</button>
+                        <button (click)="editar(os)">✏️</button>
+                        <button class="lixeira" (click)="excluir(os.id)">🗑️</button>
                     </div>
                 </td>
             </tr>
@@ -133,13 +160,22 @@
 </div>
 
 <div class="botoes-paginacao">
-    <button type="button" (click)="primPagina()" [disabled]="filtros.pagina <= 1"><<</button>
-    <button type="button" (click)="paginaAnterior()" [disabled]="filtros.pagina <= 1"><</button>
-    <button type="button" (click)="proxPagina()" [disabled]="filtros.pagina >= numUltimaPagina">></button>
-    <button type="button" (click)="ultimaPagina()" [disabled]="filtros.pagina >= numUltimaPagina">>></button>
+    <button type="button" (click)="primPagina()" [disabled]="filtros.pagina <= 1">
+        <<
+    </button>
+    <button type="button" (click)="paginaAnterior()" [disabled]="filtros.pagina <= 1">
+        <
+    </button>
+    <button type="button" (click)="proxPagina()" [disabled]="filtros.pagina >= numUltimaPagina">
+        >
+    </button>
+    <button type="button" (click)="ultimaPagina()" [disabled]="filtros.pagina >= numUltimaPagina">
+        >>
+    </button>
 </div>
 <div class="info-paginacao">
-    <h3>Pag <input type="text" [(ngModel)]="filtros.pagina" (change)="digitarPagina()"> de {{(ordemServicoResponse | async)?.totalPaginas}} </h3>
+    <h3>Pag <input type="text" [(ngModel)]="filtros.pagina" (change)="digitarPagina()"> de {{(ordemServicoResponse |
+        async)?.totalPaginas}} </h3>
     <select name="paginacao" [(ngModel)]="filtros.paginacao" (change)="mudarPaginacao($event)">
         <option value="5">5</option>
         <option value="10">10</option>
@@ -161,15 +197,13 @@
         </ng-template>
     </ng-select>
     <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
-        (change)="atualizarVeiculos($event)" [(ngModel)]="clienteAdicionadoId" [clearable]="true"
-        placeholder="cliente">
+        (change)="atualizarVeiculos($event)" [(ngModel)]="clienteAdicionadoId" [clearable]="true" placeholder="cliente">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.nome">{{ item.nome }}</span>
         </ng-template>
     </ng-select>
     <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
-        [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo"
-        notFoundText="selecione um cliente">
+        [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo" notFoundText="selecione um cliente">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.modelo">{{ item.modelo }}</span>
         </ng-template>
@@ -216,8 +250,8 @@
             <span [title]="item.tipo">{{ item.tipo }}</span>
         </ng-template>
     </ng-select>
-    <ng-select class="custom-ng-select" [items]="status" bindLabel="label" bindValue="id"
-        [(ngModel)]="novaOrdem.status" [clearable]="true" placeholder="status">
+    <ng-select class="custom-ng-select" [items]="status" bindLabel="label" bindValue="id" [(ngModel)]="novaOrdem.status"
+        [clearable]="true" placeholder="status">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.label">{{ item.label }}</span>
         </ng-template>

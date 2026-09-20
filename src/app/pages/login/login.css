@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: calc(100vh - 2rem);
 }
 
 .logo {
@@ -259,8 +259,11 @@ select {
     .inputs i {
         right: 1.5rem;
     }
+}
 
-    .msg-erro .msg-sucesso {
+@media (min-height: 494px) and (max-height: 579px) {
+    .center {
+        height: 600px;
     }
 }
 

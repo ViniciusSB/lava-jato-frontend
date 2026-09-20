@@ -17,6 +17,9 @@ export class RequisicaoInterceptor implements HttpInterceptor {
 
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      AuthUtil.limparDadosLocaisUsuario();
+      router.navigate(['/login']);
     }
 
     const cloned = req.clone({ setHeaders: headers });

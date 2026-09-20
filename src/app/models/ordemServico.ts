@@ -18,9 +18,7 @@ export interface OrdemServicoResponse {
     cliente?: Cliente;
     veiculo?: Veiculo;
     funcionario?: Usuario;
-    observacao?: string;
-    entregaDomicilio?: boolean;
-    enderecoEntrega?: string;
+    dataInicio: string;
 }
 
 export interface OrdemServicoRequest {
@@ -37,4 +35,6 @@ export interface OrdemServicoFiltros {
     termo: string;
     paginacao: number;
     pagina: number;
+    intervaloTempo: string;
+    periodo: string;
 }

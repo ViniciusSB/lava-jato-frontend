@@ -21,6 +21,7 @@ import { ServicoService } from '../../services/servico/servico';
 import { NormalizarEnum } from '../../util/normalizar-enum';
 import { Router, RouterModule } from '@angular/router';
 import { AuthUtil } from '../../util/auth-util';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 
 @Component({
@@ -33,7 +34,9 @@ import { AuthUtil } from '../../util/auth-util';
     MatOptionModule,
     NormalizarEnum,
     NgSelectModule,
-    RouterModule],
+    RouterModule,
+    NgxMaskDirective],
+  providers: [provideNgxMask({ dropSpecialCharacters: false })],
   templateUrl: './ordem-servico.html',
   styleUrl: './ordem-servico.css',
 })
@@ -62,7 +65,8 @@ export class OrdemServicoComponent {
   @ViewChild('novaOrdemForm') novaOrdemForm!: ElementRef;
   @ViewChild('editarOrdemForm') editarOrdemForm!: ElementRef;
 
-  filtros: OrdemServicoFiltros = { tipo: 'cliente', termo: '', paginacao: 10, pagina: 1 };
+  filtrosAtivos = false;
+  filtros: OrdemServicoFiltros = { tipo: 'cliente', termo: '', intervaloTempo: 'geral', periodo: '', paginacao: 10, pagina: 1 };
   tiposFiltro = [{ "label": "Cliente", "id": "cliente" }, { "label": "Veículo", "id": "veiculo" }, { "label": "Funcionário", "id": "funcionario" }, { "label": "Serviço", "id": "servico" }, { "label": "Status", "id": "status" }];
   pesquisa = "";
   numUltimaPagina = 0;
@@ -86,6 +90,12 @@ export class OrdemServicoComponent {
   status = [{ id: 'EM_ANDAMENTO', label: 'Em andamento' }, { id: 'FINALIZADO', label: 'Finalizado' }];
   veiculosList = [{ id: 'MOTO', label: 'Moto' }, { id: 'CARRO', label: 'Carro' }, { id: 'CAMINHONETE', label: 'Caminhonete' }, { id: 'CAMINHAO', label: 'Caminhão' }];
   servicosList = [{ id: 'Lavagem Completa' }, { id: "Lavagem Completa + Cera" }, { id: "Lavagem Simples" }];
+
+  intervaloTempo = [{ "id": "geral", "label": "Geral" }, { "id": "dia", "label": "Dia" }, { "id": "mes", "label": "Mês" }, { "id": "ano", "label": "Ano" }];
+  mascaraPeriodo = "00-00-0000"
+  placeholderPeriodo = "dd-mm-aaaa"
+  mensagemErro = "";
+  animacaoAtiva = false;
 
   constructor(
     private ordemServicoService: OrdemServicoService,
@@ -112,10 +122,6 @@ export class OrdemServicoComponent {
       this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
     else
       this.urlFoto = this.usuarioLogado.urlFoto;
-  }
-
-  opcoes() {
-
   }
 
   fecharOpcoesLowScreen() {
@@ -182,6 +188,7 @@ export class OrdemServicoComponent {
   }
 
   pesquisar() {
+    this.fechar();
     this.filtros.pagina = 1;
     this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
@@ -189,6 +196,7 @@ export class OrdemServicoComponent {
   }
 
   proxPagina() {
+    this.fechar();
     this.filtros.pagina = Number(this.filtros.pagina) + 1;
     this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
@@ -196,6 +204,7 @@ export class OrdemServicoComponent {
   }
 
   paginaAnterior() {
+    this.fechar();
     this.filtros.pagina = Number(this.filtros.pagina) - 1;
     this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
@@ -203,6 +212,7 @@ export class OrdemServicoComponent {
   }
 
   ultimaPagina() {
+    this.fechar();
     let totalPaginas = 0;
     this.ordemServicoResponse?.subscribe(responses => {
       totalPaginas = responses.totalPaginas;
@@ -214,6 +224,7 @@ export class OrdemServicoComponent {
   }
 
   primPagina() {
+    this.fechar();
     this.filtros.pagina = 1;
     this.ordemServicoService.getAll(this.filtros);
     this.ordemServicoResponse = this.ordemServicoService.ordemServicos;
@@ -221,8 +232,6 @@ export class OrdemServicoComponent {
   }
 
   digitarPagina() {
-    console.log("num digitado ", Number(this.filtros.pagina), " \n Ultima pag: ", this.getNumUltimaPagina);
-    console.log(Number(this.filtros.pagina) <= 0);
     if (Number(this.filtros.pagina) <= this.getNumUltimaPagina) {
       if (Number(this.filtros.pagina) <= 0) {
         this.filtros.pagina = 1;
@@ -237,6 +246,7 @@ export class OrdemServicoComponent {
       this.filtros.pagina = this.getNumUltimaPagina;
       this.ordemServicoService.getAll(this.filtros);
     }
+    this.fechar();
     this.numUltimaPagina = this.getNumUltimaPagina;
   }
 
@@ -254,6 +264,7 @@ export class OrdemServicoComponent {
     this.filtros.paginacao = Number(evento.value);
     this.ordemServicoService.getAll(this.filtros);
     this.numUltimaPagina = this.getNumUltimaPagina;
+    this.fechar();
   }
 
   salvar() {
@@ -385,6 +396,55 @@ export class OrdemServicoComponent {
     else if (this.filtros.tipo === 'cliente') {
       this.filtros.termo = '';
       this.pesquisar();
+    }
+  }
+  
+  alternarStatusFiltro() {
+    if (!this.animacaoAtiva) 
+      this.animacaoAtiva = true;
+    this.filtrosAtivos = !this.filtrosAtivos;
+  }
+
+  alterarIntervaloTempo() {
+    this.mudarTipoPeriodo();
+  }
+
+  private obterDataAtualFormatada(tipo: string): string {
+    const hoje = new Date();
+    const dia = hoje.getDate() < 10 ? `0${hoje.getDate()}` : String(hoje.getDate());
+    const mes = (hoje.getMonth() + 1) < 10 ? `0${(hoje.getMonth() + 1)}` : String(hoje.getMonth() + 1);
+    const ano = hoje.getFullYear();
+    if (tipo === 'dia')
+      return `${dia}-${mes}-${ano}`;
+    else if (tipo === 'mes')
+      return `${mes}-${ano}`;
+    else
+      return `${ano}`;
+  }
+
+  mudarTipoPeriodo(): void {
+    this.filtros.periodo = '';
+    this.mensagemErro = '';
+
+    switch (this.filtros.intervaloTempo) {
+      case 'mes':
+        this.mascaraPeriodo = '00-0000';
+        this.placeholderPeriodo = 'mm-aaaa';
+        this.filtros.periodo = this.obterDataAtualFormatada('mes');
+        this.pesquisar()
+        break;
+      case 'ano':
+        this.mascaraPeriodo = '0000';
+        this.placeholderPeriodo = 'aaaa';
+        this.filtros.periodo = this.obterDataAtualFormatada('ano');
+        this.pesquisar()
+        break;
+      default:
+        this.mascaraPeriodo = '00-00-0000';
+        this.placeholderPeriodo = 'dd-mm-aaaa';
+        this.filtros.periodo = this.obterDataAtualFormatada('dia');
+        this.pesquisar()
+        break;
     }
   }
 

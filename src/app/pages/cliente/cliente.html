@@ -30,7 +30,7 @@
     </nav>
     <nav class="menu-low-screen">
       <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
-          alt=""></button>
+          alt="" [class.ativo]="opcoesLowScreen"></button>
       <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
         <li class="li-usuario">
           <a routerLink="/opcoes">

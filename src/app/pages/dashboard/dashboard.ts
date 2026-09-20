@@ -77,10 +77,6 @@ export class DashboardComponent {
     this.preencherDashboards(this.request.tipo);
   }
 
-  opcoes() {
-
-  }
-
   fecharOpcoesLowScreen() {
     this.opcoesLowScreen = !this.opcoesLowScreen;
   }
