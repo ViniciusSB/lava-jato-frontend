@@ -43,6 +43,8 @@ export class VeiculoComponent {
 
   excluirSelecionado: boolean = false;
 
+  mensagemErro = "";
+
   idVeiculoExclusao: number | null = null;
 
   tipoSecionado: string = '';
@@ -64,10 +66,6 @@ export class VeiculoComponent {
     this.inserirVeiculo = false;
   }
 
-  opcoes() {
-
-  }
-
   fecharOpcoesLowScreen() {
     this.opcoesLowScreen = !this.opcoesLowScreen;
   }
@@ -83,6 +81,7 @@ export class VeiculoComponent {
   }
 
   adicionar() {
+    this.mensagemErro = "";
     if (this.clientes == undefined) {
       this.clienteService.getAll();
       this.clientes = this.clienteService.clientes;
@@ -92,6 +91,7 @@ export class VeiculoComponent {
   }
 
   editar(v: Veiculo) {
+    this.mensagemErro = "";
     if (this.clientes == undefined) {
       this.clienteService.getAll();
       this.clientes = this.clienteService.clientes;
@@ -108,7 +108,8 @@ export class VeiculoComponent {
         },
         error: (err) => {
           console.error('Erro ao atualizar veículo:', err);
-          alert('Não foi possível atualizar o veículo.');
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
     } else if (this.inserirVeiculo) {
@@ -119,7 +120,8 @@ export class VeiculoComponent {
         },
         error: (err) => {
           console.error('Erro ao cadastrar veículo:', err);
-          alert('Não foi possível cadastrar o veículo.');
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       })
     }
@@ -129,8 +131,13 @@ export class VeiculoComponent {
     this.idVeiculoExclusao = null;
     this.excluirSelecionado = false;
   }
+  
+  fecharMsg() {
+    this.mensagemErro = "";
+  }
 
   excluir(id: number) {
+    this.mensagemErro = "";
     this.excluirSelecionado = true;
     this.idVeiculoExclusao = id;
     this.fechar();
@@ -149,7 +156,8 @@ export class VeiculoComponent {
         },
         error: (err) => {
           console.log('Erro ao deletar o veículo', err);
-          alert('Não foi possível deletar o veículo.')
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
     }

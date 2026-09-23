@@ -22,6 +22,10 @@ export class UsuarioService {
         );
     }
 
+    listarTodosOsUsuarios(): Observable<UsuarioResponse[]> {
+        return this.http.get<UsuarioResponse[]>(`${this.urlBase}/listar`);
+    }
+
     listarUsuarioInativos() {
         this.http.get<Usuario[]>(`${this.urlBase}/listarInativos`).subscribe(
             data => {

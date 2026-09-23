@@ -34,6 +34,8 @@ export class ServicoComponent {
     tipo: ''
   };
 
+  mensagemErro = "";
+
   inserirServico: boolean = false;
   excluirSelecionado: boolean = false;
 
@@ -70,11 +72,13 @@ export class ServicoComponent {
   }
 
   adicionar() {
+    this.mensagemErro = "";
     this.inserirServico = true;
     this.servicoSelecionado = null;
   }
 
   editar(s: Servico) {
+    this.mensagemErro = "";
     this.servicoSelecionado = { ...s };
     this.inserirServico = false;
   }
@@ -112,6 +116,7 @@ export class ServicoComponent {
   }
 
   excluir(id: number) {
+    this.mensagemErro = "";
     this.excluirSelecionado = true;
     this.idServicoExclusao = id;
     this.fechar();
@@ -129,8 +134,8 @@ export class ServicoComponent {
           this.excluirSelecionado = false;
         },
         error: (err) => {
-          console.error('Erro ao excluir o serviço:', err);
-          alert('Não foi possível excluir o serviço. Tente novamente mais tarde.');
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
     }
@@ -139,6 +144,10 @@ export class ServicoComponent {
   fecharModal() {
     this.idServicoExclusao = null;
     this.excluirSelecionado = false;
+  }
+
+  fecharMsg() {
+    this.mensagemErro = "";
   }
 
 }

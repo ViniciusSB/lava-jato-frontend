@@ -15,7 +15,7 @@ import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente/cliente';
 import { UsuarioService } from '../../services/usuario/usuario';
 import { VeiculoService } from '../../services/veiculo/veiculo';
-import { Usuario, UsuarioLogado } from '../../models/usuario';
+import { Usuario, UsuarioLogado, UsuarioResponse } from '../../models/usuario';
 import { Veiculo } from '../../models/veiculo';
 import { ServicoService } from '../../services/servico/servico';
 import { NormalizarEnum } from '../../util/normalizar-enum';
@@ -71,8 +71,11 @@ export class OrdemServicoComponent {
   pesquisa = "";
   numUltimaPagina = 0;
 
-  funcionarios: Observable<Usuario[]> | undefined;
-  funcionarioSelecionado: Usuario = { id: 0, nome: '', email: '', tipo: '' };
+  funcionarios: UsuarioResponse[] = [];
+  funcionarioSelecionado: Usuario = {
+    id: 0, nome: '', email: '', tipo: '',
+    status: ''
+  };
   funcionarioAdicionadoId: number | null = null;
 
   clientes: Observable<Cliente[]> | undefined;
@@ -156,10 +159,17 @@ export class OrdemServicoComponent {
   }
 
   addFuncionario() {
-    if (this.funcionarios == undefined) {
-      this.usuarioService.getAll();
-      this.funcionarios = this.usuarioService.usuarios;
+    if (this.funcionarios.length == 0) {
+      this.usuarioService.listarTodosOsUsuarios().subscribe({
+        next: (response) => {
+          this.funcionarios = response.filter(usuario => usuario.tipo === 'FUNCIONARIO');
+        }
+      });
     }
+  }
+
+  obterFuncionariosAtivos():UsuarioResponse[] {
+    return this.funcionarios.filter(usuario => usuario.status === 'ativo');
   }
 
   addCliente() {
@@ -185,6 +195,10 @@ export class OrdemServicoComponent {
 
   fecharModal() {
     this.excluirSelecionado = false;
+  }
+
+  fecharMsg() {
+    this.mensagemErro = "";
   }
 
   pesquisar() {
@@ -292,7 +306,11 @@ export class OrdemServicoComponent {
         },
         error: (err) => {
           console.error('Erro ao editar a ordem:', err);
-          alert('Não foi possível editar a ordem.');
+          this.novaOrdem = {};
+          this.editarOrdem = false;
+          this.limparElementosSelecionados();
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
     }
@@ -370,7 +388,8 @@ export class OrdemServicoComponent {
         },
         error: (err) => {
           console.error('Erro ao excluir a ordem:', err);
-          alert('Não foi possível excluir a ordem. Tente novamente mais tarde.');
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
     }
@@ -473,7 +492,7 @@ export class OrdemServicoComponent {
     this.servicoSelecionado = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
     this.veiculoSelecionado = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, clienteNome: '' };
     this.clienteSelecionado = { id: 0, nome: '', celular: '', fidelidade: 0, veiculos: [] };
-    this.funcionarioSelecionado = { id: 0, nome: '', email: '', tipo: '' };
+    this.funcionarioSelecionado = { id: 0, nome: '', email: '', tipo: '', status: '' };
   }
 
   limparElementosAdicionados() {

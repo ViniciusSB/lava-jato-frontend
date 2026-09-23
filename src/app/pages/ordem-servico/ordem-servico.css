@@ -379,18 +379,29 @@ button:hover {
   flex-direction: column;
   opacity: 0;
   height: 0;
+  overflow: hidden;
+  pointer-events: none;
 
   h3 {
     letter-spacing: 0.1rem;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
   }
 
   &.animacao {
-    animation: dropupFade 0.3s ease;
+    animation: dropupFade 0.6s ease-in-out;
   }
 
   &.ativo {
     height: fit-content;
     opacity: 1;
+    display: flex;
+    pointer-events: visible;
+
+    h3 {
+      opacity: 1;
+    }
+
     animation: dropdownFade 0.6s ease;
   }
 }
@@ -585,6 +596,10 @@ table td {
   font-size: 0.875rem;
 }
 
+table td.inativo {
+  color: #f16060;
+}
+
 table tr:hover {
   background-color: rgba(255, 255, 255, 0.03);
 }
@@ -707,65 +722,171 @@ table tr:hover {
   top: 0;
   left: 0;
   position: fixed;
-  background: #00000080;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
 }
 
-.modal-excluir {
+.modal-interno {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 30%;
-  background: #152946;
-  max-height: 80%;
+  background: #1e293b;
   transform: translate(-50%, -50%);
-  padding: 1rem;
-  border-radius: 8px;
+  border: 1px solid #334155;
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
-.excluir-superior {
+/* Modal confirmar exclusao */
+
+.modal-interno.confirmar {
+  width: 20rem;
+  padding: 1.5rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 0.8rem;
+  text-align: center;
+
+  .excluir-superior {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    background-color: transparent;
+    padding: 0;
+
+    h3 {
+      margin: 0;
+      color: #f8fafc;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .icone-aviso {
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0;
+      padding: 0.75rem;
+      background-color: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 50%;
+    }
+  }
+
+  .acoes-modal-excluir {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 0.75rem;
+    height: auto;
+
+    button {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-cancelar-modal {
+      background-color: #334155;
+      color: #cbd5e1;
+
+      &:hover {
+        background-color: #475569;
+        color: #ffffff;
+        transform: none;
+      }
+    }
+
+    .btn-excluir-modal {
+      background-color: #dc2626;
+      color: #ffffff;
+
+      &:hover {
+        background-color: #ef4444;
+        transform: none;
+      }
+    }
+  }
 }
 
-.modal-excluir img {
-  margin-left: 0.4rem;
-  width: 1.5rem;
-  height: 1.5rem;
+/* Msg erro / sucesso */
+.modal-interno.feedback {
+  height: 18rem;
+  width: 20rem;
+
+  .titulo-superior {
+    height: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+
+    h3 {
+      margin-left: 2.5rem;
+    }
+
+    .btn-fechar {
+      margin-right: 0.5rem;
+
+      button {
+        padding: 0.4rem 0.6rem;
+        background-color: transparent;
+      }
+    }
+
+    &.erro {
+      background-color: #f85252;
+
+      button:hover {
+        background-color: #e03939;
+      }
+    }
+
+    &.sucesso {
+      background-color: #1cc72a;
+
+      button:hover {
+        background-color: #12a01d;
+      }
+    }
+  }
+
+  .conteudo-principal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 80%;
+    margin: auto 0.6rem;
+
+    img {
+      width: 6rem;
+      filter: invert(0.3);
+    }
+
+    h4 {
+      text-align: center;
+    }
+  }
 }
 
-.acoes-modal-excluir {
-  display: flex;
-  justify-content: center;
-}
-
-.acoes-modal-excluir .btn-excluir-modal {
-  color: #ffffff;
-  background-color: red;
-  margin-left: 0.2rem;
-  transition: transform 0.2s ease;
-}
-
-.acoes-modal-excluir .btn-cancelar-modal {
-  color: #ffffff;
-  background-color: #979797;
-  transition: transform 0.2s ease;
-}
-
-.acoes-modal-excluir button:hover {
-  transform: scale(1.25);
-}
 
 @keyframes dropupFade {
   from {
     opacity: 1;
     transform: translateY(0);
+    height: fit-content;
   }
 
   to {
     opacity: 0;
-    transform: translateY(-1rem);
+    transform: translateY(-5rem);
+    height: 0;
   }
 }
 
@@ -795,7 +916,7 @@ table tr:hover {
   }
 
   .filtros-intervalo-tempo {
-    display: grid; 
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     width: 214px;
 
@@ -822,6 +943,7 @@ table tr:hover {
       justify-self: center;
       font-size: 15px;
     }
+
     label:last-child {
       grid-column: 1 / -1;
       justify-self: center;
@@ -879,6 +1001,10 @@ table tr:hover {
 
   table tbody tr td {
     height: 100%;
+  }
+
+  .modal-interno.feedback {
+    width: 250px;
   }
 
 }

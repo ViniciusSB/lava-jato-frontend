@@ -367,6 +367,47 @@ button:hover {
   background-color: #dd3d3d;
 }
 
+.msg-container {
+  height: 1.5rem;
+  margin: 0.4rem auto 1.6rem auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.msg {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.6rem;
+  align-items: center;
+  color: #ffffff;
+  width: fit-content;
+  height: 100%;
+  padding: 1.2rem 0.4rem 1.2rem 0.4rem;
+  border-radius: 0.2rem;
+
+  &.msg-erro {
+    background-color: #b62d4b;
+  }
+}
+
+.btn-fechar {
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  right: 0;
+
+  button {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+}
+
 .tabela-responsiva {
   max-width: 100%;
   overflow-x: auto;

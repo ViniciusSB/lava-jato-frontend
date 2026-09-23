@@ -63,7 +63,7 @@
 <div class="filtros-titulo">
   <h3>Filtros</h3>
   <div class="filtros-tipo">
-    <label *ngFor="let tipo of filtros" (change)="filtrarUsuarios()" [class.active]="filtroSelecionado === tipo.id">
+    <label *ngFor="let tipo of filtros" [class.active]="filtroSelecionado === tipo.id">
       <input type="radio" name="tipos" [(ngModel)]="filtroSelecionado" [value]="tipo.id">
       {{ tipo.label }}
     </label>
@@ -96,14 +96,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let u of usuarios | async">
+      <tr *ngFor="let u of obterUsuariosPorStatus()">
         <td>{{u.id}}</td>
         <td>{{u.nome}}</td>
         <td>{{u.email}}</td>
         <td>{{u.tipo | primCaracMaius }}</td>
         <td>
           <img [src]="filtroSelecionado === 'ativo' ? 'switch-on.png' : 'switch-off.png'" alt="Ativo"
-            (click)="alternarStatus(u.id!)" />
+            (click)="alternarStatus(u.id)" />
         </td>
       </tr>
     </tbody>

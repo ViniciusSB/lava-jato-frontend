@@ -4,6 +4,7 @@ export interface Usuario {
     email: string;
     senha?: string;
     tipo: string;
+    status: string;
 }
 
 export interface UsuarioRequest {
@@ -25,11 +26,12 @@ export interface UsuarioLoginResponse {
 }
 
 export interface UsuarioResponse {
-    idUsuario: string;
+    id: string;
     nome: string;
     email: string;
-    tipoUsuario: string;
+    tipo: string;
     urlFoto: string;
+    status: string;
     mensagem: string;
 }
 

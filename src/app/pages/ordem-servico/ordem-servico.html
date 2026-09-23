@@ -116,6 +116,21 @@
     </div>
 </div>
 
+<div class="modal-externo" *ngIf="mensagemErro">
+    <div class="modal-interno feedback">
+        <div class="titulo-superior erro">
+            <h3>Erro</h3>
+            <div class="btn-fechar">
+                <button type="button" (click)="fecharMsg()">x</button>
+            </div>
+        </div>
+        <div class="conteudo-principal">
+            <img src="error.png" alt="">
+            <h4>{{ mensagemErro }}</h4>
+        </div>
+    </div>
+</div>
+
 <div class="tabela-responsiva">
     <table>
         <thead>
@@ -135,7 +150,7 @@
                 <td>{{os.id}}</td>
                 <td>{{os.cliente?.nome}}</td>
                 <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
-                <td>{{os.funcionario?.nome}}</td>
+                <td [class.inativo]="os.funcionario?.status === 'inativo'">{{os.funcionario?.nome}}</td>
                 <td>{{os.servico?.tipo}}</td>
                 <td>{{os.dataInicio}}</td>
                 <td>
@@ -161,17 +176,15 @@
 
 <div class="botoes-paginacao">
     <button type="button" (click)="primPagina()" [disabled]="filtros.pagina <= 1">
-        <<
-    </button>
-    <button type="button" (click)="paginaAnterior()" [disabled]="filtros.pagina <= 1">
-        <
-    </button>
-    <button type="button" (click)="proxPagina()" [disabled]="filtros.pagina >= numUltimaPagina">
-        >
-    </button>
-    <button type="button" (click)="ultimaPagina()" [disabled]="filtros.pagina >= numUltimaPagina">
-        >>
-    </button>
+        << </button>
+            <button type="button" (click)="paginaAnterior()" [disabled]="filtros.pagina <= 1">
+                < </button>
+                    <button type="button" (click)="proxPagina()" [disabled]="filtros.pagina >= numUltimaPagina">
+                        >
+                    </button>
+                    <button type="button" (click)="ultimaPagina()" [disabled]="filtros.pagina >= numUltimaPagina">
+                        >>
+                    </button>
 </div>
 <div class="info-paginacao">
     <h3>Pag <input type="text" [(ngModel)]="filtros.pagina" (change)="digitarPagina()"> de {{(ordemServicoResponse |
@@ -190,7 +203,7 @@
     <button class="btn-fechar-form" (click)="fechar()">x</button>
 </div>
 <div id="nova-ordem" #novaOrdemForm class="campos-form">
-    <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="obterFuncionariosAtivos()" bindLabel="nome" bindValue="id"
         [(ngModel)]="funcionarioAdicionadoId" [clearable]="true" placeholder="funcionário">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.nome">{{ item.nome }}</span>
@@ -224,7 +237,7 @@
     <button class="btn-fechar-form" (click)="fechar()">x</button>
 </div>
 <div id="editar-ordem" #editarOrdemForm class="campos-form">
-    <ng-select class="custom-ng-select" [items]="(funcionarios | async) || []" bindLabel="nome" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="funcionarios" bindLabel="nome" bindValue="id"
         [(ngModel)]="funcionarioSelecionado.id" [clearable]="true" placeholder="funcionário">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.nome">{{ item.nome }}</span>
@@ -262,10 +275,10 @@
 
 @if (excluirSelecionado) {
 <div class="modal-externo" (click)="fecharModal()">
-    <div class="modal-excluir">
+    <div class="modal-interno confirmar">
         <div class="excluir-superior">
-            <h3>Excluir ordem?</h3>
             <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+            <h3>Excluir ordem?</h3>
         </div>
         <div class="acoes-modal-excluir">
             <button class="btn-cancelar-modal" (click)="cancelarExclusao()">Cancelar</button>

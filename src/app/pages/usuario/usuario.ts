@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario/usuario';
-import { Usuario, UsuarioLogado } from '../../models/usuario';
+import { Usuario, UsuarioLogado, UsuarioResponse } from '../../models/usuario';
 import { Observable } from 'rxjs';
 import { PrimCarcMaius } from '../../_pipes/primCaracMaius';
 import { Router, RouterModule } from '@angular/router';
@@ -27,7 +27,7 @@ export class UsuarioComponent {
 
   filtroSelecionado = "ativo";
 
-  usuarios!: Observable<Usuario[]>;
+  usuarios:UsuarioResponse[] = [];
   tipos: string[] = ['ADM', 'GERENTE', 'FUNCIONARIO']
 
   alternarStatusUsuario: boolean = false;
@@ -40,13 +40,7 @@ export class UsuarioComponent {
   constructor(private usuarioService: UsuarioService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    if (this.usuarioLogado.tipoUsuario === 'FUNCIONARIO') {
-      this.router.navigate(["/"]);
-      return;
-    }
-    this.usuarioService.getAll();
-    this.usuarios = this.usuarioService.usuarios;
-    console.log(this.usuarios);
+    this.obterUsuariosApi();
     if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
       this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
     else
@@ -72,21 +66,23 @@ export class UsuarioComponent {
     this.alternarStatusUsuario = false;
   }
 
-  filtrarUsuarios() {
-    this.limparMensagens();
-    if (this.filtroSelecionado === 'ativo') {
-      this.usuarioService.getAll();
-      this.usuarios = this.usuarioService.usuarios;
-    } else {
-      this.usuarioService.listarUsuarioInativos();
-      this.usuarios = this.usuarioService.usuarios;
-    }
-
+  obterUsuariosApi() {
+    this.usuarioService.listarTodosOsUsuarios().subscribe(usuarios => {
+      this.usuarios = usuarios;
+      this.cdr.markForCheck();
+    });
   }
 
-  alternarStatus(id: number) {
+  obterUsuariosPorStatus():UsuarioResponse[] {
+    if (this.filtroSelecionado === 'ativo') 
+      return this.usuarios.filter(usuario => usuario.status === 'ativo');
+    else 
+      return this.usuarios.filter(usuario => usuario.status === 'inativo');
+  }
+
+  alternarStatus(id: string) {
     this.alternarStatusUsuario = true;
-    this.idUsuarioTrocaStatus = id;
+    this.idUsuarioTrocaStatus = Number(id);
   }
 
   cancelarTrocaDeStatus() {
@@ -105,6 +101,7 @@ export class UsuarioComponent {
           this.idUsuarioTrocaStatus = null;
           this.alternarStatusUsuario = false;
           this.mensagemSucesso = response.mensagem;
+          this.obterUsuariosApi();
           this.cdr.markForCheck();
         },
         error: (err) => {
@@ -115,10 +112,10 @@ export class UsuarioComponent {
     } else if (this.filtroSelecionado === 'inativo' && this.idUsuarioTrocaStatus != null) {
       this.usuarioService.ativar(this.idUsuarioTrocaStatus).subscribe({
         next: (response) => {
-          console.log(response);
           this.idUsuarioTrocaStatus = null;
           this.alternarStatusUsuario = false;
           this.mensagemSucesso = response.mensagem;
+          this.obterUsuariosApi();
           this.cdr.markForCheck();
         },
         error: (err) => {
