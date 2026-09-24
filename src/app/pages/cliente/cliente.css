@@ -567,7 +567,7 @@ select {
 
 /* Responsividade */
 
-@media (min-width: 320px) and (max-width: 739px) {
+@media (min-width: 320px) and (max-width: 820px) {
 
   .menu-navegacao,
   .user {
@@ -616,7 +616,7 @@ select {
   }
 }
 
-@media (min-width: 740px) {
+@media (min-width: 821px) {
   .menu-low-screen {
     display: none;
   }

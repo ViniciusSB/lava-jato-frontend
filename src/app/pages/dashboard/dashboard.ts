@@ -8,6 +8,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { Router, RouterModule } from '@angular/router';
 import { AuthUtil } from '../../util/auth-util';
 import { UsuarioLogado } from '../../models/usuario';
+import { DataUtil } from '../../util/data-util';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,28 +44,19 @@ export class DashboardComponent {
   faturamentoTotalFuncionario = 0;
 
   mensagemErro = "";
-  diaAtual = "";
-  mesAtual = "";
-  anoAtual = "";
+  diaAtual = DataUtil.obterDiaAtual();
+  mesAtual = DataUtil.obterMesAtual();
+  anoAtual = DataUtil.obterAnoAtual();
   campoPeriodo = "";
   mascaraPeriodo = "00-00-0000"
   placeholderPeriodo = "dd-mm-aaaa"
   tipos = ['dia', 'mes', 'ano'];
   request: DashboardFuncionarioRequest = { tipo: '', periodo: '' };
 
-  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef, private router: Router) {
-    const data = new Date();
-    this.diaAtual = data.getDate().toString();
-    if (data.getDate() < 10)
-      this.diaAtual = `0${this.diaAtual}`;
-    this.mesAtual = (data.getMonth() + 1).toString();
-    if ((data.getMonth() + 1) < 10)
-      this.mesAtual = `0${this.mesAtual}`;
-    this.anoAtual = data.getFullYear().toString();
-    this.campoPeriodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
-  }
+  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit() {
+    this.campoPeriodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
     this.iniciarGraficos();
 
     if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
@@ -107,121 +99,37 @@ export class DashboardComponent {
   }
 
   filtrar() {
-    const caracteres = this.campoPeriodo.length;
+    let resultado;
     if (this.request.tipo == "dia") {
-      if (!(caracteres == 2 || caracteres == 5 || caracteres == 10)) {
-        this.mensagemErro = "Data mal formatada";
+      resultado = DataUtil.validarPeriodoDia(this.campoPeriodo);
+      this.campoPeriodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErro = resultado.mensagem!;
         return;
       }
-
-      if (!this.validarPeriodoFiltroDia())
-        return;
     }
 
-    if (this.request.tipo == "mes") {
-      if (!(caracteres == 2 || caracteres == 7)) {
-        this.mensagemErro = "Data mal formatada";
+    else if (this.request.tipo == "mes") {
+      resultado = DataUtil.validarPeriodoMes(this.campoPeriodo);
+      this.campoPeriodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErro = resultado.mensagem!;
         return;
       }
-      if (!this.validarPeriodoFiltroMes())
-        return;
     }
 
-    else if (this.request.tipo == "ano" && !this.validarPeriodoFiltroAno())
-      return;
+    else if (this.request.tipo == "ano") {
+      resultado = DataUtil.validarPeriodoAno(this.campoPeriodo);
+      if (!resultado.valido){
+        this.mensagemErro = resultado.mensagem!;
+        return;
+      }      
+    }
 
     this.request.periodo = this.campoPeriodo;
     this.mensagemErro = "";
     this.resetarDadosDashboard();
     this.preencherDashboards(this.request.tipo);
-  }
-
-  validarPeriodoFiltroDia(): boolean {
-    const caracteres = this.campoPeriodo.length;
-    // Verficacao do dia
-    let dia = this.campoPeriodo;
-    if (caracteres >= 2) {
-      if (caracteres > 2) {
-        const datas = this.campoPeriodo.split("-");
-        dia = datas[0];
-      }
-      if (Number(dia) < 1 || Number(dia) > 31) {
-        this.mensagemErro = "Dia inválido";
-        return false;
-      }
-
-    }
-
-    // Verficacao do mes
-    let mes = this.campoPeriodo;
-    if (caracteres >= 5) {
-      const datas = this.campoPeriodo.split("-");
-      mes = datas[1];
-      if (Number(mes) < 1 || Number(mes) > 12) {
-        this.mensagemErro = "Mês inválido";
-        return false;
-      }
-    }
-
-    // Verficacao do ano
-    let ano = this.campoPeriodo;
-    if (caracteres == 10) {
-      const datas = this.campoPeriodo.split("-");
-      ano = datas[2];
-      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
-        this.mensagemErro = "Ano inválido";
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  validarPeriodoFiltroMes(): boolean {
-    const caracteres = this.campoPeriodo.length;
-    // Verficacao do mes
-    let mes = this.campoPeriodo;
-    if (caracteres >= 2) {
-      if (caracteres > 2) {
-        const datas = this.campoPeriodo.split("-");
-        mes = datas[0];
-      }
-      if (Number(mes) < 1 || Number(mes) > 12) {
-        this.mensagemErro = "Mês inválido";
-        return false;
-      }
-    }
-
-    // Verficacao do ano
-    let ano = this.campoPeriodo;
-    if (caracteres == 7) {
-      const datas = this.campoPeriodo.split("-");
-      ano = datas[1];
-      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
-        this.mensagemErro = "Ano inválido";
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  validarPeriodoFiltroAno(): boolean {
-    const caracteres = this.campoPeriodo.length;
-    let ano = this.campoPeriodo;
-    if (caracteres == 4) {
-      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
-        this.mensagemErro = "Ano inválido";
-        return false;
-      }
-      else {
-        return true;
-      }
-    }
-    else {
-      this.mensagemErro = "Data mal formatada";
-      return false;
-    }
   }
 
   fecharMsgErro() {

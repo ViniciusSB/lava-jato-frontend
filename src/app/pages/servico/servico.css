@@ -592,7 +592,7 @@ input {
   }
 }
 
-@media (min-width: 627px) and (max-width: 810px) {
+@media (min-width: 627px) and (max-width: 820px) {
 
   .menu-navegacao,
   .user {
@@ -614,7 +614,7 @@ input {
   }
 }
 
-@media (min-width: 811px) {
+@media (min-width: 821px) {
   .menu-low-screen {
     display: none;
   }

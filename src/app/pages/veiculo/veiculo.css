@@ -594,7 +594,7 @@ select {
   }
 }
 
-@media (min-width: 627px) and (max-width: 809px) {
+@media (min-width: 627px) and (max-width: 820px) {
 
   .menu-navegacao,
   .user {
@@ -620,7 +620,7 @@ select {
   }
 }
 
-@media (min-width: 810px) {
+@media (min-width: 821px) {
   .menu-low-screen {
     display: none;
   }

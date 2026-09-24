@@ -589,7 +589,7 @@ table tr:hover {
 
 /* Responsividade */
 
-@media (min-width: 320px) and (max-width: 809px) {
+@media (min-width: 320px) and (max-width: 820px) {
 
   .menu-navegacao,
   .user {
@@ -601,7 +601,7 @@ table tr:hover {
   }
 }
 
-@media (min-width: 810px) {
+@media (min-width: 821px) {
   .menu-low-screen {
     display: none;
   }

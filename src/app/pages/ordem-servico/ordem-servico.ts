@@ -22,6 +22,7 @@ import { NormalizarEnum } from '../../util/normalizar-enum';
 import { Router, RouterModule } from '@angular/router';
 import { AuthUtil } from '../../util/auth-util';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { DataUtil } from '../../util/data-util';
 
 
 @Component({
@@ -97,7 +98,11 @@ export class OrdemServicoComponent {
   intervaloTempo = [{ "id": "geral", "label": "Geral" }, { "id": "dia", "label": "Dia" }, { "id": "mes", "label": "Mês" }, { "id": "ano", "label": "Ano" }];
   mascaraPeriodo = "00-00-0000"
   placeholderPeriodo = "dd-mm-aaaa"
+  diaAtual = DataUtil.obterDiaAtual();
+  mesAtual = DataUtil.obterMesAtual();
+  anoAtual = DataUtil.obterAnoAtual();
   mensagemErro = "";
+  mensagemErroData = "";
   animacaoAtiva = false;
 
   constructor(
@@ -168,7 +173,7 @@ export class OrdemServicoComponent {
     }
   }
 
-  obterFuncionariosAtivos():UsuarioResponse[] {
+  obterFuncionariosAtivos(): UsuarioResponse[] {
     return this.funcionarios.filter(usuario => usuario.status === 'ativo');
   }
 
@@ -199,6 +204,10 @@ export class OrdemServicoComponent {
 
   fecharMsg() {
     this.mensagemErro = "";
+  }
+
+  fecharMsgErroData() {
+    this.mensagemErroData = "";
   }
 
   pesquisar() {
@@ -417,28 +426,15 @@ export class OrdemServicoComponent {
       this.pesquisar();
     }
   }
-  
+
   alternarStatusFiltro() {
-    if (!this.animacaoAtiva) 
+    if (!this.animacaoAtiva)
       this.animacaoAtiva = true;
     this.filtrosAtivos = !this.filtrosAtivos;
   }
 
   alterarIntervaloTempo() {
     this.mudarTipoPeriodo();
-  }
-
-  private obterDataAtualFormatada(tipo: string): string {
-    const hoje = new Date();
-    const dia = hoje.getDate() < 10 ? `0${hoje.getDate()}` : String(hoje.getDate());
-    const mes = (hoje.getMonth() + 1) < 10 ? `0${(hoje.getMonth() + 1)}` : String(hoje.getMonth() + 1);
-    const ano = hoje.getFullYear();
-    if (tipo === 'dia')
-      return `${dia}-${mes}-${ano}`;
-    else if (tipo === 'mes')
-      return `${mes}-${ano}`;
-    else
-      return `${ano}`;
   }
 
   mudarTipoPeriodo(): void {
@@ -449,22 +445,54 @@ export class OrdemServicoComponent {
       case 'mes':
         this.mascaraPeriodo = '00-0000';
         this.placeholderPeriodo = 'mm-aaaa';
-        this.filtros.periodo = this.obterDataAtualFormatada('mes');
+        this.filtros.periodo = `${this.mesAtual}-${this.anoAtual}`;
         this.pesquisar()
         break;
       case 'ano':
         this.mascaraPeriodo = '0000';
         this.placeholderPeriodo = 'aaaa';
-        this.filtros.periodo = this.obterDataAtualFormatada('ano');
+        this.filtros.periodo = `${this.anoAtual}`;
         this.pesquisar()
         break;
       default:
         this.mascaraPeriodo = '00-00-0000';
         this.placeholderPeriodo = 'dd-mm-aaaa';
-        this.filtros.periodo = this.obterDataAtualFormatada('dia');
+        this.filtros.periodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
         this.pesquisar()
         break;
     }
+  }
+
+  pesquisaChangePeriodo() {
+    let resultado;
+    if (this.filtros.intervaloTempo === 'dia') {
+      resultado = DataUtil.validarPeriodoDia(this.filtros.periodo);
+      this.filtros.periodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErroData = resultado.mensagem!;
+        return;
+      }
+      this.pesquisar();
+    }
+    else if (this.filtros.intervaloTempo === 'mes') {
+      resultado = DataUtil.validarPeriodoMes(this.filtros.periodo);
+      this.filtros.periodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErroData = resultado.mensagem!;
+        return;
+      }
+      this.pesquisar();
+    }
+    else {
+      resultado = DataUtil.validarPeriodoAno(this.filtros.periodo);
+      this.filtros.periodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErroData = resultado.mensagem!;
+        return;
+      }
+      this.pesquisar();
+    }
+    this.mensagemErroData = "";
   }
 
   fechar() {

@@ -75,7 +75,7 @@
                 {{ tipo.label }}
             </label>
             <input type="text" [(ngModel)]="relatorioRequest.periodo" [mask]="mascaraPeriodo"
-                [placeholder]="placeholderPeriodo" [dropSpecialCharacters]="false" />
+                (change)="relizarValidacoes()" [placeholder]="placeholderPeriodo" [dropSpecialCharacters]="false" />
         </div>
         <div class="tipo-relatorio">
             <select id="tipoRelatorio" [(ngModel)]="relatorioSelecionado">

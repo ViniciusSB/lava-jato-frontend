@@ -710,7 +710,7 @@ button {
     }
 }
 
-@media (min-width: 640px) and (max-width: 819px) {
+@media (min-width: 640px) and (max-width: 820px) {
     .container-img {
         width: 85%;
     }
@@ -730,7 +730,7 @@ button {
 
 }
 
-@media (min-width: 820px) {
+@media (min-width: 821px) {
     .campos {
         width: 80%;
         max-width: 480px;

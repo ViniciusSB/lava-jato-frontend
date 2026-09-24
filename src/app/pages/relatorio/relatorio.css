@@ -341,6 +341,7 @@
 
     h2 {
         margin-top: 3.5rem;
+        padding: 0.2rem 0;
     }
 }
 
@@ -351,11 +352,10 @@
     align-items: center;
     gap: 0.3rem;
     background-color: #e63b3b9d;
-    padding: 0.2rem;
+    padding: 0.2rem 0.2rem 0.2rem 0.4rem;
     font-size: 0.85rem;
 
     button {
-        margin: 0 0.4rem;
         border: none;
         background: none;
         cursor: pointer;
@@ -541,7 +541,7 @@
     }
 }
 
-@media (min-width: 420px) and (max-width: 829px) {
+@media (min-width: 420px) and (max-width: 820px) {
 
     .menu-navegacao,
     .user {
@@ -549,7 +549,7 @@
     }
 }
 
-@media (min-width: 830px) {
+@media (min-width: 821px) {
     .menu-low-screen {
         display: none;
     }

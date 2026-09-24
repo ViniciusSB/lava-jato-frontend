@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { AuthUtil } from '../../util/auth-util';
 import { UsuarioLogado } from '../../models/usuario';
+import { DataUtil } from '../../util/data-util';
 
 @Component({
   selector: 'app-relatorio',
@@ -41,14 +42,17 @@ export class RelatorioComponent {
     { id: 'funcionarios', label: 'Funcionários', acesso: 'GERENTE' }
   ];
 
-  relatorioSelecionado = "";
-
+  relatorioSelecionado = this.usuarioLogado.tipoUsuario === 'FUNCIONARIO' ? "funcionario" : "faturamento";
+  
+  diaAtual = DataUtil.obterDiaAtual();
+  mesAtual = DataUtil.obterMesAtual();
+  anoAtual = DataUtil.obterAnoAtual();
   mascaraPeriodo = '00-00-0000';
   placeholderPeriodo = 'dd-mm-aaaa';
 
   relatorioRequest: RelatorioRequest = {
     tipo: 'dia',
-    periodo: this.obterDataAtualFormatada('dia')
+    periodo: `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`
   };
 
   constructor(private relatorioService: RelatorioService, private router: Router, private cdr: ChangeDetectorRef) { }
@@ -72,32 +76,19 @@ export class RelatorioComponent {
       case 'mes':
         this.mascaraPeriodo = '00-0000';
         this.placeholderPeriodo = 'mm-aaaa';
-        this.relatorioRequest.periodo = this.obterDataAtualFormatada('mes');
+        this.relatorioRequest.periodo = `${this.mesAtual}-${this.anoAtual}`;
         break;
       case 'ano':
         this.mascaraPeriodo = '0000';
         this.placeholderPeriodo = 'aaaa';
-        this.relatorioRequest.periodo = this.obterDataAtualFormatada('ano');
+        this.relatorioRequest.periodo = `${this.anoAtual}`;
         break;
       default:
         this.mascaraPeriodo = '00-00-0000';
         this.placeholderPeriodo = 'dd-mm-aaaa';
-        this.relatorioRequest.periodo = this.obterDataAtualFormatada('dia');
+        this.relatorioRequest.periodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
         break;
     }
-  }
-
-  private obterDataAtualFormatada(tipo: string): string {
-    const hoje = new Date();
-    const dia = hoje.getDate() < 10 ? `0${hoje.getDate()}` : String(hoje.getDate());
-    const mes = (hoje.getMonth() + 1) < 10 ? `0${(hoje.getMonth() + 1)}` : String(hoje.getMonth() + 1);
-    const ano = hoje.getFullYear();
-    if (tipo === 'dia')
-      return `${dia}${mes}${ano}`;
-    else if (tipo === 'mes')
-      return `${mes}${ano}`;
-    else
-      return `${ano}`;
   }
 
   logout(): void {
@@ -121,125 +112,35 @@ export class RelatorioComponent {
     return this.tipoRelatorio.filter(r => r.acesso === this.usuarioLogado.tipoUsuario);
   }
 
-  validarPeriodoFiltroDia(): boolean {
-    const caracteres = this.relatorioRequest.periodo.length;
-
-    if (!(caracteres == 2 || caracteres == 5 || caracteres == 10)) {
-      this.mensagemErro = "Data mal formatada";
-      return false;
-    }
-
-    // Verficacao do dia
-    let dia = this.relatorioRequest.periodo;
-    if (caracteres >= 2) {
-      if (caracteres > 2) {
-        const datas = this.relatorioRequest.periodo.split("-");
-        dia = datas[0];
-      }
-      if (Number(dia) < 1 || Number(dia) > 31) {
-        this.mensagemErro = "Dia inválido";
-        return false;
-      }
-
-    }
-
-    // Verficacao do mes
-    let mes = this.relatorioRequest.periodo;
-    if (caracteres >= 5) {
-      const datas = this.relatorioRequest.periodo.split("-");
-      mes = datas[1];
-      if (Number(mes) < 1 || Number(mes) > 12) {
-        this.mensagemErro = "Mês inválido";
-        return false;
-      }
-    }
-
-    // Verficacao do ano
-    let ano = this.relatorioRequest.periodo;
-    if (caracteres == 10) {
-      const datas = this.relatorioRequest.periodo.split("-");
-      ano = datas[2];
-      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
-        this.mensagemErro = "Ano inválido";
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  validarPeriodoFiltroMes(): boolean {
-    const caracteres = this.relatorioRequest.periodo.length;
-
-    if (!(caracteres == 2 || caracteres == 7)) {
-      this.mensagemErro = "Data mal formatada";
-      return false;
-    }
-
-    // Verficacao do mes
-    let mes = this.relatorioRequest.periodo;
-    if (caracteres >= 2) {
-      if (caracteres > 2) {
-        const datas = this.relatorioRequest.periodo.split("-");
-        mes = datas[0];
-      }
-      if (Number(mes) < 1 || Number(mes) > 12) {
-        this.mensagemErro = "Mês inválido";
-        return false;
-      }
-    }
-
-    // Verficacao do ano
-    let ano = this.relatorioRequest.periodo;
-    if (caracteres == 7) {
-      const datas = this.relatorioRequest.periodo.split("-");
-      ano = datas[1];
-      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
-        this.mensagemErro = "Ano inválido";
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  validarPeriodoFiltroAno(): boolean {
-    const caracteres = this.relatorioRequest.periodo.length;
-    let ano = this.relatorioRequest.periodo;
-    if (caracteres == 4) {
-      if (Number(ano) < 2000 || Number(ano) > new Date().getFullYear()) {
-        this.mensagemErro = "Ano inválido";
-        return false;
-      }
-      else {
-        return true;
-      }
-    }
-    else {
-      this.mensagemErro = "Data mal formatada";
-      return false;
-    }
-  }
-
   fecharMsgErro() {
     this.mensagemErro = "";
   }
 
   relizarValidacoes(): boolean {
+    let resultado;
     if (this.relatorioRequest.tipo === "dia") {
-      if (!this.validarPeriodoFiltroDia())
+      resultado = DataUtil.validarPeriodoDia(this.relatorioRequest.periodo); 
+      this.relatorioRequest.periodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErro = resultado.mensagem!;
         return false;
+      }
     } else if (this.relatorioRequest.tipo === "mes") {
-      if (!this.validarPeriodoFiltroMes())
+      resultado = DataUtil.validarPeriodoMes(this.relatorioRequest.periodo); 
+      this.relatorioRequest.periodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErro = resultado.mensagem!;
         return false;
+      }
     } else {
-      if (!this.validarPeriodoFiltroAno())
+      resultado = DataUtil.validarPeriodoAno(this.relatorioRequest.periodo); 
+      this.relatorioRequest.periodo = resultado.dataFormatada;
+      if (!resultado.valido) {
+        this.mensagemErro = resultado.mensagem!;
         return false;
+      }
     }
-    if (this.relatorioSelecionado === '') {
-      this.mensagemErro = "Selecione um relatório";
-      return false;
-    }
+    
     this.mensagemErro = "";
     return true;
   }
@@ -258,8 +159,8 @@ export class RelatorioComponent {
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
             this.loading = false;
-            window.open(fileURL);
             this.cdr.markForCheck();
+            window.open(fileURL);
           },
           error: (erro) => {
             this.loading = false;
@@ -273,8 +174,8 @@ export class RelatorioComponent {
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
             this.loading = false;
-            window.open(fileURL);
             this.cdr.markForCheck();
+            window.open(fileURL);
           },
           error: (erro) => {
             this.loading = false;
@@ -288,8 +189,8 @@ export class RelatorioComponent {
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
             this.loading = false;
-            window.open(fileURL);
             this.cdr.markForCheck();
+            window.open(fileURL);
           },
           error: (erro) => {
             this.loading = false;
@@ -303,8 +204,8 @@ export class RelatorioComponent {
           next: (data: Blob) => {
             const fileURL = URL.createObjectURL(data);
             this.loading = false;
-            window.open(fileURL);
             this.cdr.markForCheck();
+            window.open(fileURL);
           },
           error: (erro) => {
             this.loading = false;

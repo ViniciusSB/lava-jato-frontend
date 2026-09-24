@@ -67,7 +67,13 @@
 </div>
 
 <div class="filtros-grupo" [class.ativo]="filtrosAtivos" [class.animacao]="animacaoAtiva">
-    <h3>Filtros</h3>
+    <div class="texto-superior">
+        <h3>Filtros</h3>
+        <div class="msg-erro-data" *ngIf="mensagemErroData">
+            <h4>{{mensagemErroData}}</h4>
+            <button type="button" (click)="fecharMsgErroData()">x</button>
+        </div>
+    </div>
 
     <div class="filtros-intervalo-tempo">
         <label>Data:</label>
@@ -79,7 +85,8 @@
         </label>
         }
         <input *ngIf="filtros.intervaloTempo !== 'geral'" type="text" [(ngModel)]="filtros.periodo"
-            [placeholder]="placeholderPeriodo" [mask]="mascaraPeriodo" [dropSpecialCharacters]="false">
+            (change)="pesquisaChangePeriodo()" [placeholder]="placeholderPeriodo" [mask]="mascaraPeriodo"
+            [dropSpecialCharacters]="false">
     </div>
 
     <div class="filtros-tipo">
