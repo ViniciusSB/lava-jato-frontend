@@ -31,6 +31,10 @@ export class DataUtil {
         return this.hoje.getFullYear().toString();
     }
 
+    static normalizarNumero(numero: number): string {
+        return numero < 10 ? `0${numero}` : numero.toString();
+    }
+
     static validarPeriodoDia(periodo: string): ValidacaoData {
         let caracteres = periodo.length;
         // Verficacao do dia

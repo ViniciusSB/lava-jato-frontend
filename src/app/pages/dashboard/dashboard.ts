@@ -53,7 +53,7 @@ export class DashboardComponent {
   tipos = ['dia', 'mes', 'ano'];
   request: DashboardFuncionarioRequest = { tipo: '', periodo: '' };
 
-  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef, private router: Router) {}
+  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef, private router: Router) { }
 
   ngOnInit() {
     this.campoPeriodo = `${this.diaAtual}-${this.mesAtual}-${this.anoAtual}`;
@@ -65,7 +65,7 @@ export class DashboardComponent {
       this.urlFoto = this.usuarioLogado.urlFoto;
 
     // Inicialmente traz os dados do dia
-    this.request = { periodo: this.diaAtual, tipo: 'dia' };
+    this.request = { periodo: this.campoPeriodo, tipo: 'dia' };
     this.preencherDashboards(this.request.tipo);
   }
 
@@ -98,6 +98,47 @@ export class DashboardComponent {
     this.preencherDashboards(this.request.tipo);
   }
 
+  avancarNavegacao() {
+    const periodos = this.request.periodo.split('-');
+    if (this.request.tipo === 'dia') {
+      const dia = DataUtil.normalizarNumero(Number(periodos[0]) + 1);
+      this.campoPeriodo = `${dia}-${periodos[1]}-${periodos[2]}`;
+      this.filtrar();
+    } else if (this.request.tipo === 'mes') {
+      const mes = DataUtil.normalizarNumero(Number(periodos[0]) + 1);
+      this.campoPeriodo = `${mes}-${periodos[1]}`;
+      this.filtrar();
+    } else {
+      const ano = DataUtil.normalizarNumero(Number(periodos[0]) + 1);
+      this.campoPeriodo = ano.toString();
+      this.filtrar();
+    }
+
+    if (this.mensagemErro !== '')
+      this.campoPeriodo = this.request.periodo;
+  }
+
+  retrocederNavegacao() {
+    const periodos = this.request.periodo.split('-');
+    if (this.request.tipo === 'dia') {
+      const dia = DataUtil.normalizarNumero(Number(periodos[0]) - 1);
+      this.campoPeriodo = `${dia}-${periodos[1]}-${periodos[2]}`;
+      this.filtrar();
+    } else if (this.request.tipo === 'mes') {
+      const mes = DataUtil.normalizarNumero(Number(periodos[0]) - 1);
+      this.campoPeriodo = `${mes}-${periodos[1]}`;
+      console.log(this.campoPeriodo);
+      this.filtrar();
+    } else {
+      const ano = DataUtil.normalizarNumero(Number(periodos[0]) - 1);
+      this.campoPeriodo = ano.toString();
+      this.filtrar();
+    }
+
+    if (this.mensagemErro !== '')
+      this.campoPeriodo = this.request.periodo;
+  }
+
   filtrar() {
     let resultado;
     if (this.request.tipo == "dia") {
@@ -120,10 +161,10 @@ export class DashboardComponent {
 
     else if (this.request.tipo == "ano") {
       resultado = DataUtil.validarPeriodoAno(this.campoPeriodo);
-      if (!resultado.valido){
+      if (!resultado.valido) {
         this.mensagemErro = resultado.mensagem!;
         return;
-      }      
+      }
     }
 
     this.request.periodo = this.campoPeriodo;
@@ -148,7 +189,7 @@ export class DashboardComponent {
       series: [],
       chart: { type: tipo, toolbar: { show: true }, background: "#0F172A", foreColor: "#FFFFFF", height: "100%" },
       xaxis: { categories: [], labels: { style: { colors: "94a3b8" } } },
-      title: { text: titulo, style: { fontSize: 12 }  }
+      title: { text: titulo, style: { fontSize: 12 } }
     };
   }
 
