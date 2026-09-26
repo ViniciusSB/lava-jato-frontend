@@ -6,5 +6,6 @@ export interface Veiculo {
     placa?: string;
     tipo: string;
     clienteId: number;
+    status: string;
     clienteNome: string
 }

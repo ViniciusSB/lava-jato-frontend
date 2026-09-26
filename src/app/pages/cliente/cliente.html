@@ -22,15 +22,19 @@
             <img [src]="urlFoto">
             <h4>{{usuarioLogado.nome}}</h4>
           </li>
-          <li><a routerLink="/opcoes"><h4>Opcões</h4></a></li>
-          <li><a (click)="logout()"><h4>Sair</h4></a></li>
+          <li><a routerLink="/opcoes">
+              <h4>Opcões</h4>
+            </a></li>
+          <li><a (click)="logout()">
+              <h4>Sair</h4>
+            </a></li>
         </ul>
         }
       </div>
     </nav>
     <nav class="menu-low-screen">
-      <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'"
-          alt="" [class.ativo]="opcoesLowScreen"></button>
+      <button (click)="fecharOpcoesLowScreen()"><img [src]="opcoesLowScreen ? 'close.png' : 'icone-opcoes.png'" alt=""
+          [class.ativo]="opcoesLowScreen"></button>
       <ul *ngIf="opcoesLowScreen" class="ul-low-screen">
         <li class="li-usuario">
           <a routerLink="/opcoes">
@@ -52,12 +56,38 @@
 <div class="agrupamento-cima">
   <h2>Lista de Clientes</h2>
   <button (click)="adicionar()">Adicionar</button>
-  <!-- <input class="filtrar" type="text" placeholder="digite um nome para filtrar" (input)="filtrar($event.target.value)"> -->
 </div>
 <div class="subtitulo-cima">
   <h3>Gerencie os clientes</h3>
 </div>
 
+<div class="filtros-titulo">
+  <h3>Filtros</h3>
+  <div class="filtros-tipo">
+    <label *ngFor="let tipo of filtros" [class.active]="filtroSelecionado === tipo.id">
+      <input type="radio" name="tipos" (change)="limparMensagens()" [(ngModel)]="filtroSelecionado" [value]="tipo.id">
+      {{ tipo.label }}
+    </label>
+  </div>
+  <div>
+    <input class="filtrar-nome" type="text" placeholder="digite um nome para filtrar" [(ngModel)]="termoFiltro">
+  </div>
+</div>
+
+<div class="msg-container">
+  <div *ngIf="mensagemErro" class="msg msg-erro">
+    <h4>{{ mensagemErro }}</h4>
+    <div class="btn-fechar">
+      <button type="button" class="erro" (click)="limparMensagens()">x</button>
+    </div>
+  </div>
+  <div *ngIf="mensagemSucesso" class="msg msg-sucesso">
+    <h4>{{ mensagemSucesso }}</h4>
+    <div class="btn-fechar">
+      <button type="button" class="sucesso" (click)="limparMensagens()">x</button>
+    </div>
+  </div>
+</div>
 
 <div class="tabela-responsiva">
   <table>
@@ -71,41 +101,23 @@
         <th colspan="2">ações</th>
       </tr>
     </thead>
-    @if (!filtroAtivo) {
-    @for (c of clientes | async; track c.id) {
+    @for (c of obterClientes(); track c.id) {
     <tbody>
       <tr>
         <td>{{ c.id }}</td>
         <td>{{ c.nome }}</td>
         <td>{{ c.celular }}</td>
         <td>{{ c.fidelidade }}</td>
-        <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
+        <td><button (click)="exibirVeiculos(c)">{{ obterQtdVeiculosAtivosDoCliente(c) }}</button></td>
         <td class="acoes">
-          <button (click)="editar(c)">✏️</button>
-          <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
+          <button *ngIf="filtroSelecionado === 'ativo'" (click)="editar(c)">✏️</button>
+          <button class="lixeira"
+            (click)="filtroSelecionado === 'ativo' ? desativar(c.id) : ativar(c.id)">{{filtroSelecionado === 'ativo' ?
+            '🗑️' : '♻️'}}</button>
         </td>
       </tr>
     </tbody>
     }
-    }
-    @else {
-    @for (c of clientesFiltrados | async; track c.id) {
-    <tbody>
-      <tr>
-        <td>{{ c.id }}</td>
-        <td>{{ c.nome }}</td>
-        <td>{{ c.celular }}</td>
-        <td>{{ c.fidelidade }}</td>
-        <td><button (click)="exibirVeiculos(c)">{{ c.veiculos.length }}</button></td>
-        <td>
-          <button (click)="editar(c)">✏️</button>
-          <button class="lixeira" (click)="excluir(c.id)">🗑️</button>
-        </td>
-      </tr>
-    </tbody>
-    }
-    }
-
   </table>
 </div>
 
@@ -144,6 +156,30 @@
     <div class="titulo-form">
       <h3>Veículos do(a) {{clienteSelecionado?.nome ?? ''}}</h3>
     </div>
+    <div class="filtros-titulo">
+      <div class="filtros-tipo">
+        <label *ngFor="let tipo of filtrosVeiculo" [class.active]="filtroSelecionadoVeiculo === tipo.id">
+          <input type="radio" name="tipos" [(ngModel)]="filtroSelecionadoVeiculo" [value]="tipo.id">
+          {{ tipo.label }}
+        </label>
+      </div>
+    </div>
+
+    <div class="msg-container">
+      <div *ngIf="mensagemErroVeiculo" class="msg msg-erro">
+        <h4>{{ mensagemErroVeiculo }}</h4>
+        <div class="btn-fechar">
+          <button type="button" class="erro" (click)="limparMensagensVeiculo()">x</button>
+        </div>
+      </div>
+      <div *ngIf="mensagemSucessoVeiculo" class="msg msg-sucesso">
+        <h4>{{ mensagemSucessoVeiculo }}</h4>
+        <div class="btn-fechar">
+          <button type="button" class="sucesso" (click)="limparMensagensVeiculo()">x</button>
+        </div>
+      </div>
+    </div>
+
     <button class="btn-fechar-modal" (click)="fecharModal()">×</button>
     <div class="tabela-responsiva">
       <table>
@@ -156,7 +192,7 @@
           <th>Tipo</th>
           <th colspan="2">Ações</th>
         </tr>
-        @for (v of veiculosCliente | async; track v.id) {
+        @for (v of obterVeiculosDoCliente() | async; track v.id) {
         <tr>
           <td>{{ v.id }}</td>
           <td>{{ v.marca }}</td>
@@ -165,8 +201,10 @@
           <td>{{ v.placa || '-' }}</td>
           <td>{{ v.tipo | primCaracMaius }}</td>
           <td class="acoes">
-            <button (click)="botaoEditarVeiculo(v)">✏️</button>
-            <button (click)="excluirVeiculo(v.id!)" class="lixeira">🗑️</button>
+            <button *ngIf="filtroSelecionadoVeiculo === 'ativo'" (click)="botaoEditarVeiculo(v)">✏️</button>
+            <button (click)="filtroSelecionadoVeiculo === 'ativo' ? desativarVeiculo(v.id!) : ativarVeiculo(v.id!)"
+              class="lixeira">{{filtroSelecionadoVeiculo === 'ativo' ? '🗑️' :
+              '♻️'}}</button>
           </td>
         </tr>
         }
@@ -198,7 +236,7 @@
     </div>
     }
 
-    @if (editarVeiculo) {
+    @else if (editarVeiculo) {
     <div class="titulo-form">
       <h4>Editar Veículo</h4>
       <button class="btn-fechar-form" (click)="fecharEditarVeiculo()">x</button>
@@ -220,16 +258,30 @@
     }
   </div>
 
-  @if (excluirVeiculoSelecionado) {
+  @if (desativarVeiculoSelecionado) {
   <div class="modal-externo">
     <div class="modal-excluir">
       <div class="excluir-superior">
-        <h3>Excluir veículo?</h3>
+        <h3>Desativar veículo?</h3>
         <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
       </div>
       <div class="acoes-modal-excluir">
-        <button class="btn-cancelar-modal" (click)="cancelarExclusaoVeiculo()">cancelar</button>
-        <button class="btn-excluir-modal" (click)="confirmarExclusaoVeiculo()">confirmar</button>
+        <button class="btn-cancelar-modal" (click)="cancelarDesativacaoVeiculo()">cancelar</button>
+        <button class="btn-excluir-modal" (click)="confirmarDesativacaoVeiculo()">confirmar</button>
+      </div>
+    </div>
+  </div>
+  }
+  @else if (ativarVeiculoSelecionado) {
+  <div class="modal-externo">
+    <div class="modal-excluir">
+      <div class="excluir-superior">
+        <h3>Ativar veículo?</h3>
+        <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+      </div>
+      <div class="acoes-modal-excluir">
+        <button class="btn-cancelar-modal" (click)="cancelarAtivacaoVeiculo()">cancelar</button>
+        <button class="btn-excluir-modal" (click)="confirmarAtivacaoVeiculo()">confirmar</button>
       </div>
     </div>
   </div>
@@ -237,16 +289,31 @@
 </div>
 }
 
-@if (excluirSelecionado) {
+@if (desativarSelecionado) {
 <div class="modal-externo" (click)="fecharModal()">
   <div class="modal-excluir">
     <div class="excluir-superior">
-      <h3>Excluir cliente?</h3>
+      <h3>Desativar cliente?</h3>
       <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
     </div>
     <div class="acoes-modal-excluir">
-      <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
-      <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+      <button class="btn-cancelar-modal" (click)="cancelarDesativacao()">cancelar</button>
+      <button class="btn-excluir-modal" (click)="confirmarDesativacao()">confirmar</button>
+    </div>
+  </div>
+</div>
+}
+
+@else if (ativarSelecionado) {
+<div class="modal-externo" (click)="fecharModal()">
+  <div class="modal-excluir">
+    <div class="excluir-superior">
+      <h3>Ativar cliente?</h3>
+      <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+    </div>
+    <div class="acoes-modal-excluir">
+      <button class="btn-cancelar-modal" (click)="cancelarAtivacao()">cancelar</button>
+      <button class="btn-excluir-modal" (click)="confirmarAtivacao()">confirmar</button>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente/cliente';
 import { FormsModule } from '@angular/forms';
@@ -21,11 +21,12 @@ import { UsuarioLogado } from '../../models/usuario';
 })
 export class ClienteComponent {
 
-  clientes: Observable<Cliente[]> | undefined;
+  listaClientes: Cliente[] = [];
+
   clienteSelecionado: Cliente | undefined;
   inserirCliente: boolean = false;
   novoCliente: Cliente = {
-    nome: '', celular: '', fidelidade: 0,
+    nome: '', celular: '', fidelidade: 0, status: '',
     id: 0, veiculos: []
   }
 
@@ -41,18 +42,34 @@ export class ClienteComponent {
 
   inserirVeiculo: boolean = false;
   editarVeiculo: boolean = false;
-  novoVeiculo: Veiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: '' };
+  novoVeiculo: Veiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, status: '', clienteNome: '' };
   tipos = [{ id: 'MOTO', label: 'Moto' }, { id: 'CARRO', label: 'Carro' }, { id: 'CAMINHONETE', label: 'Caminhonete' }, { id: 'CAMINHAO', label: 'Caminhão' }];
-  idVeiculoExclusao: number | null = null;
 
   clientesFiltrados: Observable<Cliente[]> | undefined;
 
-  filtroAtivo: boolean = false;
+  filtros = [{ "id": "ativo", "label": "Clientes ativos" }, { "id": "inativo", "label": "Clientes inativos" }];
+  filtrosVeiculo = [{ "id": "ativo", "label": "Veículos ativos" }, { "id": "inativo", "label": "Veículos inativos" }];
 
-  excluirSelecionado: boolean = false;
-  excluirVeiculoSelecionado: boolean = false;
+  filtroSelecionado = "ativo";
+  filtroSelecionadoVeiculo = "ativo";
 
-  idClienteExclusao: number | null = null;
+  termoFiltro = "";
+
+  mensagemErro = "";
+  mensagemErroVeiculo = "";
+  mensagemSucesso = "";
+  mensagemSucessoVeiculo = "";
+
+  desativarSelecionado: boolean = false;
+  ativarSelecionado: boolean = false;
+
+  desativarVeiculoSelecionado: boolean = false;
+  ativarVeiculoSelecionado: boolean = false;
+
+  idClienteDesativar: number | null = null;
+  idClienteAtivar: number | null = null;
+  idVeiculoDesativacao: number | null = null;
+  idVeiculoAtivacao: number | null = null;
 
   constructor(
     private clienteService: ClienteService,
@@ -62,40 +79,71 @@ export class ClienteComponent {
 
   ngOnInit() {
     this.clienteService.getAll();
-    this.clientes = this.clienteService.clientes;
+    this.obterClientesApi();
     if (this.usuarioLogado.urlFoto == null || this.usuarioLogado.urlFoto === "" || this.usuarioLogado.urlFoto === "null")
       this.urlFoto = this.usuarioLogado.tipoUsuario === "GERENTE" ? "gerente.png" : this.usuarioLogado.tipoUsuario === "FUNCIONARIO" ? "funcionario.png" : "admin.png";
     else
       this.urlFoto = this.usuarioLogado.urlFoto;
   }
 
-  excluir(id: number) {
-    this.excluirSelecionado = true;
-    this.idClienteExclusao = id;
+  desativar(id: number) {
+    this.desativarSelecionado = true;
+    this.idClienteDesativar = id;
     this.fechar();
   }
 
-  cancelarExclusao() {
-    this.excluirSelecionado = false;
+  cancelarDesativacao() {
+    this.desativarSelecionado = false;
   }
 
-  confirmarExclusao() {
-    if (this.idClienteExclusao != null) {
-      this.clienteService.delete(this.idClienteExclusao).subscribe({
-        next: () => {
-          this.idClienteExclusao = null;
-          this.excluirSelecionado = false;
+  confirmarDesativacao() {
+    if (this.idClienteDesativar != null) {
+      this.clienteService.desativar(this.idClienteDesativar).subscribe({
+        next: (response) => {
+          this.idClienteDesativar = null;
+          this.desativarSelecionado = false;
+          this.termoFiltro = "";
+          this.mensagemSucesso = response.mensagem;
+          this.obterClientesApi();
+          this.cdr.markForCheck();
         },
         error: (err) => {
           console.log('Erro ao deletar o cliente', err);
-          alert('Não foi possível deletar o cliente.')
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
         }
       });
     }
   }
 
-  opcoes() {
+  ativar(id: number) {
+    this.ativarSelecionado = true;
+    this.idClienteAtivar = id;
+    this.fechar();
+  }
 
+  cancelarAtivacao() {
+    this.ativarSelecionado = false;
+  }
+
+  confirmarAtivacao() {
+    if (this.idClienteAtivar != null) {
+      this.clienteService.ativar(this.idClienteAtivar).subscribe({
+        next: (response) => {
+          this.idClienteAtivar = null;
+          this.ativarSelecionado = false;
+          this.termoFiltro = "";
+          this.mensagemSucesso = response.mensagem;
+          this.obterClientesApi();
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.log('Erro ao ativar o cliente', err);
+          this.mensagemErro = err.error.mensagem;
+          this.cdr.markForCheck();
+        }
+      });
+    }
   }
 
   fecharOpcoesLowScreen() {
@@ -127,49 +175,55 @@ export class ClienteComponent {
   salvar() {
     if (this.clienteSelecionado) {
       if (this.clienteSelecionado.celular.length < 14) {
-        alert('O celular deve ter exatamente 11 dígitos.');
+        this.mensagemErro = "O celular deve ter exatamente 11 dígitos.";
         return;
       }
       this.clienteService.update(this.clienteSelecionado).subscribe({
         next: () => {
           this.clienteSelecionado = undefined;
+          this.obterClientesApi();
         },
         error: (err) => {
-          console.error('Erro ao atualizar cliente:', err);
-          alert('Não foi possível atualizar o cliente.');
+          this.mensagemErro = "Não foi possível atualizar o cliente.";
         }
       });
     }
     else if (this.inserirCliente) {
       if (this.novoCliente.celular.length < 14) {
-        alert('O celular deve ter exatamente 11 dígitos.');
+        this.mensagemErro = "O celular deve ter exatamente 11 dígitos.";
         return;
       }
       this.clienteService.create(this.novoCliente).subscribe({
         next: () => {
-          this.novoCliente = { id: 0, nome: '', celular: '', fidelidade: 0, veiculos: [] };
+          this.novoCliente = { id: 0, nome: '', celular: '', fidelidade: 0, status: '', veiculos: [] };
           this.inserirCliente = false;
+          this.obterClientesApi();
         },
         error: (err) => {
-          console.error('Erro ao cadastrar cliente:', err);
-          alert('Não foi possível cadastrar o cliente.');
+          this.mensagemErro = "Não foi possível cadastrar o cliente.";
         }
       });
     }
   }
 
-  filtrar(termo: string) {
-    if (termo.length == 0)
-      this.filtroAtivo = false;
-    else {
-      this.filtroAtivo = true;
-      this.clientesFiltrados = this.clientes!.pipe(
-        map(clientes =>
-          clientes.filter(c =>
-            c.nome.toLocaleLowerCase().includes(termo.toLocaleLowerCase())
-          )
-        )
-      );
+  obterClientesApi() {
+    this.clienteService.listarClientes().subscribe(clientes => {
+      this.listaClientes = clientes;
+      this.cdr.markForCheck();
+    });
+  }
+
+  obterClientes(): Cliente[] {
+    if (this.filtroSelecionado === 'ativo') {
+      if (this.termoFiltro !== '') {
+        return this.listaClientes.filter(c => c.status === 'ativo' && c.nome.toLocaleLowerCase().includes(this.termoFiltro.toLocaleLowerCase()));
+      }
+      return this.listaClientes.filter(c => c.status === 'ativo');
+    } else {
+      if (this.termoFiltro !== '') {
+        return this.listaClientes.filter(c => c.status === 'inativo' && c.nome.toLocaleLowerCase().includes(this.termoFiltro.toLocaleLowerCase()));
+      }
+      return this.listaClientes.filter(c => c.status === 'inativo');
     }
   }
 
@@ -177,20 +231,44 @@ export class ClienteComponent {
     this.clienteSelecionado = c;
     this.inserirCliente = false;
     this.revelarVeiculosCliente = true;
+    this.obterVeiculosDoClienteApi(c);
+  }
+
+  obterVeiculosDoClienteApi(c: Cliente) {
     this.veiculoService.obterVeiculosPorClienteId(c.id);
     this.veiculosCliente = this.veiculoService.veiculos;
+  }
+
+  obterVeiculosDoCliente() {
+    if (this.filtroSelecionadoVeiculo === 'ativo' && this.veiculosCliente != undefined) 
+      return this.veiculosCliente?.pipe(
+        map(veiculos => veiculos.filter(v => v.status === 'ativo'))
+      )
+    else 
+      return this.veiculosCliente?.pipe(
+        map(veiculos => veiculos.filter(v => v.status === 'inativo'))
+      )
+  }
+
+  obterQtdVeiculosAtivosDoCliente(cliente: Cliente):number {
+    return cliente.veiculos.filter(veiculo => veiculo.status === 'ativo').length;
   }
 
   fechar() {
     this.clienteSelecionado = undefined;
     this.inserirCliente = false;
+    this.mensagemErro = "";
+    this.mensagemSucesso = "";
   }
 
   fecharModal() {
     this.revelarVeiculosCliente = false;
     this.clienteSelecionado = undefined;
-    this.novoVeiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: '' };
+    this.novoVeiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, status: '', clienteNome: '' };
     this.limparCamposVeiculo();
+    this.limparMensagensVeiculo();
+    this.obterClientesApi();
+    this.filtroSelecionadoVeiculo = 'ativo';
   }
 
   botaoAdicionarVeiculo() {
@@ -209,7 +287,7 @@ export class ClienteComponent {
     if (this.inserirVeiculo) {
       this.veiculoService.criarEListarClienteSelecionado(this.novoVeiculo, this.clienteSelecionado?.id!).subscribe({
         next: () => {
-          this.novoVeiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: '' };
+          this.novoVeiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, status: '', clienteNome: '' };
           this.inserirVeiculo = false;
         },
         error: (err) => {
@@ -220,7 +298,7 @@ export class ClienteComponent {
     } else {
       this.veiculoService.atualizarEListarClienteSelecionado(this.novoVeiculo, this.clienteSelecionado?.id!).subscribe({
         next: () => {
-          this.novoVeiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, clienteNome: '' };
+          this.novoVeiculo = { marca: '', modelo: '', cor: '', tipo: '', placa: '', clienteId: 0, status: '', clienteNome: '' };
           this.editarVeiculo = false;
         },
         error: (err) => {
@@ -231,26 +309,58 @@ export class ClienteComponent {
     }
   }
 
-  excluirVeiculo(idVeiculo: number) {
-    this.excluirVeiculoSelecionado = true;
+  desativarVeiculo(idVeiculo: number) {
+    this.desativarVeiculoSelecionado = true;
     this.limparCamposVeiculo();
-    this.idVeiculoExclusao = idVeiculo;
+    this.idVeiculoDesativacao = idVeiculo;
   }
 
-  cancelarExclusaoVeiculo() {
-    this.excluirVeiculoSelecionado = false;
+  cancelarDesativacaoVeiculo() {
+    this.desativarVeiculoSelecionado = false;
   }
 
-  confirmarExclusaoVeiculo() {
-    if (this.idVeiculoExclusao != null) {
-      this.veiculoService.deletarEListarClienteSelecionado(this.idVeiculoExclusao, this.clienteSelecionado?.id!).subscribe({
-        next: () => {
-          this.idVeiculoExclusao = null;
-          this.excluirVeiculoSelecionado = false;
+  confirmarDesativacaoVeiculo() {
+    if (this.idVeiculoDesativacao != null) {
+      this.veiculoService.desativar(this.idVeiculoDesativacao).subscribe({
+        next: (response) => {
+          this.idVeiculoDesativacao = null;
+          this.desativarVeiculoSelecionado = false;
+          this.mensagemSucessoVeiculo = response.mensagem;
+          this.obterVeiculosDoClienteApi(this.clienteSelecionado!);
+          this.cdr.markForCheck();
         },
         error: (err) => {
-          console.log('Erro ao deletar o veículo', err);
-          alert('Não foi possível deletar o veículo.')
+          console.log(err);
+          this.mensagemErroVeiculo = err.error.mensagem;
+        }
+      });
+    }
+  }
+
+  ativarVeiculo(idVeiculo: number) {
+    this.ativarVeiculoSelecionado = true;
+    this.limparCamposVeiculo();
+    this.idVeiculoAtivacao = idVeiculo;
+  }
+
+  cancelarAtivacaoVeiculo() {
+    this.ativarVeiculoSelecionado = false;
+  }
+
+  confirmarAtivacaoVeiculo() {
+    if (this.idVeiculoAtivacao != null) {
+      this.veiculoService.ativar(this.idVeiculoAtivacao).subscribe({
+        next: (response) => {
+          this.idVeiculoAtivacao = null;
+          this.ativarVeiculoSelecionado = false;
+          this.mensagemSucessoVeiculo = response.mensagem;
+          this.obterVeiculosDoClienteApi(this.clienteSelecionado!);
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.mensagemErroVeiculo = err.error.mensagem;
+          this.ativarVeiculoSelecionado = false;
+          this.cdr.markForCheck();
         }
       });
     }
@@ -267,5 +377,15 @@ export class ClienteComponent {
   limparCamposVeiculo() {
     this.inserirVeiculo = false;
     this.editarVeiculo = false;
+  }
+
+  limparMensagens() {
+    this.mensagemErro = "";
+    this.mensagemSucesso = "";
+  }
+
+  limparMensagensVeiculo() {
+    this.mensagemErroVeiculo = "";
+    this.mensagemSucessoVeiculo = "";
   }
 }

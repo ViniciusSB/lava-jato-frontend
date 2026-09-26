@@ -3,4 +3,5 @@ export interface Servico {
     detalhes: string;
     precoBase: number;
     tipo: string;
+    status: string;
 }

@@ -368,45 +368,112 @@ button:hover {
   background-color: #dd3d3d;
 }
 
-.msg-container {
-  height: 1.5rem;
-  margin: 0.4rem auto 1.6rem auto;
-  width: 100%;
-  display: flex;
+.filtros-titulo {
+  width: 95%;
+  margin: 0.3rem auto;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.filtros-titulo h3 {
+  letter-spacing: 0.1rem;
+}
+
+.filtros-tipo {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.8rem;
+  display: inline-flex;
   justify-content: center;
+  margin: 0 auto;
+  gap: 0.2rem;
 }
 
-.msg {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 0.6rem;
-  align-items: center;
-  color: #ffffff;
-  width: fit-content;
-  height: 100%;
-  padding: 1.2rem 0.4rem 1.2rem 0.4rem;
-  border-radius: 0.2rem;
-
-  &.msg-erro {
-    background-color: #b62d4b;
-  }
+.filtros-tipo input {
+  display: none;
 }
 
-.btn-fechar {
-  margin-left: 0.5rem;
+.filtros-tipo label {
   display: flex;
   align-items: center;
-  right: 0;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
 
-  button {
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-  }
+.filtros-tipo label.active {
+  background-color: #0a0a0a;
+}
 
+.filtros-tipo :hover {
+  background-color: #141414;
+}
+
+.msg-container {
+    height: 1.5rem;
+    margin: 0.4rem auto 0.4rem auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .msg {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        color: #ffffff;
+        width: fit-content;
+        gap: 0.5rem;
+        padding: 0 1.8rem 0 0.3rem;
+        border-radius: 0.2rem;
+        position: relative;
+
+        h4 {
+            font-size: 0.85rem;
+        }
+    }
+
+    .msg-erro {
+        background-color: #b62d4b;
+    }
+
+    .msg-sucesso {
+        background-color: #149429;
+    }
+
+    .btn-fechar {
+        margin-left: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        right: 0.2rem;
+        top: 0.1rem;
+
+        button {
+            padding: 0.2rem 0.4rem;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+
+            &.sucesso {
+                background: #157925;
+                &:hover{
+                  background: #11641f;
+                }
+            }
+
+            &.erro {
+                background: #a51313;
+                &:hover{
+                  background: #911111;
+                }
+            }
+        }
+    }
 }
 
 .tabela-responsiva {

@@ -5,7 +5,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrdemServicoService } from '../../services/ordem-servico/ordem-servico';
 import { DadosPaginacaoOrdemServico, OrdemServicoFiltros, OrdemServicoResponse } from '../../models/ordemServico';
 import { OrdemServicoRequest } from '../../models/ordemServico';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Servico } from '../../models/servico';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -73,6 +73,7 @@ export class OrdemServicoComponent {
   numUltimaPagina = 0;
 
   funcionarios: UsuarioResponse[] = [];
+  funcionariosAtivos: UsuarioResponse[] = [];
   funcionarioSelecionado: Usuario = {
     id: 0, nome: '', email: '', tipo: '',
     status: ''
@@ -80,15 +81,18 @@ export class OrdemServicoComponent {
   funcionarioAdicionadoId: number | null = null;
 
   clientes: Observable<Cliente[]> | undefined;
-  clienteSelecionado: Cliente = { id: 0, nome: '', celular: '', fidelidade: 0, veiculos: [] };
+  clientesAtivos: Observable<Cliente[]> | undefined;
+  clienteSelecionado: Cliente = { id: 0, nome: '', celular: '', fidelidade: 0, status: '', veiculos: [] };
   clienteAdicionadoId: number | null = null;
 
   veiculos: Observable<Veiculo[]> | undefined;
-  veiculoSelecionado: Veiculo = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, clienteNome: '' };
+  veiculosAtivos: Observable<Veiculo[]> | undefined;
+  veiculoSelecionado: Veiculo = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, status: '', clienteNome: '' };
   veiculoAdicionadoId: number | null = null;
 
   servicos: Observable<Servico[]> | undefined;
-  servicoSelecionado: Servico = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
+  servicosAtivos: Observable<Servico[]> | undefined;
+  servicoSelecionado: Servico = { id: 0, detalhes: '', precoBase: 0, tipo: '', status: '' };
   servicoAdicionadoId: number | null = null;
 
   status = [{ id: 'EM_ANDAMENTO', label: 'Em andamento' }, { id: 'FINALIZADO', label: 'Finalizado' }];
@@ -168,6 +172,7 @@ export class OrdemServicoComponent {
       this.usuarioService.listarTodosOsUsuarios().subscribe({
         next: (response) => {
           this.funcionarios = response.filter(usuario => usuario.tipo === 'FUNCIONARIO');
+          this.funcionariosAtivos = this.obterFuncionariosAtivos();
         }
       });
     }
@@ -181,21 +186,55 @@ export class OrdemServicoComponent {
     if (this.clientes == undefined) {
       this.clienteService.getAll();
       this.clientes = this.clienteService.clientes;
+      this.clientesAtivos = this.obterClientesAtivosEComVeiculos();
     }
+  }
+
+  obterClientesAtivosEComVeiculos() {
+    return this.clientes?.pipe(
+      map(
+        clientes =>
+          clientes.filter(cliente => {
+            const clienteAtivo = cliente.status === 'ativo';
+            const listaVeiculos = cliente.veiculos.length > 0;
+            const veiculoAtivo = cliente.veiculos.some(veiculo => veiculo.status === 'ativo');
+            return clienteAtivo && listaVeiculos && veiculoAtivo;
+          }
+          )
+      )
+    );
   }
 
   addVeiculo() {
     if (this.clienteSelecionado != undefined && this.clienteSelecionado.id != 0) {
       this.veiculoService.obterVeiculosPorClienteId(this.clienteSelecionado.id);
       this.veiculos = this.veiculoService.veiculos;
+      this.veiculosAtivos = this.obterVeiculosAtivosDoCliente();
     }
+  }
+
+  obterVeiculosAtivosDoCliente() {
+    return this.veiculoService.veiculos.pipe(
+      map(veiculos =>
+        veiculos.filter(v =>
+          v.status === 'ativo'
+        )
+      )
+    );
   }
 
   addServico() {
     if (this.servicos == undefined) {
       this.servicoService.getAll();
       this.servicos = this.servicoService.servicos;
+      this.servicosAtivos = this.obterServicosAtivos();
     }
+  }
+
+  obterServicosAtivos() {
+    return this.servicos?.pipe(map(servicos =>
+      servicos.filter(s => s.status === 'ativo')
+    ))
   }
 
   fecharModal() {
@@ -361,7 +400,7 @@ export class OrdemServicoComponent {
 
   atualizarVeiculos(cliente: any) {
     this.veiculoAdicionadoId = null;
-    this.veiculoSelecionado = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, clienteNome: '' };
+    this.veiculoSelecionado = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, status: '', clienteNome: '' };
     this.veiculos = undefined;
 
     if (!cliente) {
@@ -375,7 +414,7 @@ export class OrdemServicoComponent {
     }
 
     this.veiculoService.obterVeiculosPorClienteId(idCliente);
-    this.veiculos = this.veiculoService.veiculos;
+    this.veiculosAtivos = this.obterVeiculosAtivosDoCliente();
   }
 
   excluir(id: number) {
@@ -517,9 +556,9 @@ export class OrdemServicoComponent {
   }
 
   limparElementosSelecionados() {
-    this.servicoSelecionado = { id: 0, detalhes: '', precoBase: 0, tipo: '' };
-    this.veiculoSelecionado = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, clienteNome: '' };
-    this.clienteSelecionado = { id: 0, nome: '', celular: '', fidelidade: 0, veiculos: [] };
+    this.servicoSelecionado = { id: 0, detalhes: '', precoBase: 0, tipo: '', status: '' };
+    this.veiculoSelecionado = { id: 0, marca: '', modelo: '', cor: '', tipo: '', clienteId: 0, status: '', clienteNome: '' };
+    this.clienteSelecionado = { id: 0, nome: '', celular: '', fidelidade: 0, status: '', veiculos: [] };
     this.funcionarioSelecionado = { id: 0, nome: '', email: '', tipo: '', status: '' };
   }
 

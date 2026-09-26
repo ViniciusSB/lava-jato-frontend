@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Veiculo } from '../../models/veiculo';
 import { environment } from '../../../environments/environment';
+import { MensagemRespose } from '../../models/mensagem';
 
 @Injectable({providedIn: 'root'})
 export class VeiculoService {
@@ -46,10 +47,16 @@ export class VeiculoService {
         );
     }
 
-    delete(id: number){
-        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
-            tap( () => this.getAll() )
-        )
+    desativar(id: number):Observable<MensagemRespose>{
+        return this.http.patch<MensagemRespose>(`${this.urlBase}/desativar/${id}`, {}).pipe(
+            tap(() => this.getAll())
+        );
+    }
+
+    ativar(id: number):Observable<MensagemRespose>{
+        return this.http.patch<MensagemRespose>(`${this.urlBase}/ativar/${id}`, {}).pipe(
+            tap(() => this.getAll())
+        );
     }
 
     deletarEListarClienteSelecionado(id: number, clienteId: number){
@@ -59,10 +66,11 @@ export class VeiculoService {
     }
 
     obterVeiculosPorClienteId(id: number) {
-        this.http.get<Veiculo[]>(`${this.urlBase}/listar/cliente/${id}`).subscribe(
+       this.http.get<Veiculo[]>(`${this.urlBase}/listar/cliente/${id}`).subscribe(
             data => {
                 this.veiculosSubject.next(data);
             }
         );
     }
+    
 }

@@ -155,7 +155,7 @@
         <tbody>
             <tr *ngFor="let os of (ordemServicoResponse | async)?.ordemServico">
                 <td>{{os.id}}</td>
-                <td>{{os.cliente?.nome}}</td>
+                <td [class.inativo]="os.cliente?.status === 'inativo'">{{os.cliente?.nome}}</td>
                 <td>{{os.veiculo?.modelo | normalizarEnum}}</td>
                 <td [class.inativo]="os.funcionario?.status === 'inativo'">{{os.funcionario?.nome}}</td>
                 <td>{{os.servico?.tipo}}</td>
@@ -210,25 +210,25 @@
     <button class="btn-fechar-form" (click)="fechar()">x</button>
 </div>
 <div id="nova-ordem" #novaOrdemForm class="campos-form">
-    <ng-select class="custom-ng-select" [items]="obterFuncionariosAtivos()" bindLabel="nome" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="funcionariosAtivos" bindLabel="nome" bindValue="id"
         [(ngModel)]="funcionarioAdicionadoId" [clearable]="true" placeholder="funcionário">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.nome">{{ item.nome }}</span>
         </ng-template>
     </ng-select>
-    <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="(clientesAtivos | async) || []" bindLabel="nome" bindValue="id"
         (change)="atualizarVeiculos($event)" [(ngModel)]="clienteAdicionadoId" [clearable]="true" placeholder="cliente">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.nome">{{ item.nome }}</span>
         </ng-template>
     </ng-select>
-    <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="(veiculosAtivos | async) || []" bindLabel="modelo" bindValue="id"
         [(ngModel)]="veiculoAdicionadoId" [clearable]="true" placeholder="veículo" notFoundText="selecione um cliente">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.modelo">{{ item.modelo }}</span>
         </ng-template>
     </ng-select>
-    <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="(servicosAtivos | async) || []" bindLabel="tipo" bindValue="id"
         [(ngModel)]="servicoAdicionadoId" [clearable]="true" placeholder="serviço">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.tipo">{{ item.tipo }}</span>
@@ -244,27 +244,27 @@
     <button class="btn-fechar-form" (click)="fechar()">x</button>
 </div>
 <div id="editar-ordem" #editarOrdemForm class="campos-form">
-    <ng-select class="custom-ng-select" [items]="funcionarios" bindLabel="nome" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="funcionariosAtivos" bindLabel="nome" bindValue="id"
         [(ngModel)]="funcionarioSelecionado.id" [clearable]="true" placeholder="funcionário">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.nome">{{ item.nome }}</span>
         </ng-template>
     </ng-select>
-    <ng-select class="custom-ng-select" [items]="(clientes | async) || []" bindLabel="nome" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="(clientesAtivos | async) || []" bindLabel="nome" bindValue="id"
         (change)="atualizarVeiculos($event)" [(ngModel)]="clienteSelecionado.id" [clearable]="true"
         placeholder="cliente">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.nome">{{ item.nome }}</span>
         </ng-template>
     </ng-select>
-    <ng-select class="custom-ng-select" [items]="(veiculos | async) || []" bindLabel="modelo" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="(veiculosAtivos | async) || []" bindLabel="modelo" bindValue="id"
         [(ngModel)]="veiculoSelecionado.id" [clearable]="true" placeholder="veículo"
         notFoundText="selecione um cliente">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.modelo">{{ item.modelo }}</span>
         </ng-template>
     </ng-select>
-    <ng-select class="custom-ng-select" [items]="(servicos | async) || []" bindLabel="tipo" bindValue="id"
+    <ng-select class="custom-ng-select" [items]="(servicosAtivos | async) || []" bindLabel="tipo" bindValue="id"
         [(ngModel)]="servicoSelecionado.id" [clearable]="true" placeholder="serviço">
         <ng-template ng-option-tmp let-item="item">
             <span [title]="item.tipo">{{ item.tipo }}</span>

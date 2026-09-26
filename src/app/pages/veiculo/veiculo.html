@@ -61,13 +61,28 @@
     <h3>Gerencie os veículos dos clientes</h3>
 </div>
 
-<div class="msg-container">
-  <div *ngIf="mensagemErro" class="msg msg-erro">
-    <h4>{{ mensagemErro }}</h4>
-    <div class="btn-fechar">
-      <button type="button" (click)="fecharMsg()">x</button>
+<div class="filtros-titulo">
+    <div class="filtros-tipo">
+        <label *ngFor="let tipo of filtrosVeiculo" [class.active]="filtroSelecionadoVeiculo === tipo.id">
+            <input type="radio" name="tipos" (change)="fecharMsg()" [(ngModel)]="filtroSelecionadoVeiculo" [value]="tipo.id">
+            {{ tipo.label }}
+        </label>
     </div>
-  </div>
+</div>
+
+<div class="msg-container">
+    <div *ngIf="mensagemErro" class="msg msg-erro">
+        <h4>{{ mensagemErro }}</h4>
+        <div class="btn-fechar">
+            <button type="button" class="erro" (click)="fecharMsg()">x</button>
+        </div>
+    </div>
+    <div *ngIf="mensagemSucesso" class="msg msg-sucesso">
+        <h4>{{ mensagemSucesso }}</h4>
+        <div class="btn-fechar">
+            <button type="button" class="sucesso" (click)="fecharMsg()">x</button>
+        </div>
+    </div>
 </div>
 
 <div class="tabela-responsiva">
@@ -84,7 +99,7 @@
                 <th colspan="2">Ações</th>
             </tr>
         </thead>
-        @for (v of veiculos | async; track v.id) {
+        @for (v of getVeiculosPeloFiltro() | async; track v.id) {
         <tbody>
             <tr>
                 <td>{{ v.id }}</td>
@@ -95,8 +110,10 @@
                 <td>{{ v.tipo | primCaracMaius }}</td>
                 <td>{{ v.clienteNome }}</td>
                 <td class="acoes">
-                    <button (click)="editar(v)">✏️</button>
-                    <button class="lixeira" (click)="excluir(v.id!)">🗑️</button>
+                    <button *ngIf="filtroSelecionadoVeiculo === 'ativo'" (click)="editar(v)">✏️</button>
+                    <button class="lixeira"
+                        (click)="filtroSelecionadoVeiculo === 'ativo' ? desativar(v.id!) : ativar(v.id!)">{{filtroSelecionadoVeiculo
+                        === 'ativo' ? '🗑️' : '♻️'}}</button>
                 </td>
             </tr>
         </tbody>
@@ -154,16 +171,29 @@
 </div>
 }
 
-@if (excluirSelecionado) {
+@if (desativarSelecionado) {
 <div class="modal-externo" (click)="fecharModal()">
     <div class="modal-excluir">
         <div class="excluir-superior">
-            <h3>Excluir veículo?</h3>
+            <h3>Desativar veículo?</h3>
             <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
         </div>
         <div class="acoes-modal-excluir">
-            <button class="btn-cancelar-modal" (click)="cancelarExclusao()">cancelar</button>
-            <button class="btn-excluir-modal" (click)="confirmarExclusao()">confirmar</button>
+            <button class="btn-cancelar-modal" (click)="cancelarDesativacao()">cancelar</button>
+            <button class="btn-excluir-modal" (click)="confirmarDesativacao()">confirmar</button>
+        </div>
+    </div>
+</div>
+} @else if (ativarSelecionado) {
+<div class="modal-externo" (click)="fecharModal()">
+    <div class="modal-excluir">
+        <div class="excluir-superior">
+            <h3>Ativar veículo?</h3>
+            <img class="icone-aviso" src="warn-triangle.png" alt="aviso">
+        </div>
+        <div class="acoes-modal-excluir">
+            <button class="btn-cancelar-modal" (click)="cancelarAtivacao()">cancelar</button>
+            <button class="btn-excluir-modal" (click)="confirmarAtivacao()">confirmar</button>
         </div>
     </div>
 </div>

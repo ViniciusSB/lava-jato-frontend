@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Servico } from '../../models/servico';
 import { environment } from '../../../environments/environment';
 import { AuthUtil } from '../../util/auth-util';
 import { UsuarioLogado } from '../../models/usuario';
+import { MensagemRespose } from '../../models/mensagem';
 
 @Injectable({ providedIn: 'root' })
 export class ServicoService {
@@ -37,8 +38,14 @@ export class ServicoService {
         );
     }
 
-    delete(id: number) {
-        return this.http.delete(`${this.urlBase}/deletar/${id}`).pipe(
+    ativar(id: number): Observable<MensagemRespose> {
+        return this.http.patch<MensagemRespose>(`${this.urlBase}/ativar/${id}`, {}).pipe(
+            tap(() => this.getAll())
+        )
+    }
+
+    desativar(id: number): Observable<MensagemRespose> {
+        return this.http.patch<MensagemRespose>(`${this.urlBase}/desativar/${id}`, {}).pipe(
             tap(() => this.getAll())
         )
     }

@@ -5,5 +5,6 @@ export interface Cliente {
     nome: string,
     celular: string,
     fidelidade: number,
+    status: string,
     veiculos: Veiculo[]
 }
