@@ -24,6 +24,9 @@ export class DashboardComponent {
 
   userOpcoes = false;
   opcoesLowScreen = false;
+  opcoesDasboardLowScreen = false;
+  botoesNavegacao = true;
+  paginacaoInferior = true;
 
   itemCarousel = 1;
   carouselAutomatico = true;
@@ -76,6 +79,18 @@ export class DashboardComponent {
 
   fecharOpcoesLowScreen() {
     this.opcoesLowScreen = !this.opcoesLowScreen;
+  }
+
+  alternarOpcoesDashboardLowScreen() {
+    this.opcoesDasboardLowScreen = !this.opcoesDasboardLowScreen;
+  }
+
+  alternarBotoesNavegacao() {
+    this.botoesNavegacao = !this.botoesNavegacao;
+  }
+
+  alternarPaginacaoInferior() {
+    this.paginacaoInferior = !this.paginacaoInferior;
   }
 
   alterarTipo(tipo: string) {
@@ -172,6 +187,11 @@ export class DashboardComponent {
     }
   }
 
+  indiceManualCarousel(indice: number) {
+    this.itemCarousel = indice;
+    this.iniciarCarouselAtomatico()
+  }
+
   iniciarCarouselAtomatico() {
     if (this.timerCarousel) {
       clearInterval(this.timerCarousel);
@@ -196,6 +216,9 @@ export class DashboardComponent {
   filtrar() {
     let resultado;
     if (this.request.tipo == "dia") {
+      if (this.campoPeriodo.length == 1) {
+        this.campoPeriodo = DataUtil.normalizarNumero(Number(this.campoPeriodo));
+      }
       resultado = DataUtil.validarPeriodoDia(this.campoPeriodo);
       this.campoPeriodo = resultado.dataFormatada;
       if (!resultado.valido) {
@@ -205,6 +228,9 @@ export class DashboardComponent {
     }
 
     else if (this.request.tipo == "mes") {
+      if (this.campoPeriodo.length == 1) {
+        this.campoPeriodo = DataUtil.normalizarNumero(Number(this.campoPeriodo));
+      }
       resultado = DataUtil.validarPeriodoMes(this.campoPeriodo);
       this.campoPeriodo = resultado.dataFormatada;
       if (!resultado.valido) {

@@ -86,31 +86,8 @@
   background-color: #4f46e5;
 }
 
-.msg-erro {
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  background-color: #e63b3b9d;
-  padding: 0.3rem;
-}
-
-.msg-erro button {
-  margin: 0 0.4rem;
-  border: none;
-  background: none;
-  cursor: pointer;
-  background-color: #ef4444;
-  border-radius: 0.3rem;
-  padding: 0.1rem 0.3rem;
-  color: #ffffff;
-}
-
-.msg-erro button:hover {
-  background-color: #dc2626;
-}
-
 .navegacao {
+  position: relative;
   display: flex;
   justify-content: center;
   width: 400px;
@@ -160,6 +137,33 @@
   }
 }
 
+.msg-erro {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: #e63b3b9d;
+  padding: 0.3rem;
+  position: absolute;
+  right: -5rem;
+  top: 0.2rem;
+}
+
+.msg-erro button {
+  margin: 0 0.4rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  background-color: #ef4444;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.3rem;
+  color: #ffffff;
+}
+
+.msg-erro button:hover {
+  background-color: #dc2626;
+}
+
 .carousel {
   height: calc(100vh - 13rem);
   overflow: hidden;
@@ -167,54 +171,17 @@
 }
 
 .centralizar {
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-}
-
-.switch-container {
-  position: absolute;
-  top: 5rem;
-  right: 3rem;
-
-  .conteudo {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-
-    h3 {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .switch {
-      width: 5rem;
-      height: 2.0rem;
-      border: 2px solid #94a3b8;
-      border-radius: 99px;
-      display: flex;
-      align-items: center;
-
-      .circulo {
-        height: 1rem;
-        width: 1rem;
-        background-color: #FFFFFF;
-        border-radius: 50%;
-        margin-left: 0.3rem;
-        transition: margin-left 0.5s ease;
-
-        &.ativo {
-          margin-left: 3.5rem;
-        }
-      }
-    }
-  }
-
+  height: 100%;
+  min-height: 100%;
+  padding-top: 1rem;
 }
 
 .item {
   width: 90%;
+  height: 100%;
   margin: 0 auto;
   gap: 0.6rem;
 
@@ -222,11 +189,25 @@
   opacity: 0;
 
   &.ativo {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
     opacity: 1;
     animation: deslizarEsquerda 0.7s ease;
   }
+}
+
+.grid-container {
+  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.7rem;
+}
+
+.grafico {
+  height: 450px;
 }
 
 .grid-dados {
@@ -287,6 +268,10 @@
   color: #f8fafc;
   font-size: 1.85rem;
   font-weight: 700;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  max-width: 100%;
 }
 
 .grid-dados .div-func-destaque h2 {
@@ -299,12 +284,23 @@
   margin: 0 auto;
 }
 
+.grid-dados.atendimento div:last-child {
+  grid-column: 1 / -1;
+  width: 50%;
+}
+
+.grid-dados.funcionario-faturamento div:last-child {
+  grid-column: 1 / -1;
+  width: 50%;
+}
+
 .navegacao-carousel {
   display: flex;
   justify-content: space-between;
   width: 100%;
   position: fixed;
   top: 50%;
+  padding: 0 0.4rem;
 
   div {
     display: flex;
@@ -314,10 +310,16 @@
       background-color: transparent;
       border-radius: 50%;
       border: 2px solid #294483;
+      width: fit-content;
+      height: fit-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       img {
         width: 1.5rem;
         filter: invert(1);
+        object-fit: cover;
       }
 
       &:hover {
@@ -351,11 +353,13 @@
     margin: 0;
     display: flex;
     gap: 0.4rem;
+    justify-content: center;
 
     .indice {
       width: 40px;
       height: 10px;
       background-color: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
 
       &.ativo {
         background-color: #00f7ff;
@@ -364,6 +368,80 @@
     }
   }
 }
+
+.opcoes-dashboard-low-screen {
+  position: fixed;
+  bottom: 0.5rem;
+  left: 0.2rem;
+  z-index: 25;
+
+  button {
+    background-color: #1f3452;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+
+    &.ativo {
+      animation: girar 2s linear infinite;
+    }
+  }
+
+  .ul-dashboard-low-screen {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    z-index: 26;
+    animation: deslizarCima 0.7s ease;
+    opacity: 0;
+
+    &.ativo {
+      opacity: 0.5;
+      transition: animation 0.7s ease;
+    }
+
+    li {
+      padding: 0.5rem 0.8rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+
+      h4 {
+        color: #94a3b8;
+      }
+    }
+  }
+}
+
+.switch {
+  width: 3rem;
+  height: 1.5rem;
+  border: 2px solid #94a3b8;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+
+  .circulo {
+    height: 0.7rem;
+    width: 0.7rem;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    margin-left: 0.3rem;
+    transition: margin-left 0.5s ease;
+
+    &.ativo {
+      margin-left: 1.8rem;
+    }
+  }
+}
+
 
 @keyframes deslizarEsquerda {
   from {
@@ -375,10 +453,25 @@
   }
 }
 
+@keyframes deslizarCima {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes girar {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 /* Responsividade */
-
-@media (min-width: 320px) and (max-width: 820px) {
+@media (min-width: 320px) and (max-width: 559px) {
 
   .menu-navegacao,
   .user {
@@ -404,22 +497,51 @@
     font-size: 0.75rem;
   }
 
-  .navegacao {
-    width: 320px;
-    margin: 0 auto 0 12px;
+  .navegacao-carousel div button img {
+    width: 0.5rem;
   }
 
-  .item {
-    grid-template-columns: 1fr;
-    margin: 0;
+  .navegacao {
+    width: 280px;
+    margin: 0 auto 0 12px;
+    position: static;
+    justify-content: space-around;
+  }
+
+  .msg-erro {
+    right: -3rem;
+    position: static;
+  }
+
+  .carousel {
+    overflow-y: auto;
+  }
+
+  .grid-container {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .grafico {
+    height: 300px;
+    margin-top: 0.8rem;
+  }
+
+  .grafico:last-child {
+    height: 250px;
   }
 
   .grid-dados {
     gap: 0.5rem;
+    height: fit-content;
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+    border-top: 2px solid #94a3b8;
   }
 
   .grid-dados div {
     padding: 1rem 0;
+    height: fit-content;
   }
 
   .grid-dados div h4 {
@@ -428,19 +550,24 @@
 
   .grid-dados div h2 {
     font-size: 1.25rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: block;
-    max-width: 100%;
+  }
+}
+
+@media (min-width: 560px) and (max-width: 820px) {
+
+  .menu-navegacao,
+  .user {
+    display: none;
   }
 
-  .grafico {
-    height: 20rem;
+  .navegacao-carousel div button img {
+    width: 0.8rem;
   }
 
-  .grafico:last-child {
-    height: 15rem;
+  .grid-dados div h2 {
+    font-size: 1.25rem;
   }
+
 }
 
 @media (min-width: 821px) and (max-width: 1024px) {
@@ -449,10 +576,6 @@
   }
 
   .grid-dados div h2 {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: block;
-    max-width: 100%;
     font-size: 1.20rem;
     line-height: 1.2;
   }
@@ -465,9 +588,6 @@
   }
 
   .grid-dados div h2 {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: block;
     max-width: 100%;
     line-height: 1.2;
   }

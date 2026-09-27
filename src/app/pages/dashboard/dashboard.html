@@ -84,13 +84,6 @@
             <button type="button" class="btn-filtrar" (click)="filtrar()">Filtrar</button>
         </div>
     </div>
-
-    <div *ngIf="mensagemErro" class="msg-erro">
-        <h4>{{ mensagemErro }}</h4>
-        <div class="btn-fechar">
-            <button type="button" (click)="fecharMsgErro()">x</button>
-        </div>
-    </div>
 </div>
 
 <div class="navegacao">
@@ -102,6 +95,37 @@
             <button type="button" (click)="avancarNavegacao()"><img src="arrow-right.png" alt="avançar"></button>
         </div>
     </div>
+
+    <div *ngIf="mensagemErro" class="msg-erro">
+        <h4>{{ mensagemErro }}</h4>
+        <div class="btn-fechar">
+            <button type="button" (click)="fecharMsgErro()">x</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" class="opcoes-dashboard-low-screen">
+    <button (click)="alternarOpcoesDashboardLowScreen()" [class.ativo]="opcoesDasboardLowScreen">⚙️</button>
+    <ul *ngIf="opcoesDasboardLowScreen" class="ul-dashboard-low-screen" [class.ativo]="opcoesDasboardLowScreen">
+        <li (click)="carouselAutomatico ? pararCarouselAutomaticoManual() : iniciarCarouselAtomaticoManual()">
+            <h4>Carousel automatico</h4>
+            <div class="switch">
+                <div class="circulo" [class.ativo]="carouselAutomatico"></div>
+            </div>
+        </li>
+        <li (click)="alternarBotoesNavegacao()">
+            <h4>Botões navegação</h4>
+            <div class="switch">
+                <div class="circulo" [class.ativo]="botoesNavegacao"></div>
+            </div>
+        </li>
+        <li (click)="alternarPaginacaoInferior()">
+            <h4>Paginação inferior</h4>
+            <div class="switch">
+                <div class="circulo" [class.ativo]="paginacaoInferior"></div>
+            </div>
+        </li>
+    </ul>
 </div>
 
 <div class="carousel">
@@ -111,83 +135,83 @@
 
     <div class="centralizar">
 
-        <div class="switch-container">
-            <div class="conteudo">
-                <h3>Automatico</h3>
-                <div class="switch" (click)="carouselAutomatico ? pararCarouselAutomaticoManual() : iniciarCarouselAtomaticoManual()">
-                    <div class="circulo" [class.ativo]="carouselAutomatico"></div>
-                </div>
-            </div>
-        </div>
-
         <!-- Faturamento -->
         <div class="item" [class.ativo]="itemCarousel == 1">
-            <div class="grid-dados">
-                <div>
-                    <h4>Total Bruto</h4>
-                    <h2>R${{ totalBruto }}</h2>
+            <h2>Dados Faturamento</h2>
+            <div class="grid-container">
+                <div class="grid-dados">
+                    <div>
+                        <h4>Total Bruto</h4>
+                        <h2>R${{ totalBruto }}</h2>
+                    </div>
+                    <div>
+                        <h4>Total Líquido</h4>
+                        <h2>R${{ totalLiquido }}</h2>
+                    </div>
                 </div>
-                <div>
-                    <h4>Total Líquido</h4>
-                    <h2>R${{ totalLiquido }}</h2>
-                </div>
-            </div>
 
-            <div class="grafico">
-                <apx-chart [series]="graficoFaturamento.series" [chart]="graficoFaturamento.chart"
-                    [xaxis]="graficoFaturamento.xaxis" [title]="graficoFaturamento.title">
-                </apx-chart>
+                <div class="grafico">
+                    <apx-chart [series]="graficoFaturamento.series" [chart]="graficoFaturamento.chart"
+                        [xaxis]="graficoFaturamento.xaxis" [title]="graficoFaturamento.title">
+                    </apx-chart>
+                </div>
             </div>
         </div>
 
         <!-- Atendimento -->
         <div class="item" [class.ativo]="itemCarousel == 2">
-            <div class="grid-dados">
-                <div>
-                    <h4>Clientes atendidos</h4>
-                    <h2>{{ clientesAtendidos }}</h2>
+            <h2>Dados Atendimento</h2>
+            <div class="grid-container">
+                <div class="grid-dados atendimento">
+                    <div>
+                        <h4>Clientes atendidos</h4>
+                        <h2>{{ clientesAtendidos }}</h2>
+                    </div>
+                    <div>
+                        <h4>Serviços finalizados</h4>
+                        <h2>{{ servicosFinalizados }}</h2>
+                    </div>
+                    <div>
+                        <h4>Ordens em andamento</h4>
+                        <h2>{{ ordensEmAndamento }}</h2>
+                    </div>
                 </div>
-                <div>
-                    <h4>Serviços finalizados</h4>
-                    <h2>{{ servicosFinalizados }}</h2>
-                </div>
-                <div>
-                    <h4>Ordens em andamento</h4>
-                    <h2>{{ ordensEmAndamento }}</h2>
-                </div>
-            </div>
 
-            <div class="grafico">
-                <apx-chart [series]="graficoTipoVeiculos.series" [chart]="graficoTipoVeiculos.chart"
-                    [xaxis]="graficoTipoVeiculos.xaxis" [title]="graficoTipoVeiculos.title"
-                    [colors]="graficoTipoVeiculos.colors" [plotOptions]="graficoTipoVeiculos.plotOptions">
-                </apx-chart>
+                <div class="grafico">
+                    <apx-chart [series]="graficoTipoVeiculos.series" [chart]="graficoTipoVeiculos.chart"
+                        [xaxis]="graficoTipoVeiculos.xaxis" [title]="graficoTipoVeiculos.title"
+                        [colors]="graficoTipoVeiculos.colors" [plotOptions]="graficoTipoVeiculos.plotOptions">
+                    </apx-chart>
+                </div>
             </div>
         </div>
 
         <!-- Dados Equipe -->
         <div class="item" [class.ativo]="itemCarousel == 3">
-            <div class="grid-dados">
-                <div>
-                    <h4>Membros totais</h4>
-                    <h2>{{ totalMembros }}</h2>
-                </div>
-                <div *ngIf="funcionarioDestaque != undefined" class="div-func-destaque">
+            <h2>Dados Equipe</h2>
+            <div class="grid-container">
+                <div class="grid-dados">
                     <div>
-                        <h4>Funcionário destaque</h4>
-                        <h2>{{ funcionarioDestaque.nome }}</h2>
+                        <h4>Membros totais</h4>
+                        <h2>{{ totalMembros }}</h2>
                     </div>
-                    <div>
-                        <h4>Atendimentos concluídos</h4>
-                        <h2>{{ funcionarioDestaque.servicosConcluidos }}</h2>
+                    <div *ngIf="funcionarioDestaque != undefined" class="div-func-destaque">
+                        <div>
+                            <h4>Funcionário destaque</h4>
+                            <h2>{{ funcionarioDestaque.nome }}</h2>
+                        </div>
+                        <div>
+                            <h4>Atendimentos concluídos</h4>
+                            <h2>{{ funcionarioDestaque.servicosConcluidos }}</h2>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="grafico">
-                <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
-                    [title]="graficoTipoMembros.title">
-                </apx-chart>
+                <div class="grafico">
+                    <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
+                        [title]="graficoTipoMembros.title">
+                    </apx-chart>
+                </div>
             </div>
         </div>
     </div>
@@ -195,29 +219,36 @@
 
     <!-- Tela do funcionário -->
     @else if (usuarioLogado.tipoUsuario === 'FUNCIONARIO') {
-    <div class="grid-dados">
-        <div>
-            <h4>Ordens finalizadas</h4>
-            <h2>{{ ordensFinalizadasFuncionario }}</h2>
+    <div class="centralizar">
+        <div class="item ativo">
+            <h2>Dados Faturamento</h2>
+            <div class="grid-container">
+                <div class="grid-dados funcionario-faturamento">
+                    <div>
+                        <h4>Ordens finalizadas</h4>
+                        <h2>{{ ordensFinalizadasFuncionario }}</h2>
+                    </div>
+                    <div>
+                        <h4>Ordens em andamento</h4>
+                        <h2>{{ ordensEmAndamentoFuncionario }}</h2>
+                    </div>
+                    <div>
+                        <h4>Faturamento total</h4>
+                        <h2>R${{ faturamentoTotalFuncionario }}</h2>
+                    </div>
+                </div>
+                <div class="grafico">
+                    <apx-chart [series]="graficoFaturamentoFuncionario.series"
+                        [chart]="graficoFaturamentoFuncionario.chart" [xaxis]="graficoFaturamentoFuncionario.xaxis"
+                        [title]="graficoFaturamentoFuncionario.title">
+                    </apx-chart>
+                </div>
+            </div>
         </div>
-        <div>
-            <h4>Ordens em andamento</h4>
-            <h2>{{ ordensEmAndamentoFuncionario }}</h2>
-        </div>
-        <div>
-            <h4>Faturamento total</h4>
-            <h2>R${{ faturamentoTotalFuncionario }}</h2>
-        </div>
-    </div>
-
-    <div class="grafico">
-        <apx-chart [series]="graficoFaturamentoFuncionario.series" [chart]="graficoFaturamentoFuncionario.chart"
-            [xaxis]="graficoFaturamentoFuncionario.xaxis" [title]="graficoFaturamentoFuncionario.title">
-        </apx-chart>
     </div>
     }
 
-    <div class="navegacao-carousel">
+    <div *ngIf="botoesNavegacao && usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" class="navegacao-carousel">
         <div class="retroceder" title="retroceder">
             <button type="button" (click)="retrocederManual()"><img src="arrow-right.png" alt="retroceder"></button>
         </div>
@@ -226,12 +257,12 @@
         </div>
     </div>
 
-    <div class="paginacao-carousel">
+    <div *ngIf="paginacaoInferior && usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" class="paginacao-carousel">
         <h4>0{{itemCarousel}}</h4>
         <div class="navegacao">
-            <div class="indice" [class.ativo]="itemCarousel == 1"></div>
-            <div class="indice" [class.ativo]="itemCarousel == 2"></div>
-            <div class="indice" [class.ativo]="itemCarousel == 3"></div>
+            <div class="indice" (click)="indiceManualCarousel(1)" [class.ativo]="itemCarousel == 1"></div>
+            <div class="indice" (click)="indiceManualCarousel(2)" [class.ativo]="itemCarousel == 2"></div>
+            <div class="indice" (click)="indiceManualCarousel(3)" [class.ativo]="itemCarousel == 3"></div>
         </div>
     </div>
 

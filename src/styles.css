@@ -534,18 +534,6 @@ foreignObject {
 }
 
 /* Grafico pizza */
-.apexcharts-inner.apexcharts-graphical {
-  justify-content: center !important;
-}
-
-.apexcharts-inner.apexcharts-graphical .apexcharts-pie {
-  justify-content: center !important;
-}
-
-.apexcharts-slices, .apexcharts-slices g {
-  justify-content: center !important;
-}
-
 .apexcharts-legend.apexcharts-align-center.apx-legend-position-right {
   justify-content: center !important;
 }

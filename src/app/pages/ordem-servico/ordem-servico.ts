@@ -505,6 +505,9 @@ export class OrdemServicoComponent {
   pesquisaChangePeriodo() {
     let resultado;
     if (this.filtros.intervaloTempo === 'dia') {
+      if (this.filtros.periodo.length == 1) {
+        this.filtros.periodo = DataUtil.normalizarNumero(Number(this.filtros.periodo));
+      }
       resultado = DataUtil.validarPeriodoDia(this.filtros.periodo);
       this.filtros.periodo = resultado.dataFormatada;
       if (!resultado.valido) {
@@ -514,6 +517,9 @@ export class OrdemServicoComponent {
       this.pesquisar();
     }
     else if (this.filtros.intervaloTempo === 'mes') {
+      if (this.filtros.periodo.length == 1) {
+        this.filtros.periodo = DataUtil.normalizarNumero(Number(this.filtros.periodo));
+      }
       resultado = DataUtil.validarPeriodoMes(this.filtros.periodo);
       this.filtros.periodo = resultado.dataFormatada;
       if (!resultado.valido) {
