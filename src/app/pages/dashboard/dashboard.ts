@@ -25,6 +25,10 @@ export class DashboardComponent {
   userOpcoes = false;
   opcoesLowScreen = false;
 
+  itemCarousel = 1;
+  carouselAutomatico = true;
+  timerCarousel: number = 0;
+
   totalMembros = 0;
   funcionarioDestaque: FuncionarioDestaque | undefined;
   graficoTipoMembros: any;
@@ -67,6 +71,7 @@ export class DashboardComponent {
     // Inicialmente traz os dados do dia
     this.request = { periodo: this.campoPeriodo, tipo: 'dia' };
     this.preencherDashboards(this.request.tipo);
+    this.iniciarCarouselAtomatico();
   }
 
   fecharOpcoesLowScreen() {
@@ -137,6 +142,55 @@ export class DashboardComponent {
 
     if (this.mensagemErro !== '')
       this.campoPeriodo = this.request.periodo;
+  }
+
+  avancarManual() {
+    this.avancarCarousel();
+    if (this.carouselAutomatico)
+      this.iniciarCarouselAtomatico();
+  }
+
+  avancarCarousel() {
+    if (this.itemCarousel == 3) {
+      this.itemCarousel = 1;
+    } else {
+      this.itemCarousel = this.itemCarousel + 1;
+    }
+  }
+
+  retrocederManual() {
+    this.retrocederCarousel();
+    if (this.carouselAutomatico)
+      this.iniciarCarouselAtomatico();
+  }
+
+  retrocederCarousel() {
+    if (this.itemCarousel == 1) {
+      this.itemCarousel = 3;
+    } else {
+      this.itemCarousel = this.itemCarousel - 1;
+    }
+  }
+
+  iniciarCarouselAtomatico() {
+    if (this.timerCarousel) {
+      clearInterval(this.timerCarousel);
+    }
+
+    this.timerCarousel = setInterval(() => {
+      this.avancarCarousel();
+      this.cdr.markForCheck();
+    }, 8000);
+  }
+
+  pararCarouselAutomaticoManual() {
+    clearInterval(this.timerCarousel);
+    this.carouselAutomatico = false;
+  }
+
+  iniciarCarouselAtomaticoManual() {
+    this.carouselAutomatico = true;
+    this.iniciarCarouselAtomatico();
   }
 
   filtrar() {
@@ -356,6 +410,12 @@ export class DashboardComponent {
       return faturamento.dadosGraficoBruto.map(f => f.valorBruto);
     else
       return faturamento.dadosGraficoLiquido.map(f => f.valorLiquido);
+  }
+
+  ngOnDestroy(): void {
+    if (this.timerCarousel) {
+      clearInterval(this.timerCarousel);
+    }
   }
 
 }

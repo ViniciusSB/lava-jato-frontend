@@ -94,85 +94,102 @@
 </div>
 
 <div class="navegacao">
-    <div class="retroceder" title="retroceder">
-        <button type="button" (click)="retrocederNavegacao()"><img src="arrow-right.png" alt="retroceder"></button>
-    </div>
-    <div class="avancar" title="avançar">
-        <button type="button" (click)="avancarNavegacao()"><img src="arrow-right.png" alt="avançar"></button>
+    <div class="navegacao-container">
+        <div class="retroceder" title="retroceder">
+            <button type="button" (click)="retrocederNavegacao()"><img src="arrow-right.png" alt="retroceder"></button>
+        </div>
+        <div class="avancar" title="avançar">
+            <button type="button" (click)="avancarNavegacao()"><img src="arrow-right.png" alt="avançar"></button>
+        </div>
     </div>
 </div>
 
-<div class="grid">
+<div class="carousel">
 
     <!-- Tela do gerente -->
     @if (usuarioLogado.tipoUsuario === 'GERENTE' || usuarioLogado.tipoUsuario === 'ADM') {
-    <!-- Atendimento -->
-    <div class="grid-dados">
-        <div>
-            <h4>Clientes atendidos</h4>
-            <h2>{{ clientesAtendidos }}</h2>
-        </div>
-        <div>
-            <h4>Serviços finalizados</h4>
-            <h2>{{ servicosFinalizados }}</h2>
-        </div>
-        <div>
-            <h4>Ordens em andamento</h4>
-            <h2>{{ ordensEmAndamento }}</h2>
-        </div>
-    </div>
 
-    <div class="grafico">
-        <apx-chart [series]="graficoTipoVeiculos.series" [chart]="graficoTipoVeiculos.chart"
-            [xaxis]="graficoTipoVeiculos.xaxis" [title]="graficoTipoVeiculos.title"
-            [colors]="graficoTipoVeiculos.colors" [plotOptions]="graficoTipoVeiculos.plotOptions">
-        </apx-chart>
-    </div>
+    <div class="centralizar">
 
-    <hr class="separador">
-
-    <!-- Faturamento -->
-    <div class="grid-dados">
-        <div>
-            <h4>Total Bruto</h4>
-            <h2>R${{ totalBruto }}</h2>
-        </div>
-        <div>
-            <h4>Total Líquido</h4>
-            <h2>R${{ totalLiquido }}</h2>
-        </div>
-    </div>
-
-    <div class="grafico">
-        <apx-chart [series]="graficoFaturamento.series" [chart]="graficoFaturamento.chart"
-            [xaxis]="graficoFaturamento.xaxis" [title]="graficoFaturamento.title">
-        </apx-chart>
-    </div>
-
-    <hr class="separador">
-
-    <!-- Dados Equipe -->
-    <div class="grid-dados">
-        <div>
-            <h4>Membros totais</h4>
-            <h2>{{ totalMembros }}</h2>
-        </div>
-        <div *ngIf="funcionarioDestaque != undefined" class="div-func-destaque">
-            <div>
-                <h4>Funcionário destaque</h4>
-                <h2>{{ funcionarioDestaque.nome }}</h2>
-            </div>
-            <div>
-                <h4>Atendimentos concluídos</h4>
-                <h2>{{ funcionarioDestaque.servicosConcluidos }}</h2>
+        <div class="switch-container">
+            <div class="conteudo">
+                <h3>Automatico</h3>
+                <div class="switch" (click)="carouselAutomatico ? pararCarouselAutomaticoManual() : iniciarCarouselAtomaticoManual()">
+                    <div class="circulo" [class.ativo]="carouselAutomatico"></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="grafico">
-        <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
-            [title]="graficoTipoMembros.title">
-        </apx-chart>
+        <!-- Faturamento -->
+        <div class="item" [class.ativo]="itemCarousel == 1">
+            <div class="grid-dados">
+                <div>
+                    <h4>Total Bruto</h4>
+                    <h2>R${{ totalBruto }}</h2>
+                </div>
+                <div>
+                    <h4>Total Líquido</h4>
+                    <h2>R${{ totalLiquido }}</h2>
+                </div>
+            </div>
+
+            <div class="grafico">
+                <apx-chart [series]="graficoFaturamento.series" [chart]="graficoFaturamento.chart"
+                    [xaxis]="graficoFaturamento.xaxis" [title]="graficoFaturamento.title">
+                </apx-chart>
+            </div>
+        </div>
+
+        <!-- Atendimento -->
+        <div class="item" [class.ativo]="itemCarousel == 2">
+            <div class="grid-dados">
+                <div>
+                    <h4>Clientes atendidos</h4>
+                    <h2>{{ clientesAtendidos }}</h2>
+                </div>
+                <div>
+                    <h4>Serviços finalizados</h4>
+                    <h2>{{ servicosFinalizados }}</h2>
+                </div>
+                <div>
+                    <h4>Ordens em andamento</h4>
+                    <h2>{{ ordensEmAndamento }}</h2>
+                </div>
+            </div>
+
+            <div class="grafico">
+                <apx-chart [series]="graficoTipoVeiculos.series" [chart]="graficoTipoVeiculos.chart"
+                    [xaxis]="graficoTipoVeiculos.xaxis" [title]="graficoTipoVeiculos.title"
+                    [colors]="graficoTipoVeiculos.colors" [plotOptions]="graficoTipoVeiculos.plotOptions">
+                </apx-chart>
+            </div>
+        </div>
+
+        <!-- Dados Equipe -->
+        <div class="item" [class.ativo]="itemCarousel == 3">
+            <div class="grid-dados">
+                <div>
+                    <h4>Membros totais</h4>
+                    <h2>{{ totalMembros }}</h2>
+                </div>
+                <div *ngIf="funcionarioDestaque != undefined" class="div-func-destaque">
+                    <div>
+                        <h4>Funcionário destaque</h4>
+                        <h2>{{ funcionarioDestaque.nome }}</h2>
+                    </div>
+                    <div>
+                        <h4>Atendimentos concluídos</h4>
+                        <h2>{{ funcionarioDestaque.servicosConcluidos }}</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grafico">
+                <apx-chart [series]="graficoTipoMembros.series" [chart]="graficoTipoMembros.chart"
+                    [title]="graficoTipoMembros.title">
+                </apx-chart>
+            </div>
+        </div>
     </div>
     }
 
@@ -199,4 +216,23 @@
         </apx-chart>
     </div>
     }
+
+    <div class="navegacao-carousel">
+        <div class="retroceder" title="retroceder">
+            <button type="button" (click)="retrocederManual()"><img src="arrow-right.png" alt="retroceder"></button>
+        </div>
+        <div class="avancar" title="avançar">
+            <button type="button" (click)="avancarManual()"><img src="arrow-right.png" alt="avançar"></button>
+        </div>
+    </div>
+
+    <div class="paginacao-carousel">
+        <h4>0{{itemCarousel}}</h4>
+        <div class="navegacao">
+            <div class="indice" [class.ativo]="itemCarousel == 1"></div>
+            <div class="indice" [class.ativo]="itemCarousel == 2"></div>
+            <div class="indice" [class.ativo]="itemCarousel == 3"></div>
+        </div>
+    </div>
+
 </div>
