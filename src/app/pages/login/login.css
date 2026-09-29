@@ -73,10 +73,14 @@ form {
     justify-content: center;
     align-items: center;
     color: #ffffff;
-    width: 60%;
+    width: fit-content;
     height: 100%;
     padding: 1.2rem 0.4rem;
     border-radius: 0.2rem;
+
+    h4 {
+        text-wrap: nowrap;
+    }
 }
 
 .msg-erro {
@@ -92,8 +96,6 @@ form {
     margin-left: 0.5rem;
     display: flex;
     align-items: center;
-    position: absolute;
-    right: 0.6rem;
 }
 
 .btn-fechar button {

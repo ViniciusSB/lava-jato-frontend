@@ -53,9 +53,21 @@ export class VeiculoService {
         );
     }
 
+    desativarVeiculoTelaCliente(id: number, idCliente: number):Observable<MensagemRespose>{
+        return this.http.patch<MensagemRespose>(`${this.urlBase}/desativar/${id}`, {}).pipe(
+            tap(() => this.obterVeiculosPorClienteId(idCliente))
+        );
+    }
+
     ativar(id: number):Observable<MensagemRespose>{
         return this.http.patch<MensagemRespose>(`${this.urlBase}/ativar/${id}`, {}).pipe(
             tap(() => this.getAll())
+        );
+    }
+
+    ativarVeiculoTelaCliente(id: number, idCliente: number):Observable<MensagemRespose>{
+        return this.http.patch<MensagemRespose>(`${this.urlBase}/ativar/${id}`, {}).pipe(
+            tap(() => this.obterVeiculosPorClienteId(idCliente))
         );
     }
 

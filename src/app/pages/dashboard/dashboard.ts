@@ -29,7 +29,7 @@ export class DashboardComponent {
   paginacaoInferior = true;
 
   itemCarousel = 1;
-  carouselAutomatico = true;
+  carouselAutomatico = this.usuarioLogado.tipoUsuario !== 'FUNCIONARIO' ? true : false;
   timerCarousel: number = 0;
 
   totalMembros = 0;
@@ -74,7 +74,8 @@ export class DashboardComponent {
     // Inicialmente traz os dados do dia
     this.request = { periodo: this.campoPeriodo, tipo: 'dia' };
     this.preencherDashboards(this.request.tipo);
-    this.iniciarCarouselAtomatico();
+    if (this.usuarioLogado.tipoUsuario !== 'FUNCIONARIO')
+      this.iniciarCarouselAtomatico();
   }
 
   fecharOpcoesLowScreen() {
@@ -189,7 +190,8 @@ export class DashboardComponent {
 
   indiceManualCarousel(indice: number) {
     this.itemCarousel = indice;
-    this.iniciarCarouselAtomatico()
+    if (this.carouselAutomatico)
+      this.iniciarCarouselAtomatico()
   }
 
   iniciarCarouselAtomatico() {

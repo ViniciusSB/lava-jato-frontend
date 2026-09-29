@@ -104,30 +104,6 @@
     </div>
 </div>
 
-<div *ngIf="usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" class="opcoes-dashboard-low-screen">
-    <button (click)="alternarOpcoesDashboardLowScreen()" [class.ativo]="opcoesDasboardLowScreen">⚙️</button>
-    <ul *ngIf="opcoesDasboardLowScreen" class="ul-dashboard-low-screen" [class.ativo]="opcoesDasboardLowScreen">
-        <li (click)="carouselAutomatico ? pararCarouselAutomaticoManual() : iniciarCarouselAtomaticoManual()">
-            <h4>Carousel automatico</h4>
-            <div class="switch">
-                <div class="circulo" [class.ativo]="carouselAutomatico"></div>
-            </div>
-        </li>
-        <li (click)="alternarBotoesNavegacao()">
-            <h4>Botões navegação</h4>
-            <div class="switch">
-                <div class="circulo" [class.ativo]="botoesNavegacao"></div>
-            </div>
-        </li>
-        <li (click)="alternarPaginacaoInferior()">
-            <h4>Paginação inferior</h4>
-            <div class="switch">
-                <div class="circulo" [class.ativo]="paginacaoInferior"></div>
-            </div>
-        </li>
-    </ul>
-</div>
-
 <div class="carousel">
 
     <!-- Tela do gerente -->
@@ -247,23 +223,55 @@
         </div>
     </div>
     }
-
-    <div *ngIf="botoesNavegacao && usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" class="navegacao-carousel">
-        <div class="retroceder" title="retroceder">
-            <button type="button" (click)="retrocederManual()"><img src="arrow-right.png" alt="retroceder"></button>
-        </div>
-        <div class="avancar" title="avançar">
-            <button type="button" (click)="avancarManual()"><img src="arrow-right.png" alt="avançar"></button>
-        </div>
-    </div>
-
-    <div *ngIf="paginacaoInferior && usuarioLogado.tipoUsuario !== 'FUNCIONARIO'" class="paginacao-carousel">
-        <h4>0{{itemCarousel}}</h4>
-        <div class="navegacao">
-            <div class="indice" (click)="indiceManualCarousel(1)" [class.ativo]="itemCarousel == 1"></div>
-            <div class="indice" (click)="indiceManualCarousel(2)" [class.ativo]="itemCarousel == 2"></div>
-            <div class="indice" (click)="indiceManualCarousel(3)" [class.ativo]="itemCarousel == 3"></div>
-        </div>
-    </div>
-
 </div>
+
+<!-- Botões navegação carousel -->
+@if (botoesNavegacao && usuarioLogado.tipoUsuario !== 'FUNCIONARIO') {
+<div class="navegacao-carousel">
+    <div class="retroceder" title="retroceder">
+        <button type="button" (click)="retrocederManual()"><img src="arrow-right.png" alt="retroceder"></button>
+    </div>
+    <div class="avancar" title="avançar">
+        <button type="button" (click)="avancarManual()"><img src="arrow-right.png" alt="avançar"></button>
+    </div>
+</div>
+}
+
+<!-- Menu inferior de opções -->
+@if (usuarioLogado.tipoUsuario !== 'FUNCIONARIO') {
+<div class="opcoes-dashboard-low-screen">
+    <button (click)="alternarOpcoesDashboardLowScreen()" [class.ativo]="opcoesDasboardLowScreen">⚙️</button>
+    <ul *ngIf="opcoesDasboardLowScreen" class="ul-dashboard-low-screen" [class.ativo]="opcoesDasboardLowScreen">
+        <li (click)="carouselAutomatico ? pararCarouselAutomaticoManual() : iniciarCarouselAtomaticoManual()">
+            <h4>Carousel automatico</h4>
+            <div class="switch">
+                <div class="circulo" [class.ativo]="carouselAutomatico"></div>
+            </div>
+        </li>
+        <li (click)="alternarBotoesNavegacao()">
+            <h4>Botões navegação</h4>
+            <div class="switch">
+                <div class="circulo" [class.ativo]="botoesNavegacao"></div>
+            </div>
+        </li>
+        <li (click)="alternarPaginacaoInferior()">
+            <h4>Paginação inferior</h4>
+            <div class="switch">
+                <div class="circulo" [class.ativo]="paginacaoInferior"></div>
+            </div>
+        </li>
+    </ul>
+</div>
+}
+
+<!-- Paginação inferior carousel -->
+@if (paginacaoInferior && usuarioLogado.tipoUsuario !== 'FUNCIONARIO') {
+<div class="paginacao-carousel">
+    <h4>0{{itemCarousel}}</h4>
+    <div class="navegacao">
+        <div class="indice" (click)="indiceManualCarousel(1)" [class.ativo]="itemCarousel == 1"></div>
+        <div class="indice" (click)="indiceManualCarousel(2)" [class.ativo]="itemCarousel == 2"></div>
+        <div class="indice" (click)="indiceManualCarousel(3)" [class.ativo]="itemCarousel == 3"></div>
+    </div>
+</div>
+}

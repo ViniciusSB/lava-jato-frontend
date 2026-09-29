@@ -166,7 +166,8 @@
 
 .carousel {
   height: calc(100vh - 13rem);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   align-items: center;
 }
 
@@ -512,11 +513,6 @@
     right: -3rem;
     position: static;
   }
-
-  .carousel {
-    overflow-y: auto;
-  }
-
   .grid-container {
     display: flex;
     flex-direction: column-reverse;

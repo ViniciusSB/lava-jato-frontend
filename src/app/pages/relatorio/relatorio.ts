@@ -116,9 +116,12 @@ export class RelatorioComponent {
     this.mensagemErro = "";
   }
 
-  relizarValidacoes(): boolean {
+  realizarValidacoes(): boolean {
     let resultado;
     if (this.relatorioRequest.tipo === "dia") {
+      if (this.relatorioRequest.periodo.length == 1) {
+        this.relatorioRequest.periodo = DataUtil.normalizarNumero(Number(this.relatorioRequest.periodo));
+      }
       resultado = DataUtil.validarPeriodoDia(this.relatorioRequest.periodo); 
       this.relatorioRequest.periodo = resultado.dataFormatada;
       if (!resultado.valido) {
@@ -126,6 +129,9 @@ export class RelatorioComponent {
         return false;
       }
     } else if (this.relatorioRequest.tipo === "mes") {
+      if (this.relatorioRequest.periodo.length == 1) {
+        this.relatorioRequest.periodo = DataUtil.normalizarNumero(Number(this.relatorioRequest.periodo));
+      }
       resultado = DataUtil.validarPeriodoMes(this.relatorioRequest.periodo); 
       this.relatorioRequest.periodo = resultado.dataFormatada;
       if (!resultado.valido) {
@@ -146,7 +152,7 @@ export class RelatorioComponent {
   }
 
   emitir() {
-    if (!this.relizarValidacoes()) {
+    if (!this.realizarValidacoes()) {
       return;
     }
 

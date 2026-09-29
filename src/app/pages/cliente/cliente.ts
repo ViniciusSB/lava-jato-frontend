@@ -321,12 +321,11 @@ export class ClienteComponent {
 
   confirmarDesativacaoVeiculo() {
     if (this.idVeiculoDesativacao != null) {
-      this.veiculoService.desativar(this.idVeiculoDesativacao).subscribe({
+      this.veiculoService.desativarVeiculoTelaCliente(this.idVeiculoDesativacao, this.clienteSelecionado?.id!).subscribe({
         next: (response) => {
           this.idVeiculoDesativacao = null;
           this.desativarVeiculoSelecionado = false;
           this.mensagemSucessoVeiculo = response.mensagem;
-          this.obterVeiculosDoClienteApi(this.clienteSelecionado!);
           this.cdr.markForCheck();
         },
         error: (err) => {
@@ -349,12 +348,11 @@ export class ClienteComponent {
 
   confirmarAtivacaoVeiculo() {
     if (this.idVeiculoAtivacao != null) {
-      this.veiculoService.ativar(this.idVeiculoAtivacao).subscribe({
+      this.veiculoService.ativarVeiculoTelaCliente(this.idVeiculoAtivacao, this.clienteSelecionado?.id!).subscribe({
         next: (response) => {
           this.idVeiculoAtivacao = null;
           this.ativarVeiculoSelecionado = false;
           this.mensagemSucessoVeiculo = response.mensagem;
-          this.obterVeiculosDoClienteApi(this.clienteSelecionado!);
           this.cdr.markForCheck();
         },
         error: (err) => {
