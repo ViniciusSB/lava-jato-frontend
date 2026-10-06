@@ -88,6 +88,7 @@ lava-jato-frontend/
 ├── src/
 │   ├── app/
 │   │   ├── _pipes/              # Pipes personalizados
+│   │   ├── guards/              # Proteção de rotas
 │   │   ├── interceptor/         # Interceptador de requisições
 │   │   ├── models/              # Interfaces e tipos
 │   │   ├── pages/               # Páginas da aplicação
