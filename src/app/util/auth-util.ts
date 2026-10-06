@@ -2,6 +2,10 @@ import { UsuarioLogado, UsuarioLoginResponse, UsuarioRequest } from "../models/u
 
 export class AuthUtil {
 
+    static verificarToken(): string | null {
+        return localStorage.getItem('token')?.trim() || null;
+    }
+
     static coletarDadosLogin(usuario: UsuarioLoginResponse):void {
         localStorage.setItem('idUsuario', usuario.idUsuario);
         localStorage.setItem('nome', usuario.nome);

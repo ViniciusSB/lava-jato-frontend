@@ -8,17 +8,18 @@ import { DashboardComponent } from './pages/dashboard/dashboard';
 import { LoginComponent } from './pages/login/login';
 import { RelatorioComponent } from './pages/relatorio/relatorio';
 import { OpcoesComponent } from './pages/opcoes/opcoes';
+import { authGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
-    { path: '', component: DashboardComponent, title: 'Dashboard'},
-    { path: 'usuario', component: UsuarioComponent, title: 'Usuário'},
-    { path: 'cliente', component: ClienteComponent, title: 'Cliente'},
-    { path: 'veiculo', component: VeiculoComponent, title: 'Veículo'},
-    { path: 'ordemServico', component: OrdemServicoComponent, title: 'Ordem Serviço'},
-    { path: 'servico', component: ServicoComponent, title: 'Serviço'},
+    { path: '', component: DashboardComponent, title: 'Dashboard', canActivate: [authGuard]},
+    { path: 'usuario', component: UsuarioComponent, title: 'Usuário', canActivate: [authGuard]},
+    { path: 'cliente', component: ClienteComponent, title: 'Cliente', canActivate: [authGuard]},
+    { path: 'veiculo', component: VeiculoComponent, title: 'Veículo', canActivate: [authGuard]},
+    { path: 'ordemServico', component: OrdemServicoComponent, title: 'Ordem Serviço', canActivate: [authGuard]},
+    { path: 'servico', component: ServicoComponent, title: 'Serviço', canActivate: [authGuard]},
     { path: 'login', component: LoginComponent, title: 'Login'},
-    { path: 'relatorio', component: RelatorioComponent, title: 'Relatório'},
-    { path: 'opcoes', component: OpcoesComponent, title: 'Opçoes Usuário'},
-    { path: '**', redirectTo: '' }
+    { path: 'relatorio', component: RelatorioComponent, title: 'Relatório', canActivate: [authGuard]},
+    { path: 'opcoes', component: OpcoesComponent, title: 'Opçoes Usuário', canActivate: [authGuard]},
+    { path: '**', redirectTo: ''}
 ];
